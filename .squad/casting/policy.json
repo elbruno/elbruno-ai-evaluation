@@ -1,0 +1,5 @@
+{
+  "universes": ["the-x-files"],
+  "max_per_universe": 10,
+  "overflow_strategy": "diegetic-expansion"
+}
