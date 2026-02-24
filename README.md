@@ -134,6 +134,8 @@ A complete developer journey through AI testing in .NET, covering both ElBruno.A
 
 Real-world examples showing the toolkit in action:
 
+- **[OllamaEvaluation](samples/OllamaEvaluation/)** — Real LLM evaluation using local Ollama (`phi3:mini`) with 5 evaluators against actual model output
+- **[FoundryLocalEvaluation](samples/FoundryLocalEvaluation/)** — Real LLM evaluation using Azure AI Foundry Local (`phi-4-mini`) with 5 evaluators against actual model output
 - **[ChatbotEvaluation](samples/ChatbotEvaluation/)** — Customer support chatbot evaluation with multi-evaluator testing
 - **[EvaluationJourney](samples/EvaluationJourney/)** — Complete pipeline from synthetic data → evaluators → regression detection → JSON export
 - **[HybridEvaluation](samples/HybridEvaluation/)** — Fast deterministic first pass with guidance on plugging in Microsoft's LLM-based evaluators

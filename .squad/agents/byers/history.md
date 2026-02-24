@@ -181,3 +181,21 @@
 
 ### Build status
 - Full solution builds successfully in 2.1s with 0 errors, 3 warnings (xUnit analyzer suggestions in test project).
+
+## Task: Real LLM Evaluation Samples (OllamaEvaluation + FoundryLocalEvaluation)
+
+### What was done
+- **samples/OllamaEvaluation/**: New sample using Microsoft.Extensions.AI.Ollama (preview) to connect to local Ollama phi3:mini. Golden dataset with 5 customer support Q&A examples. Runs RelevanceEvaluator, HallucinationEvaluator, SafetyEvaluator, CoherenceEvaluator, FactualityEvaluator against real model output. Formatted console table output. Graceful error handling for connection failures.
+- **samples/FoundryLocalEvaluation/**: New sample using Microsoft.Extensions.AI.AzureAIInference + Azure.AI.Inference to connect to Foundry Local phi-4-mini. Golden dataset with 5 technical documentation Q&A examples (.NET/C# theme). Same 5 evaluators, same console output pattern. Uses `AsIChatClient()` extension.
+- **README.md files**: Both samples have comprehensive READMEs with install instructions, prerequisites, expected output.
+- **Root README.md**: Added both samples to the Samples section.
+
+### Learnings
+- Microsoft.Extensions.AI.Ollama has no stable release — must use preview versions (9.7.0-preview.1.25356.2)
+- Microsoft.Extensions.AI.AzureAIInference is also preview-only (10.0.0-preview.1.25559.3)
+- Azure.AI.Inference extension method is `AsIChatClient()` not `AsChatClient()`
+- For real LLM evaluation, thresholds should be lower (0.3) for relevance/hallucination/factuality since heuristic evaluators measure token overlap, not semantic similarity
+- Foundry Local uses `Azure.AzureKeyCredential("unused")` — no real key needed for local inference
+
+### Build status
+- Both samples build cleanly with 0 errors, 0 warnings.
