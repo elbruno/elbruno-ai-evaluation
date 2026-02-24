@@ -1,0 +1,64 @@
+site_name: "ElBruno.AI.Evaluation — AI Testing for .NET"
+site_author: "Bruno Capuano"
+site_description: "Production-grade AI testing and evaluation toolkit for .NET applications — xUnit for AI."
+repo_name: "elbruno/netai-nextwin"
+repo_url: "https://github.com/elbruno/netai-nextwin"
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.footer
+    - content.code.copy
+    - navigation.tabs.sticky
+    - content.tabs.link
+  palette:
+    - scheme: default
+      primary: black
+      toggle:
+        icon: material/brightness-2
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
+  - glightbox
+  - include-markdown
+
+nav:
+  - Home: index.md
+  - Blog Series:
+    - Introducing ElBruno.AI.Evaluation: blog/01-introducing-elbruno-ai-evaluation.md
+    - Golden Datasets for AI Testing: blog/02-golden-datasets-for-ai-testing.md
+    - AI Evaluators Deep Dive: blog/03-ai-evaluators-deep-dive.md
+    - AI Testing with xUnit: blog/04-ai-testing-with-xunit.md
+    - From Demo to Production: blog/05-from-demo-to-production.md
+    - Synthetic Data Generation: blog/06-synthetic-data-generation.md
+    - Choosing the Right Evaluators: blog/07-choosing-the-right-evaluators.md
+  - Library Docs:
+    - Quickstart: quickstart.md
+    - Golden Datasets: golden-datasets.md
+    - Evaluation Metrics: evaluation-metrics.md
+    - Synthetic Data: synthetic-data.md
+    - Best Practices: best-practices.md
+    - Comparison with Microsoft: comparison-with-microsoft-evaluation.md
+    - Publishing: publishing.md

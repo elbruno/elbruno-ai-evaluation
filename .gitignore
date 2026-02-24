@@ -3,6 +3,9 @@ bin/
 obj/
 artifacts/
 *.nupkg
+
+## MkDocs
+site/
 *.snupkg
 
 ## IDE
