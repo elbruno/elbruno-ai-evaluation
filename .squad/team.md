@@ -17,5 +17,8 @@
 | Krycek | Trend Analyst | Emerging patterns, adoption signals, market gaps | 📊 |
 | Doggett | Validation Agent | Evidence checking, constraint filtering, reality testing | 🧪 |
 | Reyes | Advocacy Alignment | DevRel fit, Microsoft Cloud/GitHub alignment, audience resonance | 📣 |
+| Byers | Senior .NET Developer | Expert coder, library implementation, .NET architecture | 🔧 |
+| Langly | Senior QA Engineer | Expert tester, test architecture, quality gates | 🧪 |
+| Frohike | Technical Writer | Blog posts, documentation, DevRel content | 📝 |
 | Scribe | Session Logger | Memory, decisions, session logs | 📋 |
 | Ralph | Work Monitor | — | 🔄 |

@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "BMVaF63ng5I=",
+  "success": true,
+  "projectFilePath": "D:\\labs\\netai-nextwin\\samples\\RagEvaluation\\RagEvaluation.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\brunocapuano\\.nuget\\packages\\microsoft.extensions.ai.abstractions\\9.5.0\\microsoft.extensions.ai.abstractions.9.5.0.nupkg.sha512",
+    "C:\\Users\\brunocapuano\\.nuget\\packages\\system.io.pipelines\\9.0.5\\system.io.pipelines.9.0.5.nupkg.sha512",
+    "C:\\Users\\brunocapuano\\.nuget\\packages\\system.text.encodings.web\\9.0.5\\system.text.encodings.web.9.0.5.nupkg.sha512",
+    "C:\\Users\\brunocapuano\\.nuget\\packages\\system.text.json\\9.0.5\\system.text.json.9.0.5.nupkg.sha512"
+  ],
+  "logs": []
+}

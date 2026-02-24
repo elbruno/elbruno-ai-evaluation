@@ -1,0 +1,17 @@
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\bin\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.deps.json
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\bin\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.runtimeconfig.json
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\bin\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.dll
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\bin\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.pdb
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\bin\Debug\net8.0\ElBruno.AI.Evaluation.dll
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\bin\Debug\net8.0\ElBruno.AI.Evaluation.pdb
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\obj\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.csproj.AssemblyReference.cache
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\obj\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.GeneratedMSBuildEditorConfig.editorconfig
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\obj\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.AssemblyInfoInputs.cache
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\obj\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.AssemblyInfo.cs
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\obj\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.csproj.CoreCompileInputs.cache
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\obj\Debug\net8.0\ElBruno..FA28C769.Up2Date
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\obj\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.dll
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\obj\Debug\net8.0\refint\ElBruno.AI.Evaluation.Xunit.dll
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\obj\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.pdb
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\obj\Debug\net8.0\ElBruno.AI.Evaluation.Xunit.genruntimeconfig.cache
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation.Xunit\obj\Debug\net8.0\ref\ElBruno.AI.Evaluation.Xunit.dll

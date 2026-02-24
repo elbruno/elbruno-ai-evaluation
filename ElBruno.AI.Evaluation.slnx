@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/ChatbotEvaluation/ChatbotEvaluation.csproj" />
+    <Project Path="samples/RagEvaluation/RagEvaluation.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ElBruno.AI.Evaluation.Reporting/ElBruno.AI.Evaluation.Reporting.csproj" />
+    <Project Path="src/ElBruno.AI.Evaluation.Xunit/ElBruno.AI.Evaluation.Xunit.csproj" />
+    <Project Path="src/ElBruno.AI.Evaluation/ElBruno.AI.Evaluation.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ElBruno.AI.Evaluation.IntegrationTests/ElBruno.AI.Evaluation.IntegrationTests.csproj" />
+    <Project Path="tests/ElBruno.AI.Evaluation.Tests/ElBruno.AI.Evaluation.Tests.csproj" />
+  </Folder>
+</Solution>

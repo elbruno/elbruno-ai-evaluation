@@ -1,0 +1,12 @@
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\bin\Debug\net8.0\ElBruno.AI.Evaluation.deps.json
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\bin\Debug\net8.0\ElBruno.AI.Evaluation.dll
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\bin\Debug\net8.0\ElBruno.AI.Evaluation.pdb
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\obj\Debug\net8.0\ElBruno.AI.Evaluation.csproj.AssemblyReference.cache
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\obj\Debug\net8.0\ElBruno.AI.Evaluation.GeneratedMSBuildEditorConfig.editorconfig
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\obj\Debug\net8.0\ElBruno.AI.Evaluation.AssemblyInfoInputs.cache
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\obj\Debug\net8.0\ElBruno.AI.Evaluation.AssemblyInfo.cs
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\obj\Debug\net8.0\ElBruno.AI.Evaluation.csproj.CoreCompileInputs.cache
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\obj\Debug\net8.0\ElBruno.AI.Evaluation.dll
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\obj\Debug\net8.0\refint\ElBruno.AI.Evaluation.dll
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\obj\Debug\net8.0\ElBruno.AI.Evaluation.pdb
+D:\labs\netai-nextwin\src\ElBruno.AI.Evaluation\obj\Debug\net8.0\ref\ElBruno.AI.Evaluation.dll

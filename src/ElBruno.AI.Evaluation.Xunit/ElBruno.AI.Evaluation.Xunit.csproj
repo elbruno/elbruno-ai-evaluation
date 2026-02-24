@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>ElBruno.AI.Evaluation.Xunit</PackageId>
+    <Description>xUnit integration for ElBruno.AI.Evaluation</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.9.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ElBruno.AI.Evaluation\ElBruno.AI.Evaluation.csproj" />
+  </ItemGroup>
+</Project>

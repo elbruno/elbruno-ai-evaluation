@@ -11,4 +11,7 @@
 | Multi-domain research question | Scully + Krycek (parallel) |
 | Final report assembly | Mulder (after all research complete) |
 | Report validation | Doggett + Reyes (parallel review) |
+| .NET library code, implementation, architecture | Byers |
+| Test code, test architecture, quality assurance | Langly |
+| Blog posts, technical writing, DevRel content | Frohike |
 | Session logging, decisions | Scribe |
