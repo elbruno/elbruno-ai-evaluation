@@ -507,6 +507,58 @@ Both validators have approved:
 
 ---
 
-**Last Updated:** 2026-02-24T0000  
+---
+
+## IMPLEMENTATION DECISIONS: Core Components
+
+### Decision: Evaluator Implementation Strategy
+
+**Author:** Byers (Senior .NET Developer)
+**Date:** 2025-01-24
+**Status:** Implemented
+
+#### Context
+All 5 evaluators (Hallucination, Factuality, Relevance, Coherence, Safety) needed real implementations replacing NotImplementedException stubs.
+
+#### Decisions
+
+1. **Heuristic-only v1**: All evaluators use algorithmic approaches (token overlap, cosine similarity, regex) with no external LLM calls. This keeps them deterministic, fast, and dependency-free. A future v2 could add optional LLM-backed evaluation.
+
+2. **Tokenization strategy**: Shared approach across evaluators — split on whitespace + punctuation, lowercase, filter tokens ≤2 chars. Not extracted to shared helper yet to keep each evaluator self-contained; can refactor if a 6th evaluator is added.
+
+3. **SafetyEvaluator uses GeneratedRegex**: Source-generated regex (`[GeneratedRegex]`) for PII patterns (email, SSN, phone) for compile-time optimization. Requires `partial class`.
+
+4. **Factuality claim granularity**: Claims are extracted at sentence level (split on `.!?`, ≥3 words). A claim is "supported" if ≥50% of its tokens appear in the reference. This threshold is internal and not yet configurable.
+
+5. **Fixed duplicate RegressionReport**: Removed inline class from RegressionDetector.cs since standalone RegressionReport.cs already existed with a superset of properties.
+
+#### Trade-offs
+- Keyword overlap is a rough proxy for semantic similarity — adequate for v1 but not production-grade NLU
+- CoherenceEvaluator contradiction detection uses simple antonym pairs, not logical inference
+- No stopword removal — could improve relevance/factuality precision in future
+
+---
+
+### Decision: Dataset Design Choices
+
+**Author:** Byers (Senior .NET Developer)
+**Date:** 2025-07-15
+**Status:** Proposed
+
+#### Decisions Made
+
+1. **Renamed DatasetLoader → JsonDatasetLoader**: The old stub was called `DatasetLoader` but only handles JSON. Renamed to `JsonDatasetLoader` for clarity and to allow future loaders (e.g., `YamlDatasetLoader`). The interface `IDatasetLoader` is the contract.
+
+2. **Mutable Lists for Tags/Examples**: Changed `IReadOnlyList<string> Tags` to `List<string> Tags` on both GoldenExample and GoldenDataset. This is required for System.Text.Json deserialization and for AddExample() mutability. Consumers wanting immutability should use the IDatasetLoader.LoadAsync() path.
+
+3. **CSV loader uses simple comma split**: The LoadFromCsvAsync implementation uses basic `String.Split(',')` — it does not handle quoted fields with embedded commas. For production use, a proper CSV parser (CsvHelper) should be added. This is adequate for simple datasets.
+
+4. **Dataset files placed in Datasets/datasets/ subfolder**: Not embedded resources — kept as plain files for easy editing. If they need to ship with the NuGet package, a `<Content>` or `<EmbeddedResource>` item should be added to the csproj.
+
+5. **DatasetVersion.Diff() keyed on Input**: The diff method uses `Input` as the identity key for matching examples between versions. If duplicate inputs are possible, this would need a dedicated ID field.
+
+---
+
+**Last Updated:** 2026-02-24T0100  
 **Maintained by:** Scribe  
-**Status:** COMPLETE - Phase 4 Delivery Finalized
+**Status:** COMPLETE - Phase 4 Delivery Finalized + Implementation Decisions Merged
