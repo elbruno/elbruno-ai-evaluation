@@ -109,4 +109,26 @@ All documentation:
 - **Actionable** — Specific thresholds, decision matrices, checklists
 - **API-faithful** — Examples match actual implementation exactly
 
+### Root README.md (Session 2025-02-24)
+Created comprehensive root README.md for the ElBruno.AI.Evaluation repository:
+
+**Structure:**
+- Title with build, .NET, license badges
+- One-liner: "AI Testing & Observability Toolkit for .NET — the xUnit for AI applications"
+- Why section: 2-3 sentences on the .NET testing gap
+- Quick Start: Install instructions + 10-line evaluation pipeline example
+- Packages table: Core, Xunit, Reporting with descriptions
+- Features: Bullet list covering 5 evaluators, golden datasets, regression testing, persistence, xUnit integration
+- Documentation: Links to docs/ (quickstart, evaluation-metrics, golden-datasets, best-practices)
+- Samples: Links to ChatbotEvaluation and RagEvaluation projects
+- Blog Series: Links to all 5 blog posts with titles
+- Roadmap: v1.0 (current), v1.5 (Copilot integration), v2.0 (visual debugging)
+- Contributing + License (MIT) sections
+
+**Key elements:**
+- Professional OSS project presentation
+- Code example derived directly from samples/ChatbotEvaluation/Program.cs
+- API references grounded in actual source code (IEvaluator, ChatClientExtensions, GoldenDataset)
+- Progressive learning path: Quick Start → Docs → Blog → Samples
+
 ## Learnings
