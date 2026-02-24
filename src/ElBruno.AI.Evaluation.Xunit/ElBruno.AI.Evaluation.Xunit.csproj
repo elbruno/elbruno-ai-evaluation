@@ -3,6 +3,7 @@
     <PackageId>ElBruno.AI.Evaluation.Xunit</PackageId>
     <Description>xUnit integration for ElBruno.AI.Evaluation</Description>
     <IsPackable>true</IsPackable>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="xunit" Version="2.9.3" />
