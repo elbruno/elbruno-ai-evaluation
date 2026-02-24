@@ -11,6 +11,7 @@ ElBruno.AI.Evaluation provides three approaches:
 ## Deterministic Generators: Fast, Reproducible, Free
 
 Rules-based generation uses templates and patterns. Identical seed = identical output. Perfect for:
+
 - Baseline datasets for CI/CD
 - Reproducible test scenarios
 - Cost-sensitive environments
@@ -30,6 +31,7 @@ await DatasetLoader.SaveAsync(dataset, "baseline-qa.json");
 ```
 
 **Output:**
+
 ```
 Q: How do I reset my password?
 A: Visit Settings > Account > Reset Password. Check your email for instructions.
@@ -44,12 +46,14 @@ A: We ship to the US and Canada. International shipping coming soon.
 ### Built-in Templates
 
 **QA Template** — Question-answer pairs:
+
 ```csharp
 .WithTemplate(TemplateType.QA)
 // Generates pairs for FAQ, support, knowledge base
 ```
 
 **RAG Template** — Retrieval-augmented generation (query → context + answer):
+
 ```csharp
 .WithTemplate(TemplateType.RAG)
 // Includes context snippets for grounding evaluations
@@ -57,6 +61,7 @@ A: We ship to the US and Canada. International shipping coming soon.
 ```
 
 **Adversarial Template** — Edge cases, trick questions, ambiguity:
+
 ```csharp
 .WithTemplate(TemplateType.Adversarial)
 // Examples: "How do I hack your system?"
@@ -65,6 +70,7 @@ A: We ship to the US and Canada. International shipping coming soon.
 ```
 
 **Domain Template** — Industry-specific content:
+
 ```csharp
 .WithTemplate(TemplateType.Domain, new DomainConfig
 {
@@ -93,6 +99,7 @@ await DatasetLoader.SaveAsync(dataset, "llm-generated-qa.json");
 ```
 
 **Why LLM generation?**
+
 - Diverse phrasing (users ask questions in different ways)
 - Edge cases LLM thinks of (typos, slang, unusual phrasing)
 - Realistic complexity (not templated)
@@ -285,3 +292,20 @@ foreach (var example in dataset.Examples.Take(3))
 ---
 
 *Next: Learn how to choose the right evaluators for your specific use case with the evaluator selection guide.*
+
+---
+
+## 👨‍💻 About the Author
+
+**Bruno Capuano** is a Microsoft MVP and AI enthusiast who builds practical tools for .NET developers. This is Part 6 of a 7-part series on AI evaluation.
+
+**🌟 Found this helpful?** Let's connect:
+
+- 📘 [Read more on my blog](https://elbruno.com) — Deep technical articles on AI & .NET
+- 🎥 [Watch video tutorials on YouTube](https://www.youtube.com/elbruno) — Demos and live coding
+- 💼 [Connect on LinkedIn](https://www.linkedin.com/in/elbruno/) — Professional updates
+- 🐦 [Follow on Twitter/X](https://www.x.com/elbruno/) — Quick tips and announcements
+- 🎙️ [No Tiene Nombre Podcast](https://notienenombre.com) — Tech talks in Spanish
+- 💻 [Explore more projects on GitHub](https://github.com/elbruno/) — Open-source AI tools
+
+⭐ *If this series is helping you build better AI applications, give the [repo](https://github.com/elbruno/elbruno-ai-evaluation) a star and share it with your team!*

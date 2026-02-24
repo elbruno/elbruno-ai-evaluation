@@ -24,6 +24,22 @@ dotnet test ElBruno.AI.Evaluation.slnx
 6. **Push** to your fork: `git push origin feature/my-feature`
 7. **Open a Pull Request** against the `main` branch
 
+## 🌟 Community & Resources
+
+**Join the conversation!** Connect with Bruno Capuano and the community:
+
+- 💬 **[GitHub Discussions](https://github.com/elbruno/elbruno-ai-evaluation/discussions)** — Ask questions, share ideas, get help
+- 📖 **[Bruno's Blog](https://elbruno.com)** — Technical articles on AI, .NET, and cloud dev
+- 🎥 **[YouTube Tutorials](https://www.youtube.com/elbruno)** — Watch demos and coding sessions
+- 🐦 **[Follow on Twitter/X](https://www.x.com/elbruno/)** — Get updates and quick tips
+- 💼 **[Connect on LinkedIn](https://www.linkedin.com/in/elbruno/)** — Professional networking
+
+**Learning Resources:**
+
+- Read the [7-part blog series](../blog/01-introducing-elbruno-ai-evaluation.md) for comprehensive guidance
+- Explore [samples](../samples/) for real-world implementation patterns
+- Check out Bruno's [other AI projects](https://github.com/elbruno/) for more inspiration
+
 ## Adding a New Evaluator
 
 1. Create a new class implementing `IEvaluator` in `src/ElBruno.AI.Evaluation/Evaluators/`
@@ -37,6 +53,7 @@ dotnet test ElBruno.AI.Evaluation.slnx
 5. Add tests in `tests/ElBruno.AI.Evaluation.Tests/Evaluators/`
 
 Example:
+
 ```csharp
 public class MyEvaluator : IEvaluator
 {
@@ -94,6 +111,7 @@ public class XmlDatasetLoader : IDatasetLoader
 ## Code Style
 
 Follow the `.editorconfig` conventions:
+
 - **Indentation:** 4 spaces
 - **Line endings:** CRLF (Windows)
 - **Nullable:** Enabled (`<Nullable>enable</Nullable>` in Directory.Build.props)

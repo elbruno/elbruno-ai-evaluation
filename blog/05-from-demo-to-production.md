@@ -19,6 +19,7 @@ Input Data
 ```
 
 **Layers:**
+
 1. **Data layer:** ElBruno generates or manages golden datasets
 2. **Quality gate:** ElBruno's deterministic evaluators (fast, offline)
 3. **Deep analysis:** Microsoft's LLM evaluators (optional, for insights)
@@ -609,6 +610,7 @@ You've now explored the full landscape of AI testing in .NET:
 5. **Production AI Evaluation** (this post) — Complete pipeline using both toolkits
 
 **Next steps:**
+
 - Start with ElBruno for fast iteration and regression detection
 - Graduate to Microsoft when you need nuanced quality judgment
 - Use both in production for comprehensive coverage
@@ -619,3 +621,20 @@ The .NET ecosystem now has enterprise-grade AI evaluation. Build with confidence
 ---
 
 **Advanced topics:** See posts 6 & 7 for deep dives on synthetic data generation and evaluator selection by scenario.
+
+---
+
+## 👨‍💻 About the Author
+
+**Bruno Capuano** is a Microsoft MVP and AI enthusiast who builds practical tools for .NET developers. This is Part 5 of a 7-part series on AI evaluation.
+
+**🌟 Found this helpful?** Let's connect:
+
+- 📘 [Read more on my blog](https://elbruno.com) — Deep technical articles on AI & .NET
+- 🎥 [Watch video tutorials on YouTube](https://www.youtube.com/elbruno) — Demos and live coding
+- 💼 [Connect on LinkedIn](https://www.linkedin.com/in/elbruno/) — Professional updates
+- 🐦 [Follow on Twitter/X](https://www.x.com/elbruno/) — Quick tips and announcements
+- 🎙️ [No Tiene Nombre Podcast](https://notienenombre.com) — Tech talks in Spanish
+- 💻 [Explore more projects on GitHub](https://github.com/elbruno/) — Open-source AI tools
+
+⭐ *If this series is helping you build better AI applications, give the [repo](https://github.com/elbruno/elbruno-ai-evaluation) a star and share it with your team!*

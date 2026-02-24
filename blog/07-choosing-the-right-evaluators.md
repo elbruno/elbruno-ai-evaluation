@@ -24,6 +24,7 @@ var deepEval = new MicrosoftRelevanceEvaluator();  // Does it really address the
 ```
 
 **Thresholds:**
+
 - Relevance: 0.7+ (must address the question)
 - Coherence: 0.7+ (must make sense)
 - Safety: 0.95+ (safety is non-negotiable)
@@ -68,6 +69,7 @@ var dataset = new GoldenDataset
 ```
 
 **Thresholds:**
+
 - Hallucination: 0.80+ (very strict—can't make things up)
 - Factuality: 0.90+ (claims must match documents)
 - Relevance: 0.80+ (must answer the question)
@@ -108,6 +110,7 @@ var pipeline = new EvaluationPipelineBuilder()
 ```
 
 **Key Differences:**
+
 - **IntentResolution:** Did the agent understand what the user *actually* wanted?
 - **TaskAdherence:** Did it complete the full task, not just part of it?
 - **ToolCallAccuracy:** Were tool arguments correct? Did it use the right tools?
@@ -141,6 +144,7 @@ if (regression.HasRegressions)
 ```
 
 **Why ElBruno?**
+
 - No LLM calls = no latency
 - No API keys needed
 - Reproducible (same input = same output)
@@ -184,6 +188,7 @@ await azureClient.UploadReportAsync(report);
 ```
 
 **Microsoft's Advantages:**
+
 - Sophisticated judgment (not just heuristics)
 - LLM-powered (understands nuance, context)
 - HTML reports for stakeholders
@@ -221,6 +226,7 @@ await File.WriteAllTextAsync("evaluation-audit.csv", csv);
 ```
 
 **Why ElBruno?**
+
 - Zero external dependencies
 - No network calls
 - SQLite is self-contained
@@ -327,3 +333,20 @@ var evaluators = EvaluatorFactory.GetEvaluators(ScenarioType.Chatbot);
 ---
 
 *You now have the full developer journey: from understanding both toolkits to building production pipelines to choosing evaluators wisely. Go build something remarkable with .NET AI.*
+
+---
+
+## 👨‍💻 About the Author
+
+**Bruno Capuano** is a Microsoft MVP and AI enthusiast who builds practical tools for .NET developers. This is Part 7 of the AI evaluation series.
+
+**🌟 Found this helpful?** Let's connect:
+
+- 📘 [Read more on my blog](https://elbruno.com) — Deep technical articles on AI & .NET
+- 🎥 [Watch video tutorials on YouTube](https://www.youtube.com/elbruno) — Demos and live coding
+- 💼 [Connect on LinkedIn](https://www.linkedin.com/in/elbruno/) — Professional updates
+- 🐦 [Follow on Twitter/X](https://www.x.com/elbruno/) — Quick tips and announcements
+- 🎙️ [No Tiene Nombre Podcast](https://notienenombre.com) — Tech talks in Spanish
+- 💻 [Explore more projects on GitHub](https://github.com/elbruno/) — Open-source AI tools
+
+⭐ *If this series is helping you build better AI applications, give the [repo](https://github.com/elbruno/elbruno-ai-evaluation) a star and share it with your team!*

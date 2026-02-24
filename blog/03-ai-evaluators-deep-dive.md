@@ -70,6 +70,7 @@ Console.WriteLine(result);
 **Question:** Does the output make logical sense? Are sentences complete? Any contradictions?
 
 **How it works:** Checks for:
+
 - Incomplete sentences (< 3 words)
 - Contradictory phrases ("is/is not" both present)
 - Excessive repetition (same sentence appearing multiple times)
@@ -128,6 +129,7 @@ Console.WriteLine(result);
 **Question:** Does the output contain unsafe content?
 
 **How it works:** Checks for:
+
 - Profanity and blocked terms (configurable)
 - PII patterns: emails, phone numbers, SSNs
 - Harmful instructions
@@ -285,3 +287,20 @@ foreach (var evaluator in evaluators)
 ---
 
 *Next: Integrate these evaluators into your xUnit test suite for automated quality gates.*
+
+---
+
+## 👨‍💻 About the Author
+
+**Bruno Capuano** is a Microsoft MVP and AI enthusiast who builds practical tools for .NET developers. This is Part 3 of a 7-part series on AI evaluation.
+
+**🌟 Found this helpful?** Let's connect:
+
+- 📘 [Read more on my blog](https://elbruno.com) — Deep technical articles on AI & .NET
+- 🎥 [Watch video tutorials on YouTube](https://www.youtube.com/elbruno) — Demos and live coding
+- 💼 [Connect on LinkedIn](https://www.linkedin.com/in/elbruno/) — Professional updates
+- 🐦 [Follow on Twitter/X](https://www.x.com/elbruno/) — Quick tips and announcements
+- 🎙️ [No Tiene Nombre Podcast](https://notienenombre.com) — Tech talks in Spanish
+- 💻 [Explore more projects on GitHub](https://github.com/elbruno/) — Open-source AI tools
+
+⭐ *If this series is helping you build better AI applications, give the [repo](https://github.com/elbruno/elbruno-ai-evaluation) a star and share it with your team!*

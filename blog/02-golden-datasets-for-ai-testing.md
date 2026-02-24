@@ -76,24 +76,28 @@ var synthetic = new SyntheticDatasetBuilder("rag-qa")
 ElBruno provides domain-specific templates:
 
 ### Q&A Template
+
 ```csharp
 .WithTemplate(TemplateType.QA)
 // Generates: Question → Answer pairs
 ```
 
 ### RAG Template
+
 ```csharp
 .WithTemplate(TemplateType.RAG)
 // Generates: Query → Context + Answer (for retrieval scenarios)
 ```
 
 ### Adversarial Template
+
 ```csharp
 .WithTemplate(TemplateType.Adversarial)
 // Generates: Edge cases, trick questions, ambiguous inputs
 ```
 
 ### Domain Template
+
 ```csharp
 .WithTemplate(TemplateType.Domain, new DomainConfig { 
     Industry = "FinServ",
@@ -168,6 +172,7 @@ await DatasetLoader.SaveAsync(v3, "dataset-v2.0.0.json");
 ```
 
 Store in your repo:
+
 ```
 /datasets
   /support-bot
@@ -310,6 +315,7 @@ var v3 = new GoldenDataset { Name = "Support Bot", Version = "2.0.0", ... };
 ```
 
 This matters because:
+
 - **Reproducibility** — You can always re-evaluate against the exact dataset you used
 - **Comparison** — See if quality improves when you move to a newer dataset
 - **Debugging** — When a test fails, you know exactly which version of ground truth was used
@@ -337,6 +343,7 @@ Console.WriteLine($"Tags: {string.Join(", ", summary.UniqueTags)}");
 ```
 
 Output:
+
 ```
 Total examples: 42
 With context: 28
@@ -395,3 +402,20 @@ That's it. You now have a foundation for rigorous AI evaluation.
 ---
 
 *Next: Learn how to layer multiple evaluators—from ElBruno's fast offline checks to Microsoft's LLM-powered quality judgment.*
+
+---
+
+## 👨‍💻 About the Author
+
+**Bruno Capuano** is a Microsoft MVP and AI enthusiast who builds practical tools for .NET developers. This is Part 2 of a 7-part series on AI evaluation.
+
+**🌟 Found this helpful?** Let's connect:
+
+- 📘 [Read more on my blog](https://elbruno.com) — Deep technical articles on AI & .NET
+- 🎥 [Watch video tutorials on YouTube](https://www.youtube.com/elbruno) — Demos and live coding
+- 💼 [Connect on LinkedIn](https://www.linkedin.com/in/elbruno/) — Professional updates
+- 🐦 [Follow on Twitter/X](https://www.x.com/elbruno/) — Quick tips and announcements
+- 🎙️ [No Tiene Nombre Podcast](https://notienenombre.com) — Tech talks in Spanish
+- 💻 [Explore more projects on GitHub](https://github.com/elbruno/) — Open-source AI tools
+
+⭐ *If this series is helping you build better AI applications, give the [repo](https://github.com/elbruno/elbruno-ai-evaluation) a star and share it with your team!*

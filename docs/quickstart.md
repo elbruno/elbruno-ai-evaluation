@@ -48,6 +48,8 @@ Create a file called `evaluation-dataset.json`:
 
 ## Write Your First Evaluation Test
 
+> 💡 **New to AI testing?** Check out the [complete blog series](../blog/01-introducing-elbruno-ai-evaluation.md) for a guided developer journey from basics to production!
+
 Here's a simple console app that evaluates an AI model against your golden dataset:
 
 ```csharp

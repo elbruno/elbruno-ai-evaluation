@@ -93,16 +93,23 @@ Threshold selection is critical. Consider:
 ### 1. Business Impact
 
 **High-stakes domains** (medical, legal, financial):
+
 - Use conservative thresholds (0.80-0.95)
 - False negatives cost more than false positives
 - Better to reject output than provide incorrect info
 
 **Customer-facing** (support, recommendations):
+
+> 📚 **Want to dive deeper?** Check out [Bruno's YouTube channel](https://www.youtube.com/elbruno) for video walkthroughs of AI testing patterns, or read the [complete blog series](../blog/01-introducing-elbruno-ai-evaluation.md) for detailed guidance on building production-ready AI evaluation pipelines.
+
+**Customer-facing** (support, recommendations):
+
 - Use balanced thresholds (0.65-0.80)
 - Some false positives are acceptable
 - Prioritize user satisfaction
 
 **Low-stakes** (entertainment, exploration):
+
 - Use lenient thresholds (0.50-0.70)
 - Speed/efficiency matters more than perfection
 - Focus on avoiding egregious failures
@@ -357,6 +364,7 @@ public async Task DailyHealthCheck()
 **Problem:** Your golden dataset matches your model too closely.
 
 **Example:**
+
 ```csharp
 // BAD: Dataset created from current model outputs
 var examples = new[]
@@ -370,6 +378,7 @@ var examples = new[]
 ```
 
 **Solution:**
+
 - Create golden datasets **before** building the model
 - Use human-verified, expert-reviewed expected outputs
 - Periodically audit dataset for bias
@@ -379,6 +388,7 @@ var examples = new[]
 **Problem:** Blindly using default thresholds without understanding tradeoffs.
 
 **Solution:**
+
 ```csharp
 // Good: Understand your thresholds
 var evaluators = new IEvaluator[]
@@ -411,6 +421,7 @@ var dataset = new GoldenDataset
 ```
 
 **Solution:**
+
 ```csharp
 // GOOD: Balanced coverage
 var dataset = new GoldenDataset
@@ -439,6 +450,7 @@ var result = await evaluator.EvaluateAsync(input, output, expected);
 ```
 
 **Solution:**
+
 ```csharp
 // GOOD: Comprehensive evaluation
 var evaluators = new IEvaluator[]
@@ -457,6 +469,7 @@ var result = await chatClient.EvaluateAsync(example, evaluators);
 **Problem:** Baseline is 6 months old; comparing against outdated metrics.
 
 **Solution:**
+
 ```csharp
 // Update baseline quarterly or with major model changes
 public async Task UpdateBaseline()
@@ -487,12 +500,14 @@ public async Task UpdateBaseline()
 new RelevanceEvaluator(threshold: 0.99) // Too strict!
 ```
 
-**Impact:** 
+**Impact:**
+
 - Bot rejects 20% of valid answers
 - Customers see "I don't know" too often
 - Support team overwhelmed with manual review
 
 **Solution:**
+
 ```csharp
 // GOOD: Balanced threshold
 new RelevanceEvaluator(threshold: 0.70) // Allows reasonable variation
@@ -695,6 +710,7 @@ public class ContinuousImprovementCycle
 | **False Positives** | Build human review tier for borderline cases |
 
 Next steps:
+
 - **Set up your golden dataset** — Follow golden-datasets.md
 - **Choose your evaluators** — Use the matrix above
 - **Automate baseline comparison** — Add to CI/CD

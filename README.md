@@ -71,6 +71,7 @@ Console.WriteLine($"Aggregate Score: {results.AggregateScore:F2}");
 ## Features
 
 ✨ **5 Built-in Evaluators**
+
 - **RelevanceEvaluator** — Cosine similarity + term overlap; checks if output matches expected content
 - **FactualityEvaluator** — Claim-level verification against reference text  
 - **CoherenceEvaluator** — Sentence completeness, contradiction detection, repetition penalties
@@ -78,12 +79,14 @@ Console.WriteLine($"Aggregate Score: {results.AggregateScore:F2}");
 - **SafetyEvaluator** — PII masking, profanity detection, harmful content blocklists
 
 🎯 **Golden Datasets**
+
 - Fluent API for building test data programmatically or from JSON/CSV
 - Tag-based filtering and subset selection
 - Semantic versioning for regression tracking
 - Metadata and context support for RAG scenarios
 
 🧬 **Synthetic Data Generation**
+
 - Template-based (deterministic) generation for fast, reproducible test data
 - LLM-powered generation via IChatClient for diverse edge cases and adversarial examples
 - Composite generation combining deterministic + LLM for cost-effective diversity
@@ -91,17 +94,20 @@ Console.WriteLine($"Aggregate Score: {results.AggregateScore:F2}");
 - Validation and deduplication utilities for data quality
 
 🔄 **Regression Testing**
+
 - Baseline snapshots for tracking metric trends
 - Automatic regression detection with configurable tolerance
 - Integration with CI/CD pipelines (GitHub Actions, Azure Pipelines)
 
 🗄️ **Production-Ready Persistence**
+
 - SQLite storage for evaluation runs with queryable metrics
 - Export to JSON, CSV, or console
 - Cost and token tracking for monitoring LLM expenses
 - Batch operations for large-scale evaluations
 
 🧪 **xUnit Integration**
+
 - `AIEvaluationTest` attribute for data-driven tests
 - `AIAssert` fluent assertions (`PassesThreshold`, `AllMetricsPass`)
 - Native Test Explorer support in Visual Studio
@@ -146,6 +152,7 @@ Real-world examples showing the toolkit in action:
 ## Roadmap
 
 ### v0.5 (Current)
+
 - ✅ 10 evaluators (Relevance, Factuality, Coherence, Hallucination, Safety, Latency, Cost, Conciseness, Consistency, Completeness)
 - ✅ Golden datasets with JSON/CSV support
 - ✅ xUnit integration
@@ -154,11 +161,13 @@ Real-world examples showing the toolkit in action:
 - ✅ Real LLM evaluation samples (Ollama, Foundry Local)
 
 ### v1.0 (Planned)
+
 - GitHub Copilot integration for copilot-assisted test generation
 - Enhanced evaluator pipeline with streaming support
 - Custom evaluator marketplace
 
 ### v1.5 (Future)
+
 - Visual debugging dashboard with metric drill-down
 - Real-time monitoring and alerting
 - Distributed evaluation for large-scale datasets
@@ -167,6 +176,7 @@ Real-world examples showing the toolkit in action:
 ## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+
 - Submitting bug reports and feature requests
 - Creating pull requests
 - Writing evaluator plugins
@@ -178,6 +188,21 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-**Author:** Bruno Capuano  
-**Repository:** [elbruno/elbruno-ai-evaluation](https://github.com/elbruno/elbruno-ai-evaluation)  
-**Discussions:** [GitHub Discussions](https://github.com/elbruno/elbruno-ai-evaluation/discussions)
+## 👨‍💻 About the Author
+
+**Bruno Capuano** — AI enthusiast, Microsoft MVP, and developer advocate passionate about making AI accessible to everyone.
+
+I create content about AI, .NET, Azure, and developer productivity across multiple platforms. If you found this library useful, you might enjoy:
+
+🌐 **Follow my work:**
+
+- 💻 [More AI Projects on GitHub](https://github.com/elbruno/) — Explore my open-source AI experiments and tools
+- 📝 [Technical Blog](https://elbruno.com) — Deep dives into AI, .NET, and cloud development
+- 🎙️ [No Tiene Nombre Podcast](https://notienenombre.com) — Tech discussions in Spanish
+- 🎥 [YouTube Channel](https://www.youtube.com/elbruno) — Video tutorials, demos, and live coding
+- 💼 [LinkedIn](https://www.linkedin.com/in/elbruno/) — Professional updates and industry insights
+- 🐦 [Twitter/X](https://www.x.com/elbruno/) — Quick tips, announcements, and tech thoughts
+
+**Got questions or ideas?** Let's connect! Open a [Discussion](https://github.com/elbruno/elbruno-ai-evaluation/discussions) or reach out on any platform above.
+
+✨ *If this project saved you time or helped your AI testing workflow, consider giving it a ⭐ star and sharing it with fellow developers!*

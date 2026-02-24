@@ -154,6 +154,7 @@ foreach (var result in run.Results)
 ## How They Compare
 
 **Microsoft.Extensions.AI.Evaluation** (Official)
+
 - ✅ LLM-powered evaluators (Relevance, Completeness, Fluency, Groundedness, etc.)
 - ✅ Agent-focused evaluators (IntentResolution, TaskAdherence, ToolCallAccuracy)
 - ✅ Azure AI Foundry safety analysis
@@ -163,6 +164,7 @@ foreach (var result in run.Results)
 - ❌ No xUnit integration
 
 **ElBruno.AI.Evaluation** (Complementary)
+
 - ✅ Deterministic evaluators (Hallucination, Factuality, Relevance, Coherence, Safety)
 - ✅ Golden dataset versioning and management
 - ✅ Synthetic data generation
@@ -194,3 +196,20 @@ Start small: create a 5-example golden dataset, run your LLM against it, and see
 ---
 
 *ElBruno.AI.Evaluation is open source and actively maintained. Questions? Feedback? Open an issue on GitHub or reach out on social media.*
+
+---
+
+## 👨‍💻 About the Author
+
+**Bruno Capuano** is a Microsoft MVP and AI enthusiast who builds practical tools for .NET developers. This blog is part of a 7-part series on AI evaluation.
+
+**🌟 Found this helpful?** Let's connect:
+
+- 📘 [Read more on my blog](https://elbruno.com) — Deep technical articles on AI & .NET
+- 🎥 [Watch video tutorials on YouTube](https://www.youtube.com/elbruno) — Demos and live coding
+- 💼 [Connect on LinkedIn](https://www.linkedin.com/in/elbruno/) — Professional updates
+- 🐦 [Follow on Twitter/X](https://www.x.com/elbruno/) — Quick tips and announcements
+- 🎙️ [No Tiene Nombre Podcast](https://notienenombre.com) — Tech talks in Spanish
+- 💻 [Explore more projects on GitHub](https://github.com/elbruno/) — Open-source AI tools
+
+⭐ *If this series is helping you build better AI applications, give the [repo](https://github.com/elbruno/elbruno-ai-evaluation) a star and share it with your team!*
