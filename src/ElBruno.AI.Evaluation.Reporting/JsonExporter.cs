@@ -1,15 +1,34 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using ElBruno.AI.Evaluation.Evaluators;
 
 namespace ElBruno.AI.Evaluation.Reporting;
 
 /// <summary>
-/// Exports evaluation results to JSON format.
+/// Exports an <see cref="EvaluationRun"/> to a JSON file.
 /// </summary>
 public sealed class JsonExporter
 {
-    public Task ExportAsync(IEnumerable<EvaluationResult> results, string outputPath, CancellationToken ct = default)
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
-        // TODO: Implement JSON export
-        throw new NotImplementedException();
+        WriteIndented = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
+
+    /// <summary>Exports the evaluation run to a JSON file at the specified path.</summary>
+    /// <param name="run">The evaluation run to export.</param>
+    /// <param name="outputPath">Path of the output JSON file.</param>
+    /// <param name="ct">Cancellation token.</param>
+    public async Task ExportAsync(EvaluationRun run, string outputPath, CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(run);
+        ArgumentException.ThrowIfNullOrEmpty(outputPath);
+
+        var directory = Path.GetDirectoryName(outputPath);
+        if (!string.IsNullOrEmpty(directory))
+            Directory.CreateDirectory(directory);
+
+        await using var stream = File.Create(outputPath);
+        await JsonSerializer.SerializeAsync(stream, run, JsonOptions, ct).ConfigureAwait(false);
     }
 }

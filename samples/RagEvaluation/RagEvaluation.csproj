@@ -4,5 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\ElBruno.AI.Evaluation\ElBruno.AI.Evaluation.csproj" />
+    <ProjectReference Include="..\..\src\ElBruno.AI.Evaluation.Reporting\ElBruno.AI.Evaluation.Reporting.csproj" />
   </ItemGroup>
 </Project>

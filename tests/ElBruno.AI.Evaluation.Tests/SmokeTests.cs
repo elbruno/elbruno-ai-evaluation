@@ -7,7 +7,7 @@ public class SmokeTests
     [Fact]
     public void EvaluationResult_CanBeCreated()
     {
-        var result = new Evaluators.EvaluationResult
+        var result = new ElBruno.AI.Evaluation.Evaluators.EvaluationResult
         {
             Score = 0.95,
             Passed = true,

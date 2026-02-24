@@ -1,0 +1,50 @@
+{
+  "name": "rag-examples",
+  "version": "1.0.0",
+  "description": "Golden dataset for RAG (Retrieval-Augmented Generation) evaluation",
+  "tags": ["rag", "retrieval"],
+  "examples": [
+    {
+      "input": "What is the return policy?",
+      "expectedOutput": "Items can be returned within 30 days of purchase with a valid receipt for a full refund.",
+      "context": "Return Policy: All items purchased from our store may be returned within 30 days of the original purchase date. A valid receipt is required for a full refund. Items must be in original condition.",
+      "tags": ["policy", "returns"]
+    },
+    {
+      "input": "How much does the Pro plan cost?",
+      "expectedOutput": "The Pro plan costs $49 per month or $470 per year with annual billing.",
+      "context": "Pricing: Basic plan $19/month. Pro plan $49/month or $470/year (annual billing). Enterprise plan: contact sales for custom pricing.",
+      "tags": ["pricing"]
+    },
+    {
+      "input": "What programming languages does the SDK support?",
+      "expectedOutput": "The SDK supports C#, Python, JavaScript, and Java.",
+      "context": "SDK Documentation: Our SDK is available for C#, Python, JavaScript, and Java. Each SDK provides full API coverage including authentication, data operations, and streaming.",
+      "tags": ["technical", "sdk"]
+    },
+    {
+      "input": "What are the system requirements?",
+      "expectedOutput": "The application requires Windows 10 or later, 8 GB RAM minimum, and 2 GB of free disk space.",
+      "context": "System Requirements: OS: Windows 10 or later, macOS 12+, or Ubuntu 20.04+. RAM: 8 GB minimum, 16 GB recommended. Disk: 2 GB free space required.",
+      "tags": ["technical", "requirements"]
+    },
+    {
+      "input": "How do I configure SSO?",
+      "expectedOutput": "Navigate to Admin > Security > SSO Configuration, enter your Identity Provider metadata URL, and click Save.",
+      "context": "SSO Setup Guide: 1. Go to Admin > Security > SSO Configuration. 2. Enter your Identity Provider (IdP) metadata URL. 3. Map user attributes (email, name, groups). 4. Click Save and test the connection.",
+      "tags": ["technical", "security"]
+    },
+    {
+      "input": "What SLA do you offer?",
+      "expectedOutput": "We offer 99.9% uptime SLA for Pro plans and 99.99% for Enterprise plans.",
+      "context": "Service Level Agreement: Pro plan includes 99.9% uptime guarantee. Enterprise plan includes 99.99% uptime guarantee. Downtime credits are issued automatically when SLA is not met.",
+      "tags": ["sla", "enterprise"]
+    },
+    {
+      "input": "How do I export my data?",
+      "expectedOutput": "Go to Settings > Data Management > Export and select your preferred format (CSV, JSON, or Parquet).",
+      "context": "Data Export: Navigate to Settings > Data Management > Export. Choose format: CSV, JSON, or Parquet. Exports are processed asynchronously and a download link is emailed when ready.",
+      "tags": ["data", "export"]
+    }
+  ]
+}

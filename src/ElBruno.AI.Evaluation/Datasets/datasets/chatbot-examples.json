@@ -1,0 +1,43 @@
+{
+  "name": "chatbot-examples",
+  "version": "1.0.0",
+  "description": "Golden dataset for chatbot Q&A evaluation",
+  "tags": ["chatbot", "qa"],
+  "examples": [
+    {
+      "input": "What is the capital of France?",
+      "expectedOutput": "The capital of France is Paris.",
+      "tags": ["geography", "factual"]
+    },
+    {
+      "input": "How do I reset my password?",
+      "expectedOutput": "Go to Settings > Security > Reset Password and follow the prompts.",
+      "tags": ["support", "account"]
+    },
+    {
+      "input": "What are your business hours?",
+      "expectedOutput": "Our business hours are Monday through Friday, 9 AM to 5 PM EST.",
+      "tags": ["support", "general"]
+    },
+    {
+      "input": "Can you help me track my order?",
+      "expectedOutput": "Please provide your order number and I can look up the tracking status for you.",
+      "tags": ["support", "orders"]
+    },
+    {
+      "input": "What is machine learning?",
+      "expectedOutput": "Machine learning is a subset of artificial intelligence where systems learn patterns from data to make predictions or decisions without being explicitly programmed.",
+      "tags": ["technical", "factual"]
+    },
+    {
+      "input": "Tell me a joke",
+      "expectedOutput": "Why do programmers prefer dark mode? Because light attracts bugs!",
+      "tags": ["entertainment"]
+    },
+    {
+      "input": "What payment methods do you accept?",
+      "expectedOutput": "We accept Visa, Mastercard, American Express, PayPal, and Apple Pay.",
+      "tags": ["support", "payments"]
+    }
+  ]
+}

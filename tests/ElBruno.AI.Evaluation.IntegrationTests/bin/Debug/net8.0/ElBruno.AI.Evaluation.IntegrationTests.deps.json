@@ -11,6 +11,7 @@
           "ElBruno.AI.Evaluation": "1.0.0",
           "ElBruno.AI.Evaluation.Reporting": "1.0.0",
           "ElBruno.AI.Evaluation.Xunit": "1.0.0",
+          "Microsoft.Extensions.AI.Abstractions": "9.5.0",
           "Microsoft.NET.Test.Sdk": "17.12.0",
           "xunit": "2.9.3"
         },

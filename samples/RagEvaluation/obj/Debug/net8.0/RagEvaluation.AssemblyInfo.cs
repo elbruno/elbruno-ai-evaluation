@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Bruno Capuano")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+08791c0935a0c28f369f1c75fb97f0609fd87f38")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a2a09faae63cef6c36fde3a3c41e28c92022c215")]
 [assembly: System.Reflection.AssemblyProductAttribute("RagEvaluation")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RagEvaluation")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

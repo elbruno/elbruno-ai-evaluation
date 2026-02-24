@@ -18,4 +18,8 @@ public sealed class EvaluationResult
 
     /// <summary>Individual metric scores from the evaluation.</summary>
     public Dictionary<string, MetricScore> MetricScores { get; init; } = [];
+
+    /// <inheritdoc />
+    public override string ToString() =>
+        $"[{(Passed ? "PASS" : "FAIL")}] Score={Score:F2} — {Details}";
 }

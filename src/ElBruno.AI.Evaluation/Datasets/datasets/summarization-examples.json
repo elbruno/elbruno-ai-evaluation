@@ -1,0 +1,38 @@
+{
+  "name": "summarization-examples",
+  "version": "1.0.0",
+  "description": "Golden dataset for text summarization evaluation",
+  "tags": ["summarization", "nlp"],
+  "examples": [
+    {
+      "input": "Artificial intelligence has transformed numerous industries over the past decade. From healthcare diagnostics to autonomous vehicles, AI systems are becoming increasingly sophisticated. However, concerns about bias, transparency, and job displacement remain significant challenges that researchers and policymakers must address.",
+      "expectedOutput": "AI has transformed many industries but faces challenges around bias, transparency, and job displacement.",
+      "tags": ["technology"]
+    },
+    {
+      "input": "The quarterly earnings report shows revenue increased 15% year-over-year to $4.2 billion. Operating margins improved by 3 percentage points to 28%. The company attributed growth to strong demand in cloud services and enterprise software, while noting headwinds from currency fluctuations.",
+      "expectedOutput": "Revenue grew 15% YoY to $4.2B with 28% operating margins, driven by cloud and enterprise demand despite currency headwinds.",
+      "tags": ["finance"]
+    },
+    {
+      "input": "A new study published in Nature found that regular exercise of at least 150 minutes per week is associated with a 30% reduction in cardiovascular disease risk. The study followed 50,000 participants over 10 years across multiple countries. Researchers noted that even moderate activity like brisk walking showed significant benefits.",
+      "expectedOutput": "A 10-year study of 50,000 people found 150+ minutes of weekly exercise reduces cardiovascular disease risk by 30%, with even moderate activity being beneficial.",
+      "tags": ["health", "research"]
+    },
+    {
+      "input": "The open-source project released version 3.0 with breaking changes to the API. Key updates include a new plugin system, improved performance with 40% faster build times, and native TypeScript support. Migration guides are available on the documentation site. The team recommends upgrading incrementally.",
+      "expectedOutput": "Version 3.0 introduces breaking API changes, a plugin system, 40% faster builds, and native TypeScript support. Migration guides are available.",
+      "tags": ["technology", "software"]
+    },
+    {
+      "input": "Climate scientists report that global average temperatures in 2024 were 1.45°C above pre-industrial levels, approaching the 1.5°C threshold set by the Paris Agreement. Arctic sea ice reached its second-lowest extent on record. The findings underscore the urgency of reducing greenhouse gas emissions.",
+      "expectedOutput": "2024 global temperatures reached 1.45°C above pre-industrial levels, nearing the Paris Agreement's 1.5°C limit, with near-record low Arctic sea ice.",
+      "tags": ["climate", "science"]
+    },
+    {
+      "input": "The city council approved a $500 million infrastructure plan that includes road repairs, new bike lanes, expanded public transit routes, and upgraded water treatment facilities. The plan will be funded through a combination of federal grants and municipal bonds over five years. Construction is expected to begin in Q2 2025.",
+      "expectedOutput": "City council approved a $500M five-year infrastructure plan for roads, bike lanes, transit, and water facilities, funded by federal grants and municipal bonds.",
+      "tags": ["government", "infrastructure"]
+    }
+  ]
+}

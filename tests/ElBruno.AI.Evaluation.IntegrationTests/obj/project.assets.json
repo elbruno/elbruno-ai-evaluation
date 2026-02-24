@@ -1463,6 +1463,7 @@
       "ElBruno.AI.Evaluation >= 1.0.0",
       "ElBruno.AI.Evaluation.Reporting >= 1.0.0",
       "ElBruno.AI.Evaluation.Xunit >= 1.0.0",
+      "Microsoft.Extensions.AI.Abstractions >= 9.5.0",
       "Microsoft.NET.Test.Sdk >= 17.12.0",
       "xunit >= 2.9.3",
       "xunit.runner.visualstudio >= 2.8.2"
@@ -1529,6 +1530,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "Microsoft.Extensions.AI.Abstractions": {
+            "target": "Package",
+            "version": "[9.5.0, )"
+          },
           "Microsoft.NET.Test.Sdk": {
             "target": "Package",
             "version": "[17.12.0, )"

@@ -1,0 +1,386 @@
+# AI Testing with xUnit: Making LLM Quality First-Class
+
+Testing AI is hard because outputs aren't deterministic. You can't just assert `result == expected`. But you *can* measure quality with thresholds, and you *can* fail tests when quality drops.
+
+`ElBruno.AI.Evaluation.Xunit` brings AI testing into your familiar xUnit infrastructure. Use the same test runner, same CI/CD pipeline, same assertions—but for AI quality.
+
+## The AIEvaluationTest Attribute
+
+Mark any test as an AI evaluation test:
+
+```csharp
+using ElBruno.AI.Evaluation.Evaluators;
+using ElBruno.AI.Evaluation.Xunit;
+using Xunit;
+
+public class SupportBotTests
+{
+    private readonly IChatClient _chatClient;
+    
+    public SupportBotTests()
+    {
+        _chatClient = new OllamaChatClient(
+            new Uri("http://localhost:11434"),
+            "neural-chat"
+        );
+    }
+    
+    [Fact]
+    [AIEvaluationTest(MinScore = 0.8, EvaluatorType = "Relevance")]
+    public async Task SupportBot_AnswersAccountQuestions()
+    {
+        var input = "How do I reset my password?";
+        var output = await _chatClient.CompleteAsync(input);
+        
+        var evaluator = new RelevanceEvaluator(threshold: 0.8);
+        var result = await evaluator.EvaluateAsync(input, output);
+        
+        Assert.True(result.Passed);
+        Assert.True(result.Score >= 0.8);
+    }
+}
+```
+
+The `AIEvaluationTest` attribute metadata tells the test runner (and your reports) what's being tested and the minimum acceptable score.
+
+## Fluent Assertions with AIAssert
+
+`AIAssert` provides clear, expressive assertion methods:
+
+```csharp
+[Fact]
+public async Task SupportBot_RelevantAndFactual()
+{
+    var input = "What's your refund policy?";
+    var expectedOutput = "30-day refunds on all purchases, no questions asked.";
+    var output = await _chatClient.CompleteAsync(input);
+    
+    var relevance = new RelevanceEvaluator(0.7);
+    var factuality = new FactualityEvaluator(0.8);
+    
+    var relevanceResult = await relevance.EvaluateAsync(input, output, expectedOutput);
+    var factualityResult = await factuality.EvaluateAsync(input, output, expectedOutput);
+    
+    // Individual assertions
+    AIAssert.PassesThreshold(relevanceResult, 0.7);
+    AIAssert.PassesThreshold(factualityResult, 0.8);
+    
+    // All metrics must pass
+    AIAssert.AllMetricsPass(relevanceResult);
+    AIAssert.AllMetricsPass(factualityResult);
+}
+```
+
+When an assertion fails, you get clear output:
+
+```
+Test failed: Evaluation score 0.62 is below threshold 0.70. 
+Cosine similarity between input and output terms: 0.620. 
+Input terms: 5, Output terms: 8.
+```
+
+## Test Patterns
+
+### Pattern 1: Single Evaluator Per Test
+
+Organize tests around evaluators:
+
+```csharp
+public class SupportBotEvaluationTests
+{
+    private readonly IChatClient _chatClient;
+    private readonly GoldenDataset _dataset;
+    
+    [Theory]
+    [InlineData("How do I reset my password?", "Visit Settings > Account > Reset Password.")]
+    [InlineData("What's your refund policy?", "30-day refunds on all purchases.")]
+    public async Task RelevanceTests(string input, string expected)
+    {
+        var output = await _chatClient.CompleteAsync(input);
+        var evaluator = new RelevanceEvaluator(0.7);
+        var result = await evaluator.EvaluateAsync(input, output, expected);
+        
+        AIAssert.PassesThreshold(result, 0.7);
+    }
+    
+    [Theory]
+    [InlineData("How do I reset my password?", "Visit Settings > Account > Reset Password.")]
+    [InlineData("What's your refund policy?", "30-day refunds on all purchases.")]
+    public async Task FactualityTests(string input, string expected)
+    {
+        var output = await _chatClient.CompleteAsync(input);
+        var evaluator = new FactualityEvaluator(0.8);
+        var result = await evaluator.EvaluateAsync(input, output, expected);
+        
+        AIAssert.PassesThreshold(result, 0.8);
+    }
+}
+```
+
+**Benefit:** Easy to see which evaluator is failing. `dotnet test --filter "Relevance" runs only relevance tests.
+
+### Pattern 2: Golden Dataset Tests
+
+Load examples from your golden dataset:
+
+```csharp
+public class GoldenDatasetTests : IAsyncLifetime
+{
+    private readonly IChatClient _chatClient;
+    private GoldenDataset _dataset;
+    
+    public async Task InitializeAsync()
+    {
+        _chatClient = new OllamaChatClient(
+            new Uri("http://localhost:11434"),
+            "neural-chat"
+        );
+        
+        var loader = new JsonDatasetLoader();
+        _dataset = await loader.LoadAsync("support-bot.json");
+    }
+    
+    public Task DisposeAsync() => Task.CompletedTask;
+    
+    [Theory]
+    [MemberData(nameof(GetGoldenExamples))]
+    public async Task EvaluateAgainstGoldenDataset(GoldenExample example)
+    {
+        var output = await _chatClient.CompleteAsync(example.Input);
+        
+        var evaluators = new List<IEvaluator>
+        {
+            new RelevanceEvaluator(0.7),
+            new FactualityEvaluator(0.8),
+            new SafetyEvaluator(0.95)
+        };
+        
+        foreach (var evaluator in evaluators)
+        {
+            var result = await evaluator.EvaluateAsync(
+                example.Input,
+                output,
+                example.ExpectedOutput
+            );
+            
+            AIAssert.PassesThreshold(result, 0.7);
+        }
+    }
+    
+    public static IEnumerable<object[]> GetGoldenExamples()
+    {
+        var loader = new JsonDatasetLoader();
+        var dataset = loader.LoadAsync("support-bot.json").Result;
+        
+        return dataset.Examples
+            .Select(e => new object[] { e })
+            .ToList();
+    }
+}
+```
+
+This runs one test per golden example. If your dataset has 50 examples, you get 50 test cases. Visual Studio Test Explorer shows each one:
+
+```
+✓ EvaluateAgainstGoldenDataset [0]
+✓ EvaluateAgainstGoldenDataset [1]
+✓ EvaluateAgainstGoldenDataset [2]
+✗ EvaluateAgainstGoldenDataset [15]  ← Failed on refund question
+  Score: 0.52 < threshold 0.70
+```
+
+### Pattern 3: Tagged Subset Testing
+
+Run different evaluators for different question types:
+
+```csharp
+[Theory]
+[MemberData(nameof(GetBillingExamples))]
+public async Task BillingQuestionsAreFactual(GoldenExample example)
+{
+    var output = await _chatClient.CompleteAsync(example.Input);
+    var evaluator = new FactualityEvaluator(0.9);  // High bar for billing
+    var result = await evaluator.EvaluateAsync(example.Input, output, example.ExpectedOutput);
+    
+    AIAssert.PassesThreshold(result, 0.9);
+}
+
+[Theory]
+[MemberData(nameof(GetGeneralExamples))]
+public async Task GeneralQuestionsAreRelevant(GoldenExample example)
+{
+    var output = await _chatClient.CompleteAsync(example.Input);
+    var evaluator = new RelevanceEvaluator(0.6);  // Lower bar for general questions
+    var result = await evaluator.EvaluateAsync(example.Input, output);
+    
+    AIAssert.PassesThreshold(result, 0.6);
+}
+
+public static IEnumerable<object[]> GetBillingExamples()
+{
+    var loader = new JsonDatasetLoader();
+    var dataset = loader.LoadAsync("support-bot.json").Result;
+    return dataset.GetByTag("billing").Select(e => new object[] { e }).ToList();
+}
+
+public static IEnumerable<object[]> GetGeneralExamples()
+{
+    var loader = new JsonDatasetLoader();
+    var dataset = loader.LoadAsync("support-bot.json").Result;
+    return dataset.GetByTag("general").Select(e => new object[] { e }).ToList();
+}
+```
+
+## CI/CD Integration
+
+Your AI tests run exactly like regular tests in CI/CD:
+
+**GitHub Actions:**
+
+```yaml
+name: Test Suite
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
+      - run: dotnet test --logger "trx;LogFileName=test-results.trx"
+      - uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Test Results
+          path: '**/*test-results.trx'
+          reporter: 'dotnet trx'
+```
+
+**Azure Pipelines:**
+
+```yaml
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: UseDotNet@2
+    inputs:
+      version: '8.0.x'
+  
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'test'
+      arguments: '--logger "trx;LogFileName=test-results.trx"'
+  
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'VSTest'
+      testResultsFiles: '**/test-results.trx'
+```
+
+Your AI evaluation tests now fail the build if quality drops. Perfect for catching regressions before they reach production.
+
+## Test Organization
+
+Structure your test project like this:
+
+```
+tests/
+  ElBruno.AI.Evaluation.Tests/
+    Evaluators/
+      RelevanceEvaluatorTests.cs
+      FactualityEvaluatorTests.cs
+      SafetyEvaluatorTests.cs
+    Integration/
+      ChatbotEvaluationTests.cs
+      RagEvaluationTests.cs
+    Datasets/
+      GoldenDatasetTests.cs
+```
+
+Each test file focuses on one scenario or evaluator.
+
+## Debugging Failed Tests
+
+When an AI evaluation test fails, here's how to investigate:
+
+```csharp
+[Fact]
+public async Task DebugFailedEvaluation()
+{
+    var input = "How do I reset my password?";
+    var output = await _chatClient.CompleteAsync(input);
+    var expected = "Visit account settings and click reset password.";
+    
+    var evaluators = new List<IEvaluator>
+    {
+        new RelevanceEvaluator(0.7),
+        new FactualityEvaluator(0.8),
+        new SafetyEvaluator(0.95)
+    };
+    
+    foreach (var evaluator in evaluators)
+    {
+        var result = await evaluator.EvaluateAsync(input, output, expected);
+        
+        Console.WriteLine($"Evaluator: {evaluator.GetType().Name}");
+        Console.WriteLine($"  Score: {result.Score:F2}");
+        Console.WriteLine($"  Passed: {result.Passed}");
+        Console.WriteLine($"  Details: {result.Details}");
+        Console.WriteLine();
+        
+        foreach (var (metric, score) in result.MetricScores)
+        {
+            Console.WriteLine($"  Metric {metric}: {score.Value:F2} (threshold: {score.Threshold:F2})");
+        }
+    }
+}
+```
+
+xUnit captures console output, so you can see debugging info right in the test output.
+
+## Try It Yourself
+
+Create your first AI evaluation test:
+
+```csharp
+[Fact]
+[AIEvaluationTest(MinScore = 0.7)]
+public async Task MyFirstAITest()
+{
+    var chatClient = new SimpleChatClient(); // Use your LLM
+    var input = "What is 2 + 2?";
+    var output = await chatClient.CompleteAsync(input);
+    
+    var evaluator = new RelevanceEvaluator(0.7);
+    var result = await evaluator.EvaluateAsync(input, output);
+    
+    AIAssert.PassesThreshold(result, 0.7);
+}
+```
+
+Then run it:
+
+```bash
+dotnet test
+```
+
+You'll see:
+
+```
+Test Run Successful.
+Total tests: 1
+     Passed: 1
+     Failed: 0
+```
+
+That's it. You now have AI quality as a first-class testing concern.
+
+---
+
+*With AI tests running in xUnit, you've turned subjective quality into objective, measurable, automatable criteria. In the final post, we'll see how to track quality over time and catch regressions before they hit production.*
