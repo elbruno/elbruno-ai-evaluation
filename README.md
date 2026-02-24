@@ -145,19 +145,20 @@ Real-world examples showing the toolkit in action:
 
 ## Roadmap
 
-### v1.0 (Current)
-- ✅ 5 evaluators (Relevance, Factuality, Coherence, Hallucination, Safety)
+### v0.5 (Current)
+- ✅ 10 evaluators (Relevance, Factuality, Coherence, Hallucination, Safety, Latency, Cost, Conciseness, Consistency, Completeness)
 - ✅ Golden datasets with JSON/CSV support
 - ✅ xUnit integration
 - ✅ SQLite persistence and exports
 - ✅ Synthetic data generation (template-based and LLM-powered)
+- ✅ Real LLM evaluation samples (Ollama, Foundry Local)
 
-### v1.5 (Planned)
+### v1.0 (Planned)
 - GitHub Copilot integration for copilot-assisted test generation
 - Enhanced evaluator pipeline with streaming support
 - Custom evaluator marketplace
 
-### v2.0 (Future)
+### v1.5 (Future)
 - Visual debugging dashboard with metric drill-down
 - Real-time monitoring and alerting
 - Distributed evaluation for large-scale datasets
