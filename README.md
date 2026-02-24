@@ -4,6 +4,7 @@
 [![.NET 8+](https://img.shields.io/badge/.NET-8.0-blue?logo=.net)](https://dotnet.microsoft.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Build Status](https://github.com/elbruno/elbruno-ai-evaluation/actions/workflows/ci.yml/badge.svg)](https://github.com/elbruno/elbruno-ai-evaluation/actions)
+[![Docs](https://img.shields.io/badge/Docs-GitHub%20Pages-blue?logo=github)](https://elbruno.github.io/netai-nextwin/)
 
 **AI Testing & Observability Toolkit for .NET** — the xUnit for AI applications
 
@@ -126,15 +127,17 @@ Comprehensive guides for all use cases:
 
 ## Blog Series
 
+> 📖 **[Read the full series on our docs site →](https://elbruno.github.io/netai-nextwin/)**
+
 A complete developer journey through AI testing in .NET, covering both ElBruno.AI.Evaluation and Microsoft.Extensions.AI.Evaluation:
 
-1. **[Testing AI in .NET: The Landscape](blog/01-introducing-elbruno-ai-evaluation.md)** — Understanding both official and complementary toolkits
-2. **[Building Your Test Foundation: Golden Datasets & Synthetic Data](blog/02-golden-datasets-for-ai-testing.md)** — Creating and managing test data with versioning
-3. **[Evaluators: From Quick Checks to Deep Analysis](blog/03-ai-evaluators-deep-dive.md)** — Layering deterministic and LLM-powered evaluation
-4. **[AI Testing in Your CI Pipeline](blog/04-ai-testing-with-xunit.md)** — xUnit integration and automation for quality gates
-5. **[Production AI Evaluation: Combining Both Toolkits](blog/05-from-demo-to-production.md)** — End-to-end hybrid pipeline with monitoring and cost tracking
-6. **[Generating Synthetic Test Data for AI Evaluation](blog/06-synthetic-data-generation.md)** — Deep dive into template-based, LLM-powered, and composite data generation
-7. **[A Guide to Choosing the Right Evaluators for Your AI App](blog/07-choosing-the-right-evaluators.md)** — Evaluator selection by scenario (chatbots, RAG, agents, etc.)
+1. **[Testing AI in .NET: The Landscape](https://elbruno.github.io/netai-nextwin/blog/01-introducing-elbruno-ai-evaluation/)** — Understanding both official and complementary toolkits
+2. **[Building Your Test Foundation: Golden Datasets & Synthetic Data](https://elbruno.github.io/netai-nextwin/blog/02-golden-datasets-for-ai-testing/)** — Creating and managing test data with versioning
+3. **[Evaluators: From Quick Checks to Deep Analysis](https://elbruno.github.io/netai-nextwin/blog/03-ai-evaluators-deep-dive/)** — Layering deterministic and LLM-powered evaluation
+4. **[AI Testing in Your CI Pipeline](https://elbruno.github.io/netai-nextwin/blog/04-ai-testing-with-xunit/)** — xUnit integration and automation for quality gates
+5. **[Production AI Evaluation: Combining Both Toolkits](https://elbruno.github.io/netai-nextwin/blog/05-from-demo-to-production/)** — End-to-end hybrid pipeline with monitoring and cost tracking
+6. **[Generating Synthetic Test Data for AI Evaluation](https://elbruno.github.io/netai-nextwin/blog/06-synthetic-data-generation/)** — Deep dive into template-based, LLM-powered, and composite data generation
+7. **[A Guide to Choosing the Right Evaluators for Your AI App](https://elbruno.github.io/netai-nextwin/blog/07-choosing-the-right-evaluators/)** — Evaluator selection by scenario (chatbots, RAG, agents, etc.)
 
 ## Samples
 
