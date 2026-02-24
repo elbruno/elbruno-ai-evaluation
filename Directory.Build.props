@@ -7,6 +7,12 @@
     <Authors>Bruno Capuano</Authors>
     <PackageIdPrefix>ElBruno.</PackageIdPrefix>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/elbruno/netai-nextwin</RepositoryUrl>
+    <RepositoryUrl>https://github.com/elbruno/elbruno-ai-evaluation</RepositoryUrl>
+    <Version>1.0.0</Version>
+    <PackageProjectUrl>https://github.com/elbruno/elbruno-ai-evaluation</PackageProjectUrl>
+    <Description>AI Testing and Observability Toolkit for .NET</Description>
+    <PackageTags>ai;evaluation;testing;observability;dotnet;llm</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 </Project>

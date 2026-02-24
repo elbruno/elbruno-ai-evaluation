@@ -3,7 +3,7 @@
 [![NuGet](https://img.shields.io/badge/NuGet-ElBruno.AI.Evaluation-blue?logo=nuget)](https://www.nuget.org/packages/ElBruno.AI.Evaluation)
 [![.NET 8+](https://img.shields.io/badge/.NET-8.0-blue?logo=.net)](https://dotnet.microsoft.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Build Status](https://github.com/elbruno/netai-nextwin/actions/workflows/ci.yml/badge.svg)](https://github.com/elbruno/netai-nextwin/actions)
+[![Build Status](https://github.com/elbruno/elbruno-ai-evaluation/actions/workflows/ci.yml/badge.svg)](https://github.com/elbruno/elbruno-ai-evaluation/actions)
 
 **AI Testing & Observability Toolkit for .NET** — the xUnit for AI applications
 
@@ -105,6 +105,7 @@ Comprehensive guides for all use cases:
 - **[Evaluation Metrics](docs/evaluation-metrics.md)** — Deep dive into each evaluator with code examples and threshold guidance
 - **[Golden Datasets](docs/golden-datasets.md)** — Dataset design, JSON schema, CSV import, versioning, and best practices
 - **[Best Practices](docs/best-practices.md)** — Production patterns, threshold tuning, CI/CD integration, and monitoring
+- **[Publishing to NuGet](docs/publishing.md)** — How to publish new versions using GitHub Actions + Trusted Publishing
 
 ## Blog Series
 
@@ -157,5 +158,5 @@ MIT License — see [LICENSE](LICENSE) for details.
 ---
 
 **Author:** Bruno Capuano  
-**Repository:** [elbruno/netai-nextwin](https://github.com/elbruno/netai-nextwin)  
-**Discussions:** [GitHub Discussions](https://github.com/elbruno/netai-nextwin/discussions)
+**Repository:** [elbruno/elbruno-ai-evaluation](https://github.com/elbruno/elbruno-ai-evaluation)  
+**Discussions:** [GitHub Discussions](https://github.com/elbruno/elbruno-ai-evaluation/discussions)

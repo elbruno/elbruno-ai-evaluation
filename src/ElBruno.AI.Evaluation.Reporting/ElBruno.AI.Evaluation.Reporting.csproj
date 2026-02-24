@@ -2,6 +2,7 @@
   <PropertyGroup>
     <PackageId>ElBruno.AI.Evaluation.Reporting</PackageId>
     <Description>Reporting and persistence for ElBruno.AI.Evaluation</Description>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.5" />
