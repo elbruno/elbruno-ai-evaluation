@@ -7,9 +7,11 @@
 
 **AI Testing & Observability Toolkit for .NET** — the xUnit for AI applications
 
+> **.NET already has [Microsoft.Extensions.AI.Evaluation](https://learn.microsoft.com/en-us/dotnet/ai/evaluation/libraries)** — a comprehensive, LLM-powered evaluation framework. **ElBruno.AI.Evaluation complements it** with offline deterministic evaluators, synthetic test data generation, golden dataset management, regression detection, and xUnit-native assertions — scenarios the official libraries don't cover. [See the full comparison →](docs/comparison-with-microsoft-evaluation.md)
+
 ## Why ElBruno.AI.Evaluation?
 
-The .NET ecosystem has a testing gap when it comes to AI applications. While Python developers have frameworks like Ragas and DeepEval to systematically test and monitor LLM outputs, .NET teams lack native, production-grade alternatives. ElBruno.AI.Evaluation bridges this gap by providing comprehensive evaluators for hallucination detection, factuality verification, relevance assessment, coherence checking, and safety screening—all built natively for .NET with golden datasets, regression testing, and SQLite persistence.
+Microsoft's official evaluation libraries are excellent for LLM-powered quality analysis and Azure-based safety checks. But they require external LLM calls, Azure credentials, and don't provide test data generation or dataset lifecycle management. ElBruno.AI.Evaluation fills those gaps: **fast, offline, deterministic evaluators** that run in CI without any external dependencies, **synthetic data generation** to bootstrap your test suites, and **regression detection** to catch quality drops before they ship. Use them together for the best of both worlds.
 
 ## Quick Start
 
