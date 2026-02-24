@@ -118,3 +118,31 @@
 
 ### Build status
 - All three src projects (Core, Xunit, Reporting) and both test projects build cleanly. Pre-existing sample errors (IChatClient.GetStreamingResponseAsync) are unrelated.
+
+## Task: Synthetic Data Generation Library (SyntheticData/)
+
+### What was done
+- **ElBruno.AI.Evaluation.SyntheticData.csproj**: New project with PackageId, IsPackable=true, ProjectReference to core, Microsoft.Extensions.AI.Abstractions 9.5.0, pack items for logo and README.
+- **ISyntheticDataGenerator.cs**: Core interface with GenerateAsync(count, ct) returning IReadOnlyList<GoldenExample>.
+- **DeterministicGenerator.cs**: Template-based generation with optional seed. Supports QaTemplate, RagTemplate, AdversarialTemplate, DomainTemplate dispatch with perturbation logic (null injection, truncation, typos, contradictions, long inputs).
+- **LlmGenerator.cs**: IChatClient-powered generation with configurable temperature, max tokens, parallelism. JSON response parsing with fallback to raw content.
+- **CompositeGenerator.cs**: Weighted combination of sub-generators, proportional count allocation.
+- **IDataTemplate.cs**: Base interface (TemplateType, Tags, Metadata).
+- **QaTemplate.cs**: Q&A pair generation with category, tags, metadata. GetPairs() zips question/answer templates.
+- **RagTemplate.cs**: RAG context+answer with documents and QA examples.
+- **AdversarialTemplate.cs**: Edge-case generation with configurable perturbation types.
+- **DomainTemplate.cs**: Domain-specific with vocabulary, constraints, compliance framework.
+- **GenerationStrategy.cs**: GenerationTemplate enum (SimpleQA, RagContext, QAWithExplanation, QAVariations, AdversarialCases, DomainSpecific).
+- **TemplateStrategy.cs / LlmStrategy.cs**: Strategy configuration classes.
+- **SyntheticDatasetBuilder.cs**: Fluent builder with UseDeterministicGenerator, UseLlmGenerator, UseCompositeGenerator, scenario helpers, BuildAsync. Also contains CompositeGeneratorConfig.
+- **SyntheticDatasetExtensions.cs**: AugmentWithSyntheticExamplesAsync, Merge, Deduplicate, ValidateExamples with ValidationOptions/ValidationError.
+- **RandomSeedProvider.cs**: Static helper for deterministic seed creation and derivation.
+- **PromptGenerator.cs**: LLM prompt composition per GenerationTemplate.
+
+### Build status
+- Full solution (all projects) builds cleanly with zero warnings and zero errors.
+
+### Learnings
+- CompositeGeneratorConfig and SyntheticDatasetBuilder live in the same file since CompositeGeneratorConfig is tightly coupled to the builder API
+- AdversarialTemplate needs internal GetEnabledPerturbations() for DeterministicGenerator — used internal access modifier
+- LlmGenerator JSON parsing uses flexible field names (input/question, expected_output/answer) for robustness

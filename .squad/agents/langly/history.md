@@ -8,6 +8,11 @@
 - **Packages:** ElBruno.AI.Evaluation, ElBruno.AI.Evaluation.Xunit, ElBruno.AI.Evaluation.Reporting
 
 ## Learnings
+- SyntheticData generators use `ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count)` — zero count throws, doesn't return empty
+- LlmGenerator JSON parser expects `expected_output` (snake_case) and `answer`/`question` as fallback field names, not camelCase `expectedOutput`
+- LlmGenerator auto-tags examples with `["synthetic", "llm", "<template>"]` and adds generator/template metadata
+- All fluent builder/template methods return `this` for chaining (Assert.Same pattern works)
+- When writing tests against a design spec while implementation is in parallel, actual behavior may differ — always verify against implementation once available
 
 ## Work Log
 
