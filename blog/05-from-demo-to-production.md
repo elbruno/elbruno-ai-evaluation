@@ -1,17 +1,206 @@
-# From Demo to Production: AI Observability in .NET
+# Production AI Evaluation: Combining Both Toolkits
 
-Your chatbot works great in the demo. Then it hits production and the issues start: quality drops on real user inputs, edge cases you didn't anticipate, costs spike. You need visibility into what's happening.
+You've learned each toolkit separately. Now let's build a **complete production pipeline** using both together. Neither toolkitalone is sufficient—the real power comes from using them in combination.
 
-**AI observability** means tracking three things:
-1. **Quality** — Are evaluations passing?
-2. **Regressions** — Did quality drop vs. the previous version?
-3. **Cost** — How much are we spending on tokens?
+## The Hybrid Pattern
 
-ElBruno.AI.Evaluation.Reporting gives you all three. Let's build a production-ready observability pipeline.
+```
+Input Data
+    ↓
+[ElBruno Synthetic Generator] → Creates test data if needed
+    ↓
+[ElBruno Deterministic Evals] → Fast offline gate (CI/CD)
+    ↓
+    IF PASS: [Optional: Microsoft LLM Evals] → Deep analysis for reporting
+    ↓
+[ElBruno Baseline Snapshot] → Detect regressions
+    ↓
+[Production Deployment]
+```
 
-## SQLite Result Store
+**Layers:**
+1. **Data layer:** ElBruno generates or manages golden datasets
+2. **Quality gate:** ElBruno's deterministic evaluators (fast, offline)
+3. **Deep analysis:** Microsoft's LLM evaluators (optional, for insights)
+4. **Regression:** ElBruno's baseline snapshots (CI/CD safety net)
+5. **Reporting:** ElBruno's SQLite + exports, Microsoft's HTML reports
 
-Every evaluation run can be persisted to SQLite:
+## Complete Production Workflow
+
+```csharp
+public class ProductionEvaluationPipeline
+{
+    private readonly IChatClient _chatClient;
+    private readonly GoldenDataset _dataset;
+    private readonly BaselineSnapshot _baseline;
+    private readonly SqliteResultStore _store;
+    private readonly IMonitoringClient _monitoring;
+    
+    public async Task<DeploymentGate> EvaluateBeforeDeployAsync(string newModelVersion)
+    {
+        // Step 1: Generate or load test data
+        var testData = await LoadOrGenerateDatasetAsync();
+        
+        // Step 2: Run ElBruno deterministic evaluators (FAST, OFFLINE)
+        var elbrunoEvaluators = new List<IEvaluator>
+        {
+            new RelevanceEvaluator(0.7),
+            new HallucinationEvaluator(0.75),
+            new SafetyEvaluator(0.95),
+            new CoherenceEvaluator(0.7),
+            new FactualityEvaluator(0.8)
+        };
+        
+        var elbrunoPipeline = new EvaluationPipelineBuilder()
+            .WithChatClient(_chatClient)
+            .WithDataset(testData)
+            .ForEach(elbrunoEvaluators, e => elbrunoPipeline.AddEvaluator(e))
+            .WithBaseline(_baseline)
+            .Build();
+        
+        var regressionReport = await elbrunoPipeline.RunWithBaselineAsync();
+        
+        // Step 3: Store results
+        await _store.SaveAsync(new EvaluationRun
+        {
+            ModelVersion = newModelVersion,
+            Results = regressionReport.Results,
+            RegressionDetected = regressionReport.HasRegressions,
+            StartedAt = DateTime.UtcNow
+        });
+        
+        // Step 4: Check gate—fail if regression
+        if (regressionReport.HasRegressions)
+        {
+            Console.WriteLine("❌ REGRESSION DETECTED");
+            foreach (var detail in regressionReport.RegressionDetails)
+            {
+                Console.WriteLine($"  {detail.MetricName}: {detail.BaselineValue:F2} → {detail.CurrentValue:F2}");
+            }
+            return DeploymentGate.Blocked;
+        }
+        
+        // Step 5 (Optional): For critical releases, run Microsoft's LLM evaluators
+        if (ShouldRunDeepEvaluation(newModelVersion))
+        {
+            var deepResults = await RunMicrosoftEvaluatorsAsync(testData);
+            // Generate comprehensive HTML report for stakeholders
+            await GenerateMicrosoftReportAsync(deepResults);
+        }
+        
+        // Step 6: Record metrics for monitoring
+        await RecordProductionMetricsAsync(regressionReport);
+        
+        Console.WriteLine("✅ ALL GATES PASSED");
+        return DeploymentGate.Approved;
+    }
+    
+    private async Task RecordProductionMetricsAsync(RegressionReport report)
+    {
+        var metrics = new Dictionary<string, double>
+        {
+            ["ai.relevance.avg"] = report.Results.Average(r => r.MetricScores["relevance"].Value),
+            ["ai.hallucination.avg"] = report.Results.Average(r => r.MetricScores["hallucination"].Value),
+            ["ai.safety.min"] = report.Results.Min(r => r.MetricScores["safety"].Value),
+            ["ai.pass_rate"] = report.Results.Count(r => r.Passed) / (double)report.Results.Count
+        };
+        
+        // Send to DataDog, Prometheus, CloudWatch, etc.
+        await _monitoring.RecordMetricsAsync(metrics);
+    }
+    
+    private bool ShouldRunDeepEvaluation(string version)
+    {
+        // Run deep eval for major releases or if explicitly requested
+        return version.Contains(".0.0") || Environment.GetEnvironmentVariable("DEEP_EVAL") == "true";
+    }
+    
+    private async Task<List<EvaluationResult>> RunMicrosoftEvaluatorsAsync(GoldenDataset dataset)
+    {
+        // Use Microsoft's LLM-powered evaluators
+        var evaluators = new[]
+        {
+            new MicrosoftRelevanceEvaluator(),
+            new MicrosoftCompletenessEvaluator(),
+            new MicrosoftGroundednessEvaluator()
+        };
+        
+        var results = new List<EvaluationResult>();
+        foreach (var example in dataset.Examples)
+        {
+            var output = await _chatClient.CompleteAsync(example.Input);
+            foreach (var evaluator in evaluators)
+            {
+                var result = await evaluator.EvaluateAsync(
+                    new[] { new ChatMessage(ChatRole.User, example.Input) },
+                    new ChatResponse(output),
+                    null,
+                    null
+                );
+                results.Add(result);
+            }
+        }
+        
+        return results;
+    }
+}
+
+// Usage
+var pipeline = new ProductionEvaluationPipeline(
+    chatClient,
+    dataset,
+    baseline,
+    resultStore,
+    monitoring
+);
+
+var gate = await pipeline.EvaluateBeforeDeployAsync("v2.3.0");
+
+if (gate == DeploymentGate.Approved)
+{
+    await DeployToProductionAsync();
+}
+else
+{
+    throw new Exception("Deployment blocked due to quality issues");
+}
+```
+
+## Cost Tracking
+
+Both toolkits support cost monitoring:
+
+```csharp
+// ElBruno: Track tokens used by deterministic evaluators
+var run = await elbrunoPipeline.RunAsync();
+Console.WriteLine($"Tokens used: {run.TokensUsed}");
+Console.WriteLine($"Estimated cost: ${run.EstimatedCost:F4}");
+
+// Microsoft: Built-in token counting
+var config = new ChatConfiguration { MaxTokens = 1000 };
+// Token counting happens automatically during evaluation
+
+// Store trends
+SELECT 
+  DATE(created_at) as day,
+  AVG(tokens_used) as avg_tokens,
+  SUM(cost_dollars) as total_cost
+FROM evaluation_runs
+GROUP BY DATE(created_at)
+ORDER BY created_at DESC;
+```
+
+## Key Differences
+
+| Aspect | ElBruno | Microsoft |
+|--------|---------|-----------|
+| **Speed** | Milliseconds (offline) | Seconds (LLM calls) |
+| **Cost** | Negligible | $0.01-0.10 per eval |
+| **Regression Detection** | Native (via baseline snapshots) | Manual comparison |
+| **Synthetic Data** | Native (templates + LLM) | Not provided |
+| **Persistence** | SQLite (local) | Azure Storage (cloud) |
+| **Reporting** | JSON/CSV exports | HTML dashboards |
+| **Use in CI/CD** | Perfect for gating | Better for dashboards |
 
 ```csharp
 using ElBruno.AI.Evaluation.Reporting;
@@ -409,20 +598,24 @@ Run it daily, weekly, or with every deployment. Over time, you'll have a clear p
 
 ---
 
-## Conclusion
+## Conclusion: The Complete Journey
 
-You've now seen the full journey:
+You've now explored the full landscape of AI testing in .NET:
 
-1. **Introducing ElBruno.AI.Evaluation** — The tools and mindset
-2. **Golden Datasets** — Your ground truth
-3. **Five Evaluators** — Measuring every dimension of quality
-4. **xUnit Integration** — Making quality testable
-5. **Observability** (this post) — Tracking quality over time
+1. **Testing AI in .NET: The Landscape** — Understanding both toolkits
+2. **Building Your Test Foundation** — Datasets and synthetic data (ElBruno)
+3. **Evaluators: From Quick Checks to Deep Analysis** — Layered evaluation strategies
+4. **AI Testing in Your CI Pipeline** — xUnit integration and automation
+5. **Production AI Evaluation** (this post) — Complete pipeline using both toolkits
 
-The .NET ecosystem now has production-ready AI testing. Build with confidence. Ship with metrics. Monitor in production.
+**Next steps:**
+- Start with ElBruno for fast iteration and regression detection
+- Graduate to Microsoft when you need nuanced quality judgment
+- Use both in production for comprehensive coverage
+- Monitor trends over time with SQLite + dashboards
 
-Start today: create a 10-example golden dataset, evaluate against it, and commit the results to git. You're now measuring AI quality like a professional.
+The .NET ecosystem now has enterprise-grade AI evaluation. Build with confidence. Deploy with metrics. Monitor in production.
 
 ---
 
-*Ready to take the next step? Open the [GitHub repository](https://github.com/elbruno/ElBruno.AI.Evaluation) and start building. Questions? Open an issue or join the discussion.*
+**Advanced topics:** See posts 6 & 7 for deep dives on synthetic data generation and evaluator selection by scenario.

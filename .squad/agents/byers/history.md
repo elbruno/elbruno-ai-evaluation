@@ -146,3 +146,26 @@
 - CompositeGeneratorConfig and SyntheticDatasetBuilder live in the same file since CompositeGeneratorConfig is tightly coupled to the builder API
 - AdversarialTemplate needs internal GetEnabledPerturbations() for DeterministicGenerator — used internal access modifier
 - LlmGenerator JSON parsing uses flexible field names (input/question, expected_output/answer) for robustness
+
+## Task: Gap Evaluators & DatasetLoaderStatic (Evaluators/ + Datasets/)
+
+### What was done
+- **LatencyEvaluator.cs**: Measures response time with configurable maxAcceptableMs (default 5000). Supports Func<Task<string>> measurement and pre-measured latency via marker or direct method. Linear decay scoring.
+- **CostEvaluator.cs**: Estimates cost from word-based token estimation (words * 1.3). Configurable maxCostPerResponse and tokenCostRate. Linear decay scoring.
+- **ConcisenessEvaluator.cs**: Penalizes too-short/too-long responses against configurable ideal word range (20-200). Detects 12 common padding phrases with 0.1 penalty each.
+- **ConsistencyEvaluator.cs**: Detects "X is Y / X is not Y" negation patterns and numerical inconsistencies (different numbers for same entity). Score: 1.0/0.5/0.0 based on contradiction count.
+- **CompletenessEvaluator.cs**: Heuristic topic extraction from question marks, numbered lists, and "and" conjunctions. Checks keyword overlap between topics and output. Score = addressed/total.
+- **DatasetLoaderStatic.cs**: Static methods LoadFromJsonAsync, LoadFromCsvAsync (configurable column names), SaveToJsonAsync, SaveToCsvAsync. Proper CSV parsing with quote handling.
+- **publish.yml**: Added SyntheticData project to Pack step.
+
+### Build status
+- Core project builds cleanly with zero warnings and zero errors.
+
+### Learnings
+- ConsistencyEvaluator uses GeneratedRegex (partial class) for number pattern matching — same approach as SafetyEvaluator
+- DatasetLoaderStatic is a separate static class to avoid conflicting with existing IDatasetLoader/JsonDatasetLoader interface pattern
+- All gap evaluators are deterministic and offline — key differentiator from Microsoft's LLM-based evaluators
+- DeterministicGenerator can produce duplicate Input values — avoid ToDictionary on generated examples, use list-based lookup instead
+- SyntheticData types live in sub-namespaces: Generators (DeterministicGenerator), Templates (QaTemplate, RagTemplate, AdversarialTemplate)
+- Deterministic evaluators score surprisingly high on well-formed short responses — set passThreshold above 0.85 for meaningful hybrid filtering demos
+- MockChatClient for samples should use list of tuples not dictionary to handle duplicate synthetic inputs gracefully

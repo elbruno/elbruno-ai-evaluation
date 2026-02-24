@@ -9,6 +9,7 @@ This guide covers how to publish new versions of the ElBruno.AI.Evaluation packa
 | `ElBruno.AI.Evaluation` | `src/ElBruno.AI.Evaluation/` | Core library — evaluators, datasets, metrics, pipeline |
 | `ElBruno.AI.Evaluation.Xunit` | `src/ElBruno.AI.Evaluation.Xunit/` | xUnit integration — AIAssert, AIEvaluationTest |
 | `ElBruno.AI.Evaluation.Reporting` | `src/ElBruno.AI.Evaluation.Reporting/` | Reporting — SQLite store, JSON/CSV export |
+| `ElBruno.AI.Evaluation.SyntheticData` | `src/ElBruno.AI.Evaluation.SyntheticData/` | Synthetic data generation — templates, LLM-powered generation, validation |
 
 > **Maintenance rule:** If a new packable library is added under `src/`, update `.github/workflows/publish.yml` in the same PR so the new project is packed/pushed, and add a matching NuGet Trusted Publishing policy.
 
@@ -27,11 +28,12 @@ This guide covers how to publish new versions of the ElBruno.AI.Evaluation packa
 | **Workflow File** | `publish.yml` |
 | **Environment** | `release` |
 
-You need to create this policy **three times** — once per package:
+You need to create this policy **four times** — once per package:
 
 - `ElBruno.AI.Evaluation`
 - `ElBruno.AI.Evaluation.Xunit`
 - `ElBruno.AI.Evaluation.Reporting`
+- `ElBruno.AI.Evaluation.SyntheticData`
 
 > **Note:** For new packages that don't exist on NuGet.org yet, you must first push them once (the workflow handles this). After the initial push, add the Trusted Publishing policy so future publishes are keyless.
 
@@ -76,7 +78,7 @@ You need to create this policy **three times** — once per package:
 GitHub Release created (e.g. v1.0.0)
   → GitHub Actions triggers publish.yml
     → Builds + tests all projects
-    → Packs three .nupkg files
+    → Packs four .nupkg files
     → Requests an OIDC token from GitHub
     → Exchanges the token with NuGet.org for a temporary API key
     → Pushes all packages to NuGet.org

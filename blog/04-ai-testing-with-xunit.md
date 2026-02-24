@@ -1,8 +1,9 @@
-# AI Testing with xUnit: Making LLM Quality First-Class
+# AI Testing in Your CI Pipeline
 
-Testing AI is hard because outputs aren't deterministic. You can't just assert `result == expected`. But you *can* measure quality with thresholds, and you *can* fail tests when quality drops.
+AI evaluation doesn't have to be separate from your normal testing workflow. ElBruno.AI.Evaluation integrates directly into xUnit—your existing test infrastructure. Both toolkits can be used in CI/CD, but with different patterns.
 
-`ElBruno.AI.Evaluation.Xunit` brings AI testing into your familiar xUnit infrastructure. Use the same test runner, same CI/CD pipeline, same assertions—but for AI quality.
+**ElBruno:** xUnit-native assertions. Deterministic. Fast gates. Perfect for regression detection in CI/CD.  
+**Microsoft:** MSTest/xUnit compatible but more reporting-focused. Great for quality dashboards, less for quick gates.
 
 ## The AIEvaluationTest Attribute
 
@@ -233,57 +234,42 @@ public static IEnumerable<object[]> GetGeneralExamples()
 
 ## CI/CD Integration
 
-Your AI tests run exactly like regular tests in CI/CD:
+Your AI tests run exactly like regular tests:
 
-**GitHub Actions:**
+**GitHub Actions (ElBruno Pattern):**
 
 ```yaml
-name: Test Suite
+name: AI Quality Gate
 on: [push, pull_request]
 
 jobs:
-  test:
+  evaluate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0'
-      - run: dotnet test --logger "trx;LogFileName=test-results.trx"
+      
+      # Run ElBruno tests (fast, offline gate)
+      - run: dotnet test tests/AI.Evaluation.Tests/ --logger "trx"
+      
+      # If passed, optionally run Microsoft evaluations for reporting
+      - name: Run Microsoft Evaluations (Optional)
+        if: success()
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: dotnet run --project tests/DeepEval.Tests/
+      
       - uses: dorny/test-reporter@v1
         if: always()
         with:
-          name: Test Results
-          path: '**/*test-results.trx'
+          name: AI Evaluation Results
+          path: '**/test-results.trx'
           reporter: 'dotnet trx'
 ```
 
-**Azure Pipelines:**
-
-```yaml
-trigger:
-  - main
-
-pool:
-  vmImage: 'ubuntu-latest'
-
-steps:
-  - task: UseDotNet@2
-    inputs:
-      version: '8.0.x'
-  
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'test'
-      arguments: '--logger "trx;LogFileName=test-results.trx"'
-  
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'VSTest'
-      testResultsFiles: '**/test-results.trx'
-```
-
-Your AI evaluation tests now fail the build if quality drops. Perfect for catching regressions before they reach production.
+**Pattern:** ElBruno first (fast gate), Microsoft optional (detailed analysis).
 
 ## Test Organization
 
@@ -383,4 +369,4 @@ That's it. You now have AI quality as a first-class testing concern.
 
 ---
 
-*With AI tests running in xUnit, you've turned subjective quality into objective, measurable, automatable criteria. In the final post, we'll see how to track quality over time and catch regressions before they hit production.*
+*Next: Build your complete production pipeline using both ElBruno and Microsoft toolkits together.*

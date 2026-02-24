@@ -64,6 +64,7 @@ Console.WriteLine($"Aggregate Score: {results.AggregateScore:F2}");
 | **ElBruno.AI.Evaluation** | Core evaluators, metrics, golden datasets, and extension methods for `IChatClient` | ✅ Available |
 | **ElBruno.AI.Evaluation.Xunit** | xUnit attribute-based testing integration (`AIEvaluationTest`, `AIAssert`) | ✅ Available |
 | **ElBruno.AI.Evaluation.Reporting** | SQLite result persistence, baseline snapshots, and export formats (JSON, CSV, Console) | ✅ Available |
+| **ElBruno.AI.Evaluation.SyntheticData** | Synthetic test data generation (template-based and LLM-powered) for evaluation datasets | ✅ Available |
 
 ## Features
 
@@ -79,6 +80,13 @@ Console.WriteLine($"Aggregate Score: {results.AggregateScore:F2}");
 - Tag-based filtering and subset selection
 - Semantic versioning for regression tracking
 - Metadata and context support for RAG scenarios
+
+🧬 **Synthetic Data Generation**
+- Template-based (deterministic) generation for fast, reproducible test data
+- LLM-powered generation via IChatClient for diverse edge cases and adversarial examples
+- Composite generation combining deterministic + LLM for cost-effective diversity
+- Built-in templates: Q&A, RAG, Adversarial, Domain-specific
+- Validation and deduplication utilities for data quality
 
 🔄 **Regression Testing**
 - Baseline snapshots for tracking metric trends
@@ -104,18 +112,21 @@ Comprehensive guides for all use cases:
 - **[Quick Start](docs/quickstart.md)** — Get up and running in 5 minutes
 - **[Evaluation Metrics](docs/evaluation-metrics.md)** — Deep dive into each evaluator with code examples and threshold guidance
 - **[Golden Datasets](docs/golden-datasets.md)** — Dataset design, JSON schema, CSV import, versioning, and best practices
+- **[Synthetic Data Generation](docs/synthetic-data.md)** — Template-based and LLM-powered test data generation for evaluation
 - **[Best Practices](docs/best-practices.md)** — Production patterns, threshold tuning, CI/CD integration, and monitoring
 - **[Publishing to NuGet](docs/publishing.md)** — How to publish new versions using GitHub Actions + Trusted Publishing
 
 ## Blog Series
 
-Learn the patterns and philosophy behind the toolkit:
+A complete developer journey through AI testing in .NET, covering both ElBruno.AI.Evaluation and Microsoft.Extensions.AI.Evaluation:
 
-1. **[Introducing ElBruno.AI.Evaluation](blog/01-introducing-elbruno-ai-evaluation.md)** — Why testing AI in .NET matters
-2. **[Golden Datasets for AI Testing](blog/02-golden-datasets-for-ai-testing.md)** — Building ground truth for evaluations
-3. **[AI Evaluators Deep Dive](blog/03-ai-evaluators-deep-dive.md)** — Understanding each evaluator's strengths
-4. **[AI Testing with xUnit](blog/04-ai-testing-with-xunit.md)** — Integrating evaluations into your test suite
-5. **[From Demo to Production](blog/05-from-demo-to-production.md)** — Monitoring, baselines, and regression detection
+1. **[Testing AI in .NET: The Landscape](blog/01-introducing-elbruno-ai-evaluation.md)** — Understanding both official and complementary toolkits
+2. **[Building Your Test Foundation: Golden Datasets & Synthetic Data](blog/02-golden-datasets-for-ai-testing.md)** — Creating and managing test data with versioning
+3. **[Evaluators: From Quick Checks to Deep Analysis](blog/03-ai-evaluators-deep-dive.md)** — Layering deterministic and LLM-powered evaluation
+4. **[AI Testing in Your CI Pipeline](blog/04-ai-testing-with-xunit.md)** — xUnit integration and automation for quality gates
+5. **[Production AI Evaluation: Combining Both Toolkits](blog/05-from-demo-to-production.md)** — End-to-end hybrid pipeline with monitoring and cost tracking
+6. **[Generating Synthetic Test Data for AI Evaluation](blog/06-synthetic-data-generation.md)** — Deep dive into template-based, LLM-powered, and composite data generation
+7. **[A Guide to Choosing the Right Evaluators for Your AI App](blog/07-choosing-the-right-evaluators.md)** — Evaluator selection by scenario (chatbots, RAG, agents, etc.)
 
 ## Samples
 
@@ -123,6 +134,9 @@ Real-world examples showing the toolkit in action:
 
 - **[ChatbotEvaluation](samples/ChatbotEvaluation/)** — Customer support chatbot evaluation with multi-evaluator testing
 - **[RagEvaluation](samples/RagEvaluation/)** — RAG (Retrieval-Augmented Generation) system evaluation with context-aware metrics
+- **[SyntheticDataGeneration](samples/SyntheticDataGeneration/)** — Generate Q&A, RAG, and adversarial datasets with round-trip JSON persistence
+- **[EvaluationJourney](samples/EvaluationJourney/)** — Complete pipeline from synthetic data → evaluators → regression detection → JSON export
+- **[HybridEvaluation](samples/HybridEvaluation/)** — Fast deterministic first pass with guidance on plugging in Microsoft's LLM-based evaluators
 
 ## Roadmap
 
@@ -131,6 +145,7 @@ Real-world examples showing the toolkit in action:
 - ✅ Golden datasets with JSON/CSV support
 - ✅ xUnit integration
 - ✅ SQLite persistence and exports
+- ✅ Synthetic data generation (template-based and LLM-powered)
 
 ### v1.5 (Planned)
 - GitHub Copilot integration for copilot-assisted test generation

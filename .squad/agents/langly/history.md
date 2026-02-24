@@ -9,6 +9,9 @@
 
 ## Learnings
 - SyntheticData generators use `ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count)` — zero count throws, doesn't return empty
+- New evaluators (Latency, Cost, Conciseness, Consistency, Completeness) use non-standard signatures — LatencyEvaluator takes `elapsedMs` param, CostEvaluator uses `budgetPerCall`/`costPerToken` constructor args
+- DatasetLoader extension methods (SaveToCsvAsync, CsvColumnMapping) are expected additions — tests written ahead of implementation
+- Writing tests-first against a spec while implementation is parallel means compile errors are expected and acceptable; tests serve as a contract for the implementer
 - LlmGenerator JSON parser expects `expected_output` (snake_case) and `answer`/`question` as fallback field names, not camelCase `expectedOutput`
 - LlmGenerator auto-tags examples with `["synthetic", "llm", "<template>"]` and adds generator/template metadata
 - All fluent builder/template methods return `this` for chaining (Assert.Same pattern works)

@@ -1,8 +1,12 @@
-# Deep Dive: 5 AI Evaluators Every .NET Developer Needs
+# Evaluators: From Quick Checks to Deep Analysis
 
-Evaluators are the engines of AI quality measurement. Each one answers a specific question: *Is this output relevant? Is it truthful? Does it make sense?* 
+Evaluation is layered. Not all scenarios need LLM-powered judgment. Some need fast, offline verification. Some need sophisticated reasoning. The art is knowing which layer to use and when.
 
-ElBruno.AI.Evaluation includes five production-ready evaluators, each with a clear purpose and tunable threshold. Let's walk through each one with real code and output examples.
+This post walks through four evaluation layers, using both ElBruno's deterministic evaluators and Microsoft's LLM-powered ones.
+
+## Layer 1: ElBruno's Deterministic Evaluators (Fast, Offline, Debuggable)
+
+These are your first line of defense. No external calls. No cost. Transparent logic you can understand and tune.
 
 ## 1. RelevanceEvaluator
 
@@ -160,40 +164,39 @@ var customEvaluator = new SafetyEvaluator(
 
 ## Combining Evaluators
 
-Real-world evaluation uses multiple evaluators:
+Real-world evaluation is **layered and hybrid**:
 
 ```csharp
-var dataset = new JsonDatasetLoader().LoadAsync("support-bot.json");
-
-var evaluators = new List<IEvaluator>
+// Layer 1: Fast ElBruno evaluators (offline, CI/CD-friendly)
+var fastPass = new List<IEvaluator>
 {
-    new RelevanceEvaluator(0.6),      // Must answer the question
-    new FactualityEvaluator(0.8),      // Must be accurate
-    new CoherenceEvaluator(0.7),       // Must make sense
-    new HallucinationEvaluator(0.7),   // Must not make things up
-    new SafetyEvaluator(0.95)          // Must be safe
+    new RelevanceEvaluator(0.7),
+    new CoherenceEvaluator(0.7),
+    new SafetyEvaluator(0.95)
 };
 
-var pipeline = new EvaluationPipelineBuilder()
-    .WithChatClient(chatClient)
-    .WithDataset(dataset)
-    .ForEach(evaluators, e => _pipeline.AddEvaluator(e))
-    .Build();
+// If fast pass succeeds, optionally upgrade to LLM-powered
+// Layer 2: Microsoft's LLM evaluators (nuanced judgment)
+var deepPass = new List<IEvaluator>
+{
+    new MicrosoftRelevanceEvaluator(),    // LLM-powered
+    new MicrosoftCompletenessEvaluator(),
+    new MicrosoftGroundednessEvaluator()
+};
 
-var run = await pipeline.RunAsync();
-
+// Example: Use ElBruno first, Microsoft for edge cases
 foreach (var result in run.Results)
 {
-    // Only pass if ALL evaluators agree
-    bool fullyPass = result.MetricScores.Values.All(m => m.Passed);
-    Console.WriteLine($"Example: {result.Passed ? "PASS" : "FAIL"}");
-    
-    foreach (var (metric, score) in result.MetricScores)
+    if (result.Score < 0.7)
     {
-        Console.WriteLine($"  {metric}: {score.Value:F2} [{(score.Passed ? "✓" : "✗")}]");
+        // Failed fast checks—investigate with LLM
+        var deepResult = await LLMEvaluate(result);
+        // Helps debug *why* it failed
     }
 }
 ```
+
+**Pattern:** ElBruno for gate-keeping, Microsoft for insights.
 
 ## Creating Custom Evaluators
 
@@ -281,4 +284,4 @@ foreach (var evaluator in evaluators)
 
 ---
 
-*With these five evaluators in your toolkit, you can measure virtually any dimension of AI quality. In the next post, we'll see how to integrate them into your xUnit test suite.*
+*Next: Integrate these evaluators into your xUnit test suite for automated quality gates.*

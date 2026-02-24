@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ElBruno.AI.Evaluation\ElBruno.AI.Evaluation.csproj" />
+    <ProjectReference Include="..\..\src\ElBruno.AI.Evaluation.SyntheticData\ElBruno.AI.Evaluation.SyntheticData.csproj" />
+  </ItemGroup>
+</Project>

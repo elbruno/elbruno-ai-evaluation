@@ -1,10 +1,14 @@
 <Solution>
   <Folder Name="/samples/">
     <Project Path="samples/ChatbotEvaluation/ChatbotEvaluation.csproj" />
+    <Project Path="samples/EvaluationJourney/EvaluationJourney.csproj" />
+    <Project Path="samples/HybridEvaluation/HybridEvaluation.csproj" />
     <Project Path="samples/RagEvaluation/RagEvaluation.csproj" />
+    <Project Path="samples/SyntheticDataGeneration/SyntheticDataGeneration.csproj" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/ElBruno.AI.Evaluation.Reporting/ElBruno.AI.Evaluation.Reporting.csproj" />
+    <Project Path="src/ElBruno.AI.Evaluation.SyntheticData/ElBruno.AI.Evaluation.SyntheticData.csproj" />
     <Project Path="src/ElBruno.AI.Evaluation.Xunit/ElBruno.AI.Evaluation.Xunit.csproj" />
     <Project Path="src/ElBruno.AI.Evaluation/ElBruno.AI.Evaluation.csproj" />
   </Folder>

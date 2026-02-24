@@ -1,36 +1,180 @@
-# Golden Datasets: The Foundation of AI Testing in .NET
+# Building Your Test Foundation: Golden Datasets & Synthetic Data
 
-## What's a Golden Dataset?
+## Before You Evaluate
 
-A **golden dataset** is a curated collection of input-output pairs that represent correct, expected behavior from your AI system. Think of it as your AI's source of truth—the examples you'd show someone to say, "This is what good looks like."
+You can't evaluate without something to evaluate against. That something is a **golden dataset**—a curated collection of input-output pairs representing correct behavior. It's your AI's ground truth.
 
-Golden datasets are the foundation of reliable AI evaluation. Without them, you're guessing. With them, you can measure quality objectively.
+But here's the problem: creating golden datasets manually is tedious. You need dozens or hundreds of examples. ElBruno.AI.Evaluation addresses this with two strategies:
 
-In ElBruno.AI.Evaluation, a golden dataset has three layers:
+1. **Golden Datasets** — Curated, versioned collections (your hand-crafted ground truth)
+2. **Synthetic Data** — Automatically generated test examples (deterministic or LLM-powered)
+
+**Important:** Microsoft.Extensions.AI.Evaluation assumes you *already have* a golden dataset. ElBruno provides the tools to *create and manage* one. This is a critical gap ElBruno fills.
+
+## Golden Datasets: Your Source of Truth
+
+A golden dataset has three layers:
 
 1. **Examples** — Individual test cases with input, expected output, and optional context
 2. **Metadata** — Name, version, description, and tags for organization
 3. **Summaries** — Quick statistics about what you've got
 
-## Why Golden Datasets Matter
+## Synthetic Data: Generate, Don't Hand-Craft
 
-Consider a support chatbot. You want it to:
-- Answer billing questions accurately
-- Stay on-topic (not answer "How do I hack the Pentagon?")
-- Use consistent tone and terminology
-- Never expose customer data
+Creating 100 golden examples by hand? No thanks. ElBruno's `SyntheticDatasetBuilder` generates test data for you. Three strategies:
 
-A golden dataset captures these requirements as concrete examples. Instead of writing 50 test cases with if-then assertions, you define 50 examples of good behavior and measure how close your LLM gets to those examples.
+### 1. Deterministic (Template-Based) Generation
 
-Golden datasets also:
-- **Enable regression testing** — Catch quality drops before they hit production
-- **Track evolution** — Version your datasets like you version code
-- **Support filtering** — Use tags to test specific scenarios (e.g., "Is my model good at billing questions?")
-- **Facilitate team alignment** — Non-engineers can contribute examples
+Fast, reproducible, no LLM calls:
 
-## Creating a Dataset Programmatically
+```csharp
+var synthetic = new SyntheticDatasetBuilder("qa-pairs")
+    .WithTemplate(TemplateType.QA)
+    .Generate(50);  // 50 deterministic examples
 
-Here's the fluent API for building datasets in code:
+// Output: Standard Q&A pairs like:
+// Q: "How do I reset my password?"
+// A: "Visit Settings > Account > Reset Password."
+```
+
+**Use this for:** Quick iteration, CI/CD, cost-sensitive scenarios, reproducible baselines.
+
+### 2. LLM-Powered Generation
+
+Diverse, nuanced, uses your chat client:
+
+```csharp
+using var http = new HttpClient();
+var chatClient = new OpenAIChatClient("gpt-4o-mini", apiKey);
+
+var synthetic = new SyntheticDatasetBuilder("customer-support")
+    .WithTemplate(TemplateType.QA)
+    .WithLLMGenerator(chatClient, count: 50)
+    .Build();
+
+// ChatClient generates 50 realistic examples
+```
+
+**Use this for:** Production datasets, edge cases, adversarial examples, diversity.
+
+### 3. Composite Generation
+
+Blend deterministic + LLM for cost-effective diversity:
+
+```csharp
+var synthetic = new SyntheticDatasetBuilder("rag-qa")
+    .WithTemplate(TemplateType.RAG)
+    .WithDeterministicGenerator(25)    // 25 templated
+    .WithLLMGenerator(chatClient, 25)  // 25 LLM-generated
+    .Build();
+```
+
+**Use this for:** Balanced approach—fast baseline + realistic edge cases.
+
+## Built-in Templates
+
+ElBruno provides domain-specific templates:
+
+### Q&A Template
+```csharp
+.WithTemplate(TemplateType.QA)
+// Generates: Question → Answer pairs
+```
+
+### RAG Template
+```csharp
+.WithTemplate(TemplateType.RAG)
+// Generates: Query → Context + Answer (for retrieval scenarios)
+```
+
+### Adversarial Template
+```csharp
+.WithTemplate(TemplateType.Adversarial)
+// Generates: Edge cases, trick questions, ambiguous inputs
+```
+
+### Domain Template
+```csharp
+.WithTemplate(TemplateType.Domain, new DomainConfig { 
+    Industry = "FinServ",
+    Topics = new[] { "lending", "mortgages", "compliance" }
+})
+// Generates: Domain-specific examples with context
+```
+
+## End-to-End Example: Generate → Evaluate
+
+```csharp
+using ElBruno.AI.Evaluation;
+using ElBruno.AI.Evaluation.SyntheticData;
+
+// Step 1: Generate synthetic data
+var generator = new SyntheticDatasetBuilder("customer-support-v1")
+    .WithTemplate(TemplateType.QA)
+    .WithLLMGenerator(chatClient, 100)
+    .WithVersion("1.0.0")
+    .Build();
+
+await DatasetLoader.SaveAsync(generator, "dataset-v1.0.0.json");
+
+// Step 2: Evaluate against it
+var dataset = await DatasetLoader.LoadAsync("dataset-v1.0.0.json");
+
+var evaluators = new List<IEvaluator>
+{
+    new RelevanceEvaluator(0.7),
+    new FactualityEvaluator(0.8),
+    new SafetyEvaluator(0.95)
+};
+
+var pipeline = new EvaluationPipelineBuilder()
+    .WithChatClient(chatClient)
+    .WithDataset(dataset)
+    .ForEach(evaluators, e => pipeline.AddEvaluator(e))
+    .Build();
+
+var results = await pipeline.RunAsync();
+Console.WriteLine($"Pass Rate: {results.PassRate:P0}");
+```
+
+## Versioning Your Datasets
+
+Always version datasets like code:
+
+```csharp
+// v1.0.0 — Initial synthetic dataset
+var v1 = new SyntheticDatasetBuilder("support-bot")
+    .WithVersion("1.0.0")
+    .WithTemplate(TemplateType.QA)
+    .Generate(50)
+    .Build();
+
+// v1.1.0 — Added adversarial examples
+var v2 = new SyntheticDatasetBuilder("support-bot")
+    .WithVersion("1.1.0")
+    .WithTemplate(TemplateType.QA)
+    .Generate(50)
+    .WithTemplate(TemplateType.Adversarial)
+    .Generate(20)
+    .Build();
+
+// v2.0.0 — LLM-generated for production
+var v3 = new SyntheticDatasetBuilder("support-bot")
+    .WithVersion("2.0.0")
+    .WithLLMGenerator(chatClient, 200)
+    .Build();
+
+await DatasetLoader.SaveAsync(v3, "dataset-v2.0.0.json");
+```
+
+Store in your repo:
+```
+/datasets
+  /support-bot
+    v1.0.0.json  (deterministic baseline)
+    v1.1.0.json  (+ adversarial)
+    v2.0.0.json  (LLM-generated, production)
+```
 
 ```csharp
 using ElBruno.AI.Evaluation.Datasets;
@@ -250,4 +394,4 @@ That's it. You now have a foundation for rigorous AI evaluation.
 
 ---
 
-*Golden datasets are the cornerstone of AI testing. In the next post, we'll explore the five evaluators that measure how well your LLM matches those golden examples.*
+*Next: Learn how to layer multiple evaluators—from ElBruno's fast offline checks to Microsoft's LLM-powered quality judgment.*

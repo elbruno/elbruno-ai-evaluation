@@ -1,42 +1,73 @@
-# Introducing ElBruno.AI.Evaluation: AI Testing for .NET Developers
+# Testing AI in .NET: The Landscape
 
-## The Gap: Why We Built This
+## The Challenge
 
-You've probably felt it. Your LLM application works great in demos—clean examples, perfect conditions. But the moment it hits production, something goes wrong. A prompt generates off-topic content. The AI hallucinates facts. Performance degrades in ways you didn't anticipate.
+You're building an AI app in .NET. Your chatbot works great in demos—clean examples, perfect conditions. But production? That's where things get messy. Prompts generate off-topic content. The AI hallucinates facts. Performance degrades in unexpected ways. You need to measure and improve quality systematically.
 
-The Python ecosystem has had tools like Ragas and DeepEval for years, letting teams measure AI quality systematically. .NET developers? We've been flying blind.
+The Python ecosystem has had frameworks like Ragas and DeepEval for years. .NET developers? Until now, you've had two choices: build it yourself or reach for Python interop. Neither is ideal.
 
-**ElBruno.AI.Evaluation** closes that gap. It's a production-ready toolkit for testing, evaluating, and observing AI applications built with .NET. Three NuGet packages. Five built-in evaluators. Real metrics that matter.
+## Two Toolkits, One Goal
 
-## What You Get
+This series explores **two complementary evaluation frameworks** for .NET:
 
-**ElBruno.AI.Evaluation** (Core Library)
-- Five evaluators out of the box: Relevance, Factuality, Coherence, Hallucination, Safety
-- Fluent API for building evaluation pipelines
-- Support for golden datasets (your ground truth)
-- Integration with Microsoft.Extensions.AI
+1. **Microsoft.Extensions.AI.Evaluation** — Microsoft's official, enterprise-grade framework. LLM-powered evaluators for nuanced quality judgment, agent evaluation, professional reporting, Azure integration.
+2. **ElBruno.AI.Evaluation** — A lightweight, deterministic alternative. Offline evaluation, golden dataset versioning, synthetic data generation, xUnit integration, zero external dependencies.
 
-**ElBruno.AI.Evaluation.Xunit**
-- `AIEvaluationTest` attribute for xUnit
-- Fluent assertions (`AIAssert`) for evaluation results
-- First-class AI testing in your test suite
+Neither is "better"—they solve different problems. Microsoft excels at sophisticated quality analysis. ElBruno excels at offline scenarios, test automation, and dataset management. **The real power is using both together.**
 
-**ElBruno.AI.Evaluation.Reporting**
-- SQLite persistence for tracking quality over time
-- Baseline snapshots and regression detection
-- Export to JSON, CSV, or console
-- Cost and token tracking
+This series guides your journey: from "I need to test my AI app" to "I have a production evaluation pipeline."
+
+## When to Use Which: Decision Tree
+
+```
+Need LLM-powered quality judgment?
+  → YES: Use Microsoft (Relevance, Completeness, Fluency, Groundedness)
+  → NO: Next question
+
+Need agentic evaluators (IntentResolution, TaskAdherence)?
+  → YES: Use Microsoft
+  → NO: Next question
+
+Need offline/air-gapped evaluation?
+  → YES: Use ElBruno (+ Microsoft for non-safety)
+  → NO: Next question
+
+Need synthetic data or golden dataset versioning?
+  → YES: Use ElBruno
+  → NO: Next question
+
+Need regression detection in CI/CD?
+  → YES: Use ElBruno
+  → NO: Use either; Microsoft for comprehensiveness
+```
+
+**Quick Comparison:**
+
+| Scenario | Best Choice |
+|----------|---|
+| "I need fast, local eval in CI/CD" | ElBruno |
+| "I need nuanced quality judgment" | Microsoft |
+| "I'm offline or air-gapped" | ElBruno |
+| "I need to generate test data" | ElBruno |
+| "I need comprehensive safety analysis" | Microsoft |
+| "I want xUnit-native testing" | ElBruno |
+| "I need professional HTML reports" | Microsoft |
+| "I'm cost-conscious" | ElBruno |
 
 ## A Quick Demo
 
-Let's build a simple chatbot evaluation in 5 minutes.
+Let's build a simple evaluation in 5 minutes. This example uses ElBruno, but Microsoft's approach is similar.
 
-### Step 1: Install the NuGet Packages
+### Step 1: Install the Packages
 
 ```bash
+# ElBruno for offline, xUnit-native evaluation
 dotnet add package ElBruno.AI.Evaluation
 dotnet add package ElBruno.AI.Evaluation.Xunit
 dotnet add package ElBruno.AI.Evaluation.Reporting
+
+# OR: Microsoft for LLM-powered evaluation
+dotnet add package Microsoft.Extensions.AI.Evaluation
 ```
 
 ### Step 2: Create a Golden Dataset
@@ -120,29 +151,39 @@ foreach (var result in run.Results)
 }
 ```
 
-## How It Compares to Python
+## How They Compare
 
-If you're familiar with Ragas or DeepEval, here's the mapping:
+**Microsoft.Extensions.AI.Evaluation** (Official)
+- ✅ LLM-powered evaluators (Relevance, Completeness, Fluency, Groundedness, etc.)
+- ✅ Agent-focused evaluators (IntentResolution, TaskAdherence, ToolCallAccuracy)
+- ✅ Azure AI Foundry safety analysis
+- ✅ HTML report generation
+- ❌ Requires external LLM calls
+- ❌ No golden dataset management
+- ❌ No xUnit integration
 
-| Ragas | DeepEval | ElBruno.AI.Evaluation |
-|-------|----------|----------------------|
-| Answer Relevance | Answer Relevance | `RelevanceEvaluator` |
-| Factuality | Factuality | `FactualityEvaluator` |
-| Coherence | Coherence | `CoherenceEvaluator` |
-| Hallucination | Hallucination | `HallucinationEvaluator` |
-| — | Toxic Input | `SafetyEvaluator` |
-
-The main difference? **ElBruno.AI.Evaluation is built for .NET from the ground up**. It uses C# async/await patterns, integrates with Microsoft.Extensions.AI, and works with your existing xUnit test infrastructure. No Python interop. No dependency bloat.
+**ElBruno.AI.Evaluation** (Complementary)
+- ✅ Deterministic evaluators (Hallucination, Factuality, Relevance, Coherence, Safety)
+- ✅ Golden dataset versioning and management
+- ✅ Synthetic data generation
+- ✅ xUnit-native test integration
+- ✅ Offline, zero external dependencies
+- ❌ Not LLM-powered
+- ❌ Simpler, less nuanced than Microsoft's evaluators
 
 ## What's Next
 
-This is the beginning of a series on AI testing in .NET:
+This is the beginning of a developer journey through AI testing in .NET:
 
-1. **Introducing ElBruno.AI.Evaluation** (this post) — Overview and quick start
-2. **Golden Datasets** — Creating, versioning, and organizing ground truth data
-3. **AI Evaluators Deep Dive** — Each evaluator explained with real examples
-4. **AI Testing with xUnit** — First-class AI testing in your test suite
-5. **From Demo to Production** — Observability, baselines, and regression detection
+1. **Testing AI in .NET: The Landscape** (this post) — Overview of both toolkits and when to use each
+2. **Building Your Test Foundation: Golden Datasets & Synthetic Data** — Preparing test data with ElBruno
+3. **Evaluators: From Quick Checks to Deep Analysis** — Layering ElBruno's deterministic evaluators with Microsoft's LLM-powered ones
+4. **AI Testing in Your CI Pipeline** — Integrating both toolkits into automated tests
+5. **Production AI Evaluation: Combining Both Toolkits** — End-to-end pipeline using both frameworks together
+6. **Generating Synthetic Test Data for AI Evaluation** (NEW) — Deep dive into ElBruno's synthetic data generation
+7. **A Guide to Choosing the Right Evaluators for Your AI App** (NEW) — Evaluator selection by scenario
+
+**Recommendation:** Start with ElBruno for fast iteration, deterministic baselines, and test automation. Graduate to Microsoft when you need nuanced quality judgment or advanced safety analysis. Use both in your production pipeline.
 
 ## Try It Yourself
 

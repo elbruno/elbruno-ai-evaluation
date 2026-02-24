@@ -55,6 +55,7 @@ jobs:
           dotnet pack src/ElBruno.AI.Evaluation/ElBruno.AI.Evaluation.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.AI.Evaluation.Xunit/ElBruno.AI.Evaluation.Xunit.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
           dotnet pack src/ElBruno.AI.Evaluation.Reporting/ElBruno.AI.Evaluation.Reporting.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
+          dotnet pack src/ElBruno.AI.Evaluation.SyntheticData/ElBruno.AI.Evaluation.SyntheticData.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o artifacts
 
       - name: NuGet login (OIDC → temp API key)
         uses: NuGet/login@v1
