@@ -135,10 +135,11 @@ A complete developer journey through AI testing in .NET, covering both ElBruno.A
 Real-world examples showing the toolkit in action:
 
 - **[ChatbotEvaluation](samples/ChatbotEvaluation/)** — Customer support chatbot evaluation with multi-evaluator testing
-- **[RagEvaluation](samples/RagEvaluation/)** — RAG (Retrieval-Augmented Generation) system evaluation with context-aware metrics
-- **[SyntheticDataGeneration](samples/SyntheticDataGeneration/)** — Generate Q&A, RAG, and adversarial datasets with round-trip JSON persistence
 - **[EvaluationJourney](samples/EvaluationJourney/)** — Complete pipeline from synthetic data → evaluators → regression detection → JSON export
 - **[HybridEvaluation](samples/HybridEvaluation/)** — Fast deterministic first pass with guidance on plugging in Microsoft's LLM-based evaluators
+- **[RagEvaluation](samples/RagEvaluation/)** — RAG (Retrieval-Augmented Generation) system evaluation with context-aware metrics
+- **[ReportingShowcase](samples/ReportingShowcase/)** — End-to-end result persistence, export, and reporting (SQLite, JSON, CSV, Console)
+- **[SyntheticDataGeneration](samples/SyntheticDataGeneration/)** — Generate Q&A, RAG, and adversarial datasets with round-trip JSON persistence
 
 ## Roadmap
 
