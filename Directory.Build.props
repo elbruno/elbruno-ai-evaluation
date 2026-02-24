@@ -13,6 +13,7 @@
     <Description>AI Testing and Observability Toolkit for .NET</Description>
     <PackageTags>ai;evaluation;testing;observability;dotnet;llm</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>logo_01.png</PackageIcon>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 </Project>

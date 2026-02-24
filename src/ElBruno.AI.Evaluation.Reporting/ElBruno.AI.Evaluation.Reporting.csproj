@@ -10,4 +10,8 @@
   <ItemGroup>
     <ProjectReference Include="..\ElBruno.AI.Evaluation\ElBruno.AI.Evaluation.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\nuget_images\logo_01.png" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>
