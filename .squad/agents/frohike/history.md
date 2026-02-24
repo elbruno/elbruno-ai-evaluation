@@ -132,3 +132,28 @@ Created comprehensive root README.md for the ElBruno.AI.Evaluation repository:
 - Progressive learning path: Quick Start → Docs → Blog → Samples
 
 ## Learnings
+
+### ReportingShowcase Sample (Current Session)
+Created a new production-ready sample demonstrating the complete reporting workflow:
+
+**Files Created:**
+- `samples/ReportingShowcase/ReportingShowcase.csproj` — Project file referencing ElBruno.AI.Evaluation and ElBruno.AI.Evaluation.Reporting
+- `samples/ReportingShowcase/Program.cs` — Comprehensive demonstration:
+  - Simulates evaluation runs with RelevanceEvaluator and HallucinationEvaluator
+  - Stores results in SQLite using SqliteResultStore (query by dataset name)
+  - Exports to JSON via JsonExporter (preserves full metadata and metrics)
+  - Exports to CSV via CsvExporter (tabular format with one row per example + metric columns)
+  - Prints console summary via ConsoleReporter (verbose mode shows per-evaluator breakdown and failures)
+- `samples/ReportingShowcase/README.md` — Developer documentation covering:
+  - What the sample demonstrates (SQLite persistence + multi-format export)
+  - Running instructions and expected output files
+  - Code highlights for each reporting API
+  - Real-world use cases (CI/CD regression detection, monitoring dashboards, compliance auditing, team communication)
+
+**Files Modified:**
+- `README.md` — Added ReportingShowcase entry to Samples section (alphabetically ordered)
+
+**Verification:**
+- ✅ ReportingShowcase project builds successfully (0 errors, 0 warnings)
+- ✅ All APIs used match actual public signatures from source code
+- ✅ Example data is realistic (customer support Q&A scenarios)

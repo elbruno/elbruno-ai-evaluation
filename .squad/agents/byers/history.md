@@ -169,3 +169,15 @@
 - SyntheticData types live in sub-namespaces: Generators (DeterministicGenerator), Templates (QaTemplate, RagTemplate, AdversarialTemplate)
 - Deterministic evaluators score surprisingly high on well-formed short responses — set passThreshold above 0.85 for meaningful hybrid filtering demos
 - MockChatClient for samples should use list of tuples not dictionary to handle duplicate synthetic inputs gracefully
+
+## Task: Repository Polish - LICENSE, CONTRIBUTING, .editorconfig, Build Verification
+
+### What was done
+- **LICENSE**: Created MIT License file at repo root with copyright "2025 Bruno Capuano".
+- **CONTRIBUTING.md**: Created comprehensive contributing guide covering build/test commands, PR process, how to add new evaluators, how to add dataset formats, and code style guidelines.
+- **.editorconfig**: Created standard C# .editorconfig for .NET 8+ with indent_style=space, indent_size=4, end_of_line=crlf, nullable enabled conventions, and C# naming conventions (PascalCase for public, _camelCase for private fields).
+- **XML doc comments verification**: Verified all key public API surfaces already have XML doc comments (IEvaluator, EvaluationResult, all 10 evaluator classes, GoldenDataset, GoldenExample, DatasetLoaderStatic).
+- **Build verification**: Confirmed full solution builds cleanly with zero errors and only 3 minor xUnit analyzer warnings (unrelated to API surface).
+
+### Build status
+- Full solution builds successfully in 2.1s with 0 errors, 3 warnings (xUnit analyzer suggestions in test project).
