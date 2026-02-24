@@ -131,9 +131,35 @@ Created comprehensive root README.md for the ElBruno.AI.Evaluation repository:
 - API references grounded in actual source code (IEvaluator, ChatClientExtensions, GoldenDataset)
 - Progressive learning path: Quick Start → Docs → Blog → Samples
 
+### MkDocs Material Setup (Current Session)
+Configured production-ready documentation site for GitHub Pages publication:
+
+**Files Created:**
+- `requirements.txt` — Python dependencies for MkDocs Material (mkdocs-material>=9.5, mkdocs-glightbox, mkdocs-include-markdown-plugin)
+- `mkdocs.yml` — Complete Material theme configuration:
+  - Site metadata with GitHub repo link
+  - Material theme with dark/light toggle, instant navigation, sticky tabs, code copy button
+  - Roboto fonts, black primary color
+  - Markdown extensions: toc (with permalinks), admonition, superfences, tabbed content, tasklists, attr_list
+  - Plugins: search, glightbox (image lightbox), include-markdown
+  - Navigation structure: Home → Blog Series (7 posts) → Library Docs (7 docs)
+  - `docs_dir: .` to find both `blog/` and `docs/` folders at repo root
+- `index.md` — Welcome landing page with:
+  - Project tagline ("xUnit for AI applications")
+  - Two-section navigation: 7 blog posts with descriptions + 7 library docs with descriptions
+  - Inviting, developer-friendly intro text
+  - Call-to-action linking to Quickstart and first blog post
+
+**Design Decisions:**
+- Used `docs_dir: .` to treat repo root as docs directory (allows MkDocs to resolve both blog/ and docs/ naturally)
+- Explicit `nav:` section controls what gets published, preventing accidental inclusion of internal files
+- Navigation structure mirrors learning path: intro → blog deep-dives → reference docs
+- Material theme features (instant navigation, tabs, code copy) enhance developer experience
+- Dark/light toggle accommodates different reading preferences
+
 ## Learnings
 
-### ReportingShowcase Sample (Current Session)
+### ReportingShowcase Sample (Session Before Last)
 Created a new production-ready sample demonstrating the complete reporting workflow:
 
 **Files Created:**

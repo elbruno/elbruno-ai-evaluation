@@ -559,6 +559,154 @@ All 5 evaluators (Hallucination, Factuality, Relevance, Coherence, Safety) neede
 
 ---
 
-**Last Updated:** 2026-02-24T0100  
+---
+
+## IMPLEMENTATION DECISIONS: Documentation & CI/CD (Phase 5)
+
+### Decision: MkDocs Material Setup for GitHub Pages Publishing
+
+**Author:** Frohike (Technical Writer)  
+**Date:** 2026-02-24  
+**Status:** ✅ Implemented
+
+#### Scope
+Set up MkDocs Material theme and configuration for publishing ElBruno.AI.Evaluation blog posts and documentation as a GitHub Pages site.
+
+#### Key Design Choices
+
+1. **Material Theme with Dark/Light Toggle**
+   - Professional, modern design suitable for developer tool
+   - Built-in dark/light modes reduce eye strain
+   - Excellent mobile support (responsive design)
+   - Strong accessibility features (WCAG 2.1 AA)
+   - Popular in .NET ecosystem
+
+2. **Markdown Extensions Enabled**
+   - `toc` — table of contents with permalinks
+   - `admonition` — callout boxes (!!! note, !!! warning)
+   - `pymdownx.details` — collapsible sections
+   - `pymdownx.superfences` — syntax-highlighted code blocks
+   - `pymdownx.tabbed` — content tabs
+   - `pymdownx.tasklist` — GitHub-style task lists
+   - `attr_list` — HTML attribute assignment
+   - `md_in_html` — HTML in Markdown
+
+3. **Explicit Navigation Configuration**
+   - Prevents accidental publication of design docs/internal notes
+   - Makes information architecture intentional and explicit
+   - Easier to add new content without unwanted includes
+   - Structure: Home → Blog Series (7 posts) → Library Docs (7 docs)
+
+4. **Three Essential Plugins**
+   - `search` — Full-text search in sidebar
+   - `glightbox` — Image gallery lightbox (for blog screenshots)
+   - `include-markdown` — Markdown inclusion for reusable content
+
+5. **Python Dependencies** (requirements.txt)
+   - `mkdocs-material>=9.5` — Material Design theme
+   - `mkdocs-glightbox` — Image lightbox plugin
+   - `mkdocs-include-markdown-plugin` — Markdown inclusion
+
+#### Deliverables
+- `mkdocs.yml` — Complete configuration with theme, extensions, plugins, navigation
+- `requirements.txt` — Python dependency declarations
+- `docs/index.md` — Welcome landing page with blog/docs sections
+
+#### Rationale
+
+**Why split Blog and Docs?**
+- Blog: Narrative, progressive learning (intro → deep-dive → production)
+- Docs: Reference material, task-oriented (how-do-I...?)
+- Mirrors how developers learn (blogs for concepts, docs for APIs)
+
+**Why explicit navigation?**
+- Prevents accidental publication of design docs/internal notes
+- Makes information architecture explicit and intentional
+- Easier to add new content without worrying about unwanted includes
+
+**Why these plugins?**
+- Blog posts include evaluator output screenshots → images need zoom
+- Future improvements can reuse examples (DRY via include-markdown)
+- Developers need fast topic discovery (search)
+
+#### Impact
+- Blog posts and documentation now publication-ready
+- GitHub Pages site available at `https://elbruno.github.io/netai-nextwin/`
+- Developers can discover ElBruno.AI.Evaluation through searchable documentation
+- Content version-controlled alongside code
+
+---
+
+### Decision: GitHub Actions CI/CD Workflow for MkDocs Deployment
+
+**Author:** Byers (Senior .NET Developer)  
+**Date:** 2026-02-24  
+**Status:** ✅ Implemented
+
+#### Scope
+Create GitHub Actions workflow for automated MkDocs build and deploy to GitHub Pages.
+
+#### Key Design Choices
+
+1. **Trigger Strategy**
+   - Push to main branch
+   - Path filters: `docs/**`, `mkdocs.yml`, `requirements.txt`
+   - Conditional build prevents unnecessary runs
+
+2. **Build Environment**
+   - Python 3.11
+   - `pip install -r requirements.txt` (all MkDocs deps)
+   - `mkdocs build` → output to `site/` folder
+
+3. **Deployment Method**
+   - Native GitHub Actions: `actions/upload-pages-artifact`, `actions/deploy-pages`
+   - Automatic HTTPS with GitHub Pages
+   - Custom domain support
+   - Zero infrastructure required
+
+4. **Permissions (Least-Privilege)**
+   - `id-token: write` — GitHub Pages workflow identity
+   - `pages: write` — Deploy to GitHub Pages
+
+#### Deliverables
+- `.github/workflows/deploy-docs.yml` — Complete CI/CD workflow
+
+#### Rationale
+
+**Why native GitHub Actions deployment?**
+- Native integration, no third-party services
+- Automatic HTTPS and custom domain support
+- Zero infrastructure to maintain
+- Seamless with GitHub ecosystem
+
+**Why path filters?**
+- Prevents workflow runs on unrelated changes (src/, tests/, etc.)
+- Saves CI/CD minutes
+- Faster feedback for documentation edits
+
+#### Impact
+- MkDocs site auto-publishes on every push to main
+- No manual deployment steps
+- Developers get instant feedback on doc changes
+- Site always reflects latest main branch content
+
+---
+
+## Cross-Phase Integration Notes
+
+**Documentation Setup (Phase 5):**
+- Builds on Phase 4 (FINAL_REPORT.md, strategic decisions)
+- Frohike + Byers automated docs publishing
+- Coordinator validated build and fixed docs_dir path issues
+- Site now live on every main branch push
+
+**Team Coordination:**
+- Frohike: Content & configuration (mkdocs.yml, index.md)
+- Byers: Infrastructure & automation (deploy-docs.yml)
+- Coordinator: Build verification & troubleshooting
+
+---
+
+**Last Updated:** 2026-02-24T1632Z  
 **Maintained by:** Scribe  
-**Status:** COMPLETE - Phase 4 Delivery Finalized + Implementation Decisions Merged
+**Status:** COMPLETE - Phase 4 Delivery + Phase 5 Documentation Setup Merged

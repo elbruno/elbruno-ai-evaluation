@@ -199,3 +199,19 @@
 
 ### Build status
 - Both samples build cleanly with 0 errors, 0 warnings.
+
+## Task: GitHub Actions Workflow for MkDocs Deployment
+
+### What was done
+- **deploy-docs.yml**: Created `.github/workflows/deploy-docs.yml` for automated MkDocs deployment to GitHub Pages.
+  - Triggers on push to main when blog/, docs/, mkdocs.yml, requirements.txt, or index.md change
+  - Manual trigger via workflow_dispatch
+  - Uses actions/setup-python@v5, actions/cache@v4, actions/checkout@v4
+  - Weekly cache key rotation for mkdocs-material cache
+  - Deploys via `mkdocs gh-deploy --force` to gh-pages branch
+  - Git credentials configured for github-actions[bot]
+
+### Learnings
+- Existing CI workflows (publish.yml, ci.yml) already exist in .github/workflows/
+- mkdocs.yml is at repo root so no --config-file flag needed
+- Cache uses ISO week number for weekly rotation
