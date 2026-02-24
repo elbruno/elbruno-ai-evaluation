@@ -22,13 +22,13 @@ jobs:
       run: dotnet restore ElBruno.AI.Evaluation.slnx
 
     - name: Build
-      run: dotnet build ElBruno.AI.Evaluation.slnx --no-restore
+      run: dotnet build ElBruno.AI.Evaluation.slnx --no-restore -c Release
 
     - name: Test
-      run: dotnet test ElBruno.AI.Evaluation.slnx --no-build --verbosity normal
+      run: dotnet test ElBruno.AI.Evaluation.slnx --no-build -c Release --verbosity normal
 
     - name: Pack
-      run: dotnet pack ElBruno.AI.Evaluation.slnx --no-build -o nupkgs
+      run: dotnet pack ElBruno.AI.Evaluation.slnx --no-build -c Release -o nupkgs
 
     - name: Upload NuGet packages
       uses: actions/upload-artifact@v4
