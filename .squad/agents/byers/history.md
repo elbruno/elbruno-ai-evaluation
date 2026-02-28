@@ -254,3 +254,52 @@ Documented in `.squad/decisions/inbox/byers-performance-audit.md`:
 - [GeneratedRegex] source generation already optimal for regex patterns
 - Evaluators are stateless (safe for parallelization)
 - Current code has no SIMD, pooling, or span usage — low-hanging fruit for optimization
+
+## Task: Path Traversal Guards Implementation (Security/)
+
+### What was done
+Implemented comprehensive path traversal protection across all file I/O operations per security audit findings:
+- **PathValidator.cs**: New security class with 3 validation methods:
+  - `ValidateFilePath()` — Prevents path traversal attacks (rejects ".." segments, absolute paths)
+  - `ValidateFileName()` — Cross-platform filename validation (union of Windows + Unix restrictions)
+  - `ValidateDatabasePath()` — SQLite-specific validation with URI injection protection
+- **FileIntegrityValidator.cs**: Updated existing validator to call PathValidator methods
+- **Files modified** (11 total):
+  - DatasetLoaderStatic.cs — SaveToJsonAsync, SaveToCsvAsync (LoadAsync already had FileIntegrityValidator)
+  - DatasetLoader.cs — SaveAsync (LoadAsync already had FileIntegrityValidator)
+  - SqliteResultStore.cs — CreateAsync (via FileIntegrityValidator.ValidateDatabaseFile)
+  - JsonExporter.cs — ExportAsync
+  - CsvExporter.cs — ExportAsync
+  - BaselineSnapshot.cs — SaveAsync (LoadAsync already had FileIntegrityValidator)
+  - AITestRunner.cs — WithDataset
+
+### Security Measures
+- **Path traversal prevention**: Rejects paths containing ".." segments
+- **Absolute path restriction**: By default, only relative paths allowed
+- **SQLite URI injection protection**: Rejects ";" and "?" characters in database paths
+- **Cross-platform validation**: Uses ['<', '>', ':', '"', '|', '?', '*', '\\', '/', '\0'] char set (not Path.GetInvalidFileNameChars())
+- **Length validation**: Max 260 chars for paths, max 255 for filenames
+
+### Testing
+Created manual test console app verifying:
+- ✅ Path traversal with "../../../etc/passwd" — Rejected
+- ✅ Absolute path "C:\Windows\..." — Rejected
+- ✅ Normal relative path "datasets/test.json" — Accepted
+- ✅ SQLite URI injection "test.db;mode=memory" — Rejected
+- ✅ SQLite query params "test.db?mode=memory" — Rejected
+
+### Build status
+- Full solution builds successfully with 0 errors, 3 pre-existing xUnit warnings
+- No breaking changes to public API
+
+### Learnings
+- PathValidator must be `public` to be accessible from ElBruno.AI.Evaluation.Reporting and ElBruno.AI.Evaluation.Xunit projects
+- FileIntegrityValidator already existed (for size/format checks) — added path validation as first step
+- Path.IsPathRooted() correctly detects absolute paths on both Windows and Unix
+- Validation is additive — only rejects previously exploitable paths, all valid paths still work
+
+### Related Work
+- Security Audit: `.squad/decisions/inbox/skinner-security-audit.md`
+- Implementation Report: `.squad/decisions/inbox/byers-path-traversal-fix.md`
+- Commit: `d83f244 - Security: Add path traversal guards to file operations`
+
