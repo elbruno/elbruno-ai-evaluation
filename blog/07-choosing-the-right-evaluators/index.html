@@ -1,0 +1,1583 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Production-grade AI testing and evaluation toolkit for .NET applications — xUnit for AI.">
+      
+      
+        <meta name="author" content="Bruno Capuano">
+      
+      
+      
+        <link rel="prev" href="../06-synthetic-data-generation/">
+      
+      
+        <link rel="next" href="../../quickstart/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>Choosing the Right Evaluators - ElBruno.AI.Evaluation — AI Testing for .NET</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#a-guide-to-choosing-the-right-evaluators-for-your-ai-app" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ElBruno.AI.Evaluation — AI Testing for .NET" class="md-header__button md-logo" aria-label="ElBruno.AI.Evaluation — AI Testing for .NET" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ElBruno.AI.Evaluation — AI Testing for .NET
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Choosing the Right Evaluators
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 2c-1.82 0-3.53.5-5 1.35C8 5.08 10 8.3 10 12s-2 6.92-5 8.65C6.47 21.5 8.18 22 10 22a10 10 0 0 0 10-10A10 10 0 0 0 10 2"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/elbruno/netai-nextwin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    elbruno/netai-nextwin
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ElBruno.AI.Evaluation — AI Testing for .NET" class="md-nav__button md-logo" aria-label="ElBruno.AI.Evaluation — AI Testing for .NET" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    ElBruno.AI.Evaluation — AI Testing for .NET
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/elbruno/netai-nextwin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    elbruno/netai-nextwin
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-introducing-elbruno-ai-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing ElBruno.AI.Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-golden-datasets-for-ai-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Datasets for AI Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-ai-evaluators-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Evaluators Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-ai-testing-with-xunit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Testing with xUnit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-from-demo-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Demo to Production
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-synthetic-data-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing the Right Evaluators
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing the Right Evaluators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-1-building-a-chatbot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 1: Building a Chatbot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-2-building-a-rag-retrieval-augmented-generation-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 2: Building a RAG (Retrieval-Augmented Generation) System
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-3-building-an-agent-tool-calling-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 3: Building an Agent (Tool-Calling System)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-4-need-fast-cicd-regression-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 4: Need Fast CI/CD Regression Gates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-5-need-comprehensive-quality-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 5: Need Comprehensive Quality Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-6-in-air-gapped-or-regulated-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 6: In Air-Gapped or Regulated Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluator-selection-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluator Selection Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-tree-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Tree: Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-example-thoughtful-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Example: Thoughtful Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-the-author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        👨‍💻 About the Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Library Docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../golden-datasets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Datasets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluation-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../comparison-with-microsoft-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison with Microsoft
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../publishing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-1-building-a-chatbot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 1: Building a Chatbot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-2-building-a-rag-retrieval-augmented-generation-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 2: Building a RAG (Retrieval-Augmented Generation) System
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-3-building-an-agent-tool-calling-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 3: Building an Agent (Tool-Calling System)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-4-need-fast-cicd-regression-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 4: Need Fast CI/CD Regression Gates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-5-need-comprehensive-quality-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 5: Need Comprehensive Quality Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-6-in-air-gapped-or-regulated-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 6: In Air-Gapped or Regulated Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluator-selection-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluator Selection Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-tree-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Tree: Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-example-thoughtful-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Example: Thoughtful Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-the-author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        👨‍💻 About the Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="a-guide-to-choosing-the-right-evaluators-for-your-ai-app">A Guide to Choosing the Right Evaluators for Your AI App<a class="headerlink" href="#a-guide-to-choosing-the-right-evaluators-for-your-ai-app" title="Permanent link">¶</a></h1>
+<p>You've seen the landscape: ElBruno's five deterministic evaluators, Microsoft's LLM-powered suite, agent-focused metrics, safety analysis. The question now: <strong>Which evaluators should I actually use?</strong></p>
+<p>This post organizes evaluators by <strong>scenario, not toolkit</strong>. Answer the question "What am I building?" and get a recommended evaluator set.</p>
+<h2 id="scenario-1-building-a-chatbot">Scenario 1: Building a Chatbot<a class="headerlink" href="#scenario-1-building-a-chatbot" title="Permanent link">¶</a></h2>
+<p><strong>Your Goal:</strong> Conversational AI that answers user questions, stays on-topic, doesn't hallucinate or expose PII.</p>
+<p><strong>Recommended Evaluators:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">evaluators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IEvaluator</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span><span class="w">        </span><span class="c1">// Answers the question (ElBruno)</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">CoherenceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span><span class="w">        </span><span class="c1">// Output makes sense (ElBruno)</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">(</span><span class="mf">0.95</span><span class="p">),</span><span class="w">          </span><span class="c1">// No PII or harmful content (ElBruno)</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">HallucinationEvaluator</span><span class="p">(</span><span class="mf">0.75</span><span class="p">),</span><span class="w">   </span><span class="c1">// No made-up facts (ElBruno)</span>
+<span class="p">};</span>
+
+<span class="c1">// If you need nuanced judgment (optional):</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">deepEval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MicrosoftRelevanceEvaluator</span><span class="p">();</span><span class="w">  </span><span class="c1">// Does it really address the question?</span>
+</code></pre></div>
+<p><strong>Thresholds:</strong></p>
+<ul>
+<li>Relevance: 0.7+ (must address the question)</li>
+<li>Coherence: 0.7+ (must make sense)</li>
+<li>Safety: 0.95+ (safety is non-negotiable)</li>
+<li>Hallucination: 0.75+ (don't make up facts)</li>
+</ul>
+<p><strong>CI/CD:</strong> Use ElBruno evaluators for fast gates. Optionally use Microsoft for periodic deep analysis.</p>
+<hr>
+<h2 id="scenario-2-building-a-rag-retrieval-augmented-generation-system">Scenario 2: Building a RAG (Retrieval-Augmented Generation) System<a class="headerlink" href="#scenario-2-building-a-rag-retrieval-augmented-generation-system" title="Permanent link">¶</a></h2>
+<p><strong>Your Goal:</strong> Answer questions using retrieved documents. Responses must be grounded in source material, factually accurate, and cite sources correctly.</p>
+<p><strong>Recommended Evaluators:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">evaluators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IEvaluator</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">HallucinationEvaluator</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span><span class="w">    </span><span class="c1">// Must be grounded in retrieved context (ElBruno)</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">FactualityEvaluator</span><span class="p">(</span><span class="mf">0.9</span><span class="p">),</span><span class="w">       </span><span class="c1">// Claims must match source documents (ElBruno)</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span><span class="w">        </span><span class="c1">// Answer must address the query (ElBruno)</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">(</span><span class="mf">0.95</span><span class="p">),</span><span class="w">          </span><span class="c1">// No PII from documents (ElBruno)</span>
+
+<span class="w">    </span><span class="c1">// Optional: Deep analysis</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftGroundednessEvaluator</span><span class="p">(),</span><span class="w"> </span><span class="c1">// LLM judges if response is grounded</span>
+<span class="p">};</span>
+
+<span class="c1">// Golden dataset must include context</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">dataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GoldenDataset</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Examples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">GoldenExample</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"What is the company's return policy?"</span><span class="p">,</span>
+<span class="w">            </span><span class="n">ExpectedOutput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"30-day returns, no questions asked."</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"[From company docs] Our return policy: 30 days from purchase, full refund, no questions asked."</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">"rag"</span><span class="p">,</span><span class="w"> </span><span class="s">"policy"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<p><strong>Thresholds:</strong></p>
+<ul>
+<li>Hallucination: 0.80+ (very strict—can't make things up)</li>
+<li>Factuality: 0.90+ (claims must match documents)</li>
+<li>Relevance: 0.80+ (must answer the question)</li>
+<li>Safety: 0.95+ (don't expose sensitive info)</li>
+</ul>
+<p><strong>CI/CD:</strong> All ElBruno evaluators are offline—perfect for regression gates. Use Microsoft's groundedness evaluator for release reviews.</p>
+<hr>
+<h2 id="scenario-3-building-an-agent-tool-calling-system">Scenario 3: Building an Agent (Tool-Calling System)<a class="headerlink" href="#scenario-3-building-an-agent-tool-calling-system" title="Permanent link">¶</a></h2>
+<p><strong>Your Goal:</strong> An agent that makes decisions, calls tools, orchestrates workflows. Must interpret requests correctly, use the right tools, and report accurate results.</p>
+<p><strong>Recommended Evaluators:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// ElBruno: Quick offline checks</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">quickChecks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IEvaluator</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">CoherenceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span><span class="w">        </span><span class="c1">// Plan makes sense</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">(</span><span class="mf">0.95</span><span class="p">),</span><span class="w">          </span><span class="c1">// No malicious tool calls</span>
+<span class="p">};</span>
+
+<span class="c1">// Microsoft: Agent-specific evaluation (REQUIRED for agents)</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">agentEvals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">IntentResolutionEvaluator</span><span class="p">(),</span><span class="w">    </span><span class="c1">// Did agent understand the user's intent?</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">TaskAdherenceEvaluator</span><span class="p">(),</span><span class="w">       </span><span class="c1">// Did agent complete the requested task?</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">ToolCallAccuracyEvaluator</span><span class="p">(),</span><span class="w">    </span><span class="c1">// Were tools called with correct arguments?</span>
+<span class="p">};</span>
+
+<span class="c1">// Combined</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">pipeline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EvaluationPipelineBuilder</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithChatClient</span><span class="p">(</span><span class="n">chatClient</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">quickChecks</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">pipeline</span><span class="p">.</span><span class="n">AddEvaluator</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+<span class="w">    </span><span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">agentEvals</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">pipeline</span><span class="p">.</span><span class="n">AddEvaluator</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+</code></pre></div>
+<p><strong>Key Differences:</strong></p>
+<ul>
+<li><strong>IntentResolution:</strong> Did the agent understand what the user <em>actually</em> wanted?</li>
+<li><strong>TaskAdherence:</strong> Did it complete the full task, not just part of it?</li>
+<li><strong>ToolCallAccuracy:</strong> Were tool arguments correct? Did it use the right tools?</li>
+</ul>
+<p><strong>CI/CD:</strong> Use ElBruno for fast safety checks. Use Microsoft's agent evaluators for release gates (LLM-powered, sophisticated judgment).</p>
+<hr>
+<h2 id="scenario-4-need-fast-cicd-regression-gates">Scenario 4: Need Fast CI/CD Regression Gates<a class="headerlink" href="#scenario-4-need-fast-cicd-regression-gates" title="Permanent link">¶</a></h2>
+<p><strong>Your Goal:</strong> Catch quality drops before they reach production. Speed matters. Cost matters. External calls not allowed.</p>
+<p><strong>Recommended Evaluators:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">cicdEvaluators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IEvaluator</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span><span class="w">        </span><span class="c1">// Fast, offline</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">CoherenceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span><span class="w">        </span><span class="c1">// Fast, offline</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">(</span><span class="mf">0.95</span><span class="p">),</span><span class="w">          </span><span class="c1">// Fast, offline</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">HallucinationEvaluator</span><span class="p">(</span><span class="mf">0.75</span><span class="p">),</span><span class="w">   </span><span class="c1">// Fast, offline</span>
+<span class="p">};</span>
+
+<span class="c1">// All ElBruno—no external calls, no costs</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">pipeline</span><span class="p">.</span><span class="n">RunAsync</span><span class="p">();</span><span class="w">  </span><span class="c1">// &lt; 1 second for 100 examples</span>
+
+<span class="c1">// Compare against baseline</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">regression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">pipeline</span><span class="p">.</span><span class="n">RunWithBaselineAsync</span><span class="p">();</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">regression</span><span class="p">.</span><span class="n">HasRegressions</span><span class="p">)</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Exception</span><span class="p">(</span><span class="s">"Quality regression detected—blocking deployment"</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Why ElBruno?</strong></p>
+<ul>
+<li>No LLM calls = no latency</li>
+<li>No API keys needed</li>
+<li>Reproducible (same input = same output)</li>
+<li>Perfect for CI/CD gates</li>
+<li>~$0 cost for 1000s of evaluations</li>
+</ul>
+<hr>
+<h2 id="scenario-5-need-comprehensive-quality-review">Scenario 5: Need Comprehensive Quality Review<a class="headerlink" href="#scenario-5-need-comprehensive-quality-review" title="Permanent link">¶</a></h2>
+<p><strong>Your Goal:</strong> Quarterly or pre-release review. Need nuanced judgment. Budget available for LLM calls. Want professional reports.</p>
+<p><strong>Recommended Evaluators:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Phase 1: Quick ElBruno gate</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">quickPass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* relevance, coherence, safety */</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">quickResults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">quickPipeline</span><span class="p">.</span><span class="n">RunAsync</span><span class="p">();</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">quickResults</span><span class="p">.</span><span class="n">AggregateScore</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.7</span><span class="p">)</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Exception</span><span class="p">(</span><span class="s">"Failed quick checks"</span><span class="p">);</span>
+
+<span class="c1">// Phase 2: Deep Microsoft evaluation</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">deepEvals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftRelevanceEvaluator</span><span class="p">(),</span><span class="w">       </span><span class="c1">// Nuanced judgment</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftCompletenessEvaluator</span><span class="p">(),</span><span class="w">    </span><span class="c1">// Does it answer fully?</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftFluencyEvaluator</span><span class="p">(),</span><span class="w">         </span><span class="c1">// Well-written?</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftGroundednessEvaluator</span><span class="p">(),</span><span class="w">    </span><span class="c1">// Factually grounded?</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftCoherenceEvaluator</span><span class="p">(),</span><span class="w">       </span><span class="c1">// Logically consistent?</span>
+<span class="p">};</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">deepResults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">microsoftPipeline</span><span class="p">.</span><span class="n">RunAsync</span><span class="p">();</span>
+
+<span class="c1">// Phase 3: Generate professional report</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">report</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">htmlReporter</span><span class="p">.</span><span class="n">GenerateReportAsync</span><span class="p">(</span><span class="n">deepResults</span><span class="p">);</span>
+<span class="k">await</span><span class="w"> </span><span class="n">File</span><span class="p">.</span><span class="n">WriteAllTextAsync</span><span class="p">(</span><span class="s">"quality-review-q1-2025.html"</span><span class="p">,</span><span class="w"> </span><span class="n">report</span><span class="p">);</span>
+
+<span class="c1">// Phase 4: Archive in Azure</span>
+<span class="k">await</span><span class="w"> </span><span class="n">azureClient</span><span class="p">.</span><span class="n">UploadReportAsync</span><span class="p">(</span><span class="n">report</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Microsoft's Advantages:</strong></p>
+<ul>
+<li>Sophisticated judgment (not just heuristics)</li>
+<li>LLM-powered (understands nuance, context)</li>
+<li>HTML reports for stakeholders</li>
+<li>Azure integration for enterprise scale</li>
+<li>Professional, auditable results</li>
+</ul>
+<hr>
+<h2 id="scenario-6-in-air-gapped-or-regulated-environment">Scenario 6: In Air-Gapped or Regulated Environment<a class="headerlink" href="#scenario-6-in-air-gapped-or-regulated-environment" title="Permanent link">¶</a></h2>
+<p><strong>Your Goal:</strong> No external API calls allowed. No internet. Compliance required.</p>
+<p><strong>Recommended Evaluators:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// ONLY ElBruno—100% offline</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">evaluators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IEvaluator</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span><span class="w">        </span><span class="c1">// No calls</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">FactualityEvaluator</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span><span class="w">       </span><span class="c1">// No calls</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">CoherenceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span><span class="w">        </span><span class="c1">// No calls</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">HallucinationEvaluator</span><span class="p">(</span><span class="mf">0.75</span><span class="p">),</span><span class="w">   </span><span class="c1">// No calls</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">(</span><span class="mf">0.95</span><span class="p">),</span><span class="w">          </span><span class="c1">// No calls (local blocklist)</span>
+<span class="p">};</span>
+
+<span class="c1">// Everything runs locally</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">pipeline</span><span class="p">.</span><span class="n">RunAsync</span><span class="p">();</span>
+
+<span class="c1">// Results stored in SQLite (local, portable)</span>
+<span class="k">await</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="n">SaveAsync</span><span class="p">(</span><span class="n">results</span><span class="p">);</span>
+
+<span class="c1">// Can export to CSV for compliance audit</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">csv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">csvExporter</span><span class="p">.</span><span class="n">ExportAsync</span><span class="p">(</span><span class="n">results</span><span class="p">);</span>
+<span class="k">await</span><span class="w"> </span><span class="n">File</span><span class="p">.</span><span class="n">WriteAllTextAsync</span><span class="p">(</span><span class="s">"evaluation-audit.csv"</span><span class="p">,</span><span class="w"> </span><span class="n">csv</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Why ElBruno?</strong></p>
+<ul>
+<li>Zero external dependencies</li>
+<li>No network calls</li>
+<li>SQLite is self-contained</li>
+<li>CSV/JSON export for compliance</li>
+<li>Fully portable and auditable</li>
+</ul>
+<hr>
+<h2 id="evaluator-selection-matrix">Evaluator Selection Matrix<a class="headerlink" href="#evaluator-selection-matrix" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Relevance</th>
+<th>Factuality</th>
+<th>Coherence</th>
+<th>Hallucination</th>
+<th>Safety</th>
+<th>Microsoft (Opt)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chatbot</td>
+<td>✅ (0.7)</td>
+<td>✅ (0.8)</td>
+<td>✅ (0.7)</td>
+<td>✅ (0.75)</td>
+<td>✅ (0.95)</td>
+<td>⚠️ (deep only)</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>✅ (0.8)</td>
+<td>✅ (0.9)</td>
+<td>✅ (0.7)</td>
+<td>✅ (0.8)</td>
+<td>✅ (0.95)</td>
+<td>✅ Groundedness</td>
+</tr>
+<tr>
+<td>Agent</td>
+<td>✅ (fast)</td>
+<td>—</td>
+<td>✅ (0.7)</td>
+<td>—</td>
+<td>✅ (0.95)</td>
+<td>✅ IntentRes, TaskAdh, ToolCall</td>
+</tr>
+<tr>
+<td>CI/CD Gate</td>
+<td>✅ (0.7)</td>
+<td>⚠️ (if needed)</td>
+<td>✅ (0.7)</td>
+<td>⚠️ (if needed)</td>
+<td>✅ (0.95)</td>
+<td>❌ (too slow)</td>
+</tr>
+<tr>
+<td>Quality Review</td>
+<td>✅ (quick)</td>
+<td>✅ (quick)</td>
+<td>✅ (quick)</td>
+<td>✅ (quick)</td>
+<td>✅ (quick)</td>
+<td>✅ (REQUIRED)</td>
+</tr>
+<tr>
+<td>Air-Gapped</td>
+<td>✅ (only option)</td>
+<td>✅ (only option)</td>
+<td>✅ (only option)</td>
+<td>✅ (only option)</td>
+<td>✅ (only option)</td>
+<td>❌ (no internet)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="decision-tree-quick-reference">Decision Tree: Quick Reference<a class="headerlink" href="#decision-tree-quick-reference" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code>What am I building?
+├─ Chatbot?
+│  └─ Use: Relevance, Coherence, Safety (ElBruno)
+│     Optional: Microsoft Relevance for deep review
+│
+├─ RAG System?
+│  └─ Use: Hallucination, Factuality, Relevance, Safety (ElBruno)
+│     Optional: Microsoft Groundedness
+│
+├─ Agent?
+│  └─ Use: Coherence, Safety (ElBruno)
+│     MUST USE: IntentResolution, TaskAdherence, ToolCallAccuracy (Microsoft)
+│
+├─ Need Fast CI/CD Gate?
+│  └─ Use: ALL ElBruno (Relevance, Coherence, Safety, Hallucination)
+│     Never use Microsoft (too slow for gates)
+│
+├─ Need Comprehensive Review?
+│  └─ Phase 1: All ElBruno (fast gate)
+│     Phase 2: All Microsoft (deep analysis)
+│     Export: HTML reports + Azure
+│
+└─ Air-Gapped / Regulated?
+   └─ Use: ONLY ElBruno (Relevance, Factuality, Coherence, Hallucination, Safety)
+      Never use Microsoft (no internet)
+</code></pre></div>
+<h2 id="implementation-example-thoughtful-selection">Implementation Example: Thoughtful Selection<a class="headerlink" href="#implementation-example-thoughtful-selection" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">EvaluatorFactory</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IEvaluator</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetEvaluators</span><span class="p">(</span><span class="n">ScenarioType</span><span class="w"> </span><span class="n">scenario</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">scenario</span><span class="w"> </span><span class="k">switch</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">ScenarioType</span><span class="p">.</span><span class="n">Chatbot</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="nf">CoherenceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">(</span><span class="mf">0.95</span><span class="p">),</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="nf">HallucinationEvaluator</span><span class="p">(</span><span class="mf">0.75</span><span class="p">),</span>
+<span class="w">            </span><span class="p">},</span>
+
+<span class="w">            </span><span class="n">ScenarioType</span><span class="p">.</span><span class="n">RAG</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="nf">HallucinationEvaluator</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="nf">FactualityEvaluator</span><span class="p">(</span><span class="mf">0.9</span><span class="p">),</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">(</span><span class="mf">0.95</span><span class="p">),</span>
+<span class="w">            </span><span class="p">},</span>
+
+<span class="w">            </span><span class="n">ScenarioType</span><span class="p">.</span><span class="n">FastGate</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="nf">CoherenceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">(</span><span class="mf">0.95</span><span class="p">),</span>
+<span class="w">            </span><span class="p">},</span>
+
+<span class="w">            </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArgumentException</span><span class="p">(</span><span class="s">$"Unknown scenario: {scenario}"</span><span class="p">)</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Usage</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">evaluators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EvaluatorFactory</span><span class="p">.</span><span class="n">GetEvaluators</span><span class="p">(</span><span class="n">ScenarioType</span><span class="p">.</span><span class="n">Chatbot</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h2 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">¶</a></h2>
+<ol>
+<li><strong>Match evaluators to your scenario</strong>, not to the toolkit</li>
+<li><strong>ElBruno for gates and baselines</strong> (fast, offline, deterministic)</li>
+<li><strong>Microsoft for deep analysis</strong> (LLM-powered, nuanced, reporting)</li>
+<li><strong>Combine both for production</strong> (quick checks + second opinion)</li>
+<li><strong>Always include Safety</strong> evaluators for customer-facing systems</li>
+<li><strong>Version your evaluator configs</strong> like you version code</li>
+</ol>
+<hr>
+<p><em>You now have the full developer journey: from understanding both toolkits to building production pipelines to choosing evaluators wisely. Go build something remarkable with .NET AI.</em></p>
+<hr>
+<h2 id="about-the-author">👨‍💻 About the Author<a class="headerlink" href="#about-the-author" title="Permanent link">¶</a></h2>
+<p><strong>Bruno Capuano</strong> is a Microsoft MVP and AI enthusiast who builds practical tools for .NET developers. This is Part 7 of the AI evaluation series.</p>
+<p><strong>🌟 Found this helpful?</strong> Let's connect:</p>
+<ul>
+<li>📘 <a href="https://elbruno.com">Read more on my blog</a> — Deep technical articles on AI &amp; .NET</li>
+<li>🎥 <a href="https://www.youtube.com/elbruno">Watch video tutorials on YouTube</a> — Demos and live coding</li>
+<li>💼 <a href="https://www.linkedin.com/in/elbruno/">Connect on LinkedIn</a> — Professional updates</li>
+<li>🐦 <a href="https://www.x.com/elbruno/">Follow on Twitter/X</a> — Quick tips and announcements</li>
+<li>🎙️ <a href="https://notienenombre.com">No Tiene Nombre Podcast</a> — Tech talks in Spanish</li>
+<li>💻 <a href="https://github.com/elbruno/">Explore more projects on GitHub</a> — Open-source AI tools</li>
+</ul>
+<p>⭐ <em>If this series is helping you build better AI applications, give the <a href="https://github.com/elbruno/elbruno-ai-evaluation">repo</a> a star and share it with your team!</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../06-synthetic-data-generation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Synthetic Data Generation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Synthetic Data Generation
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../quickstart/" class="md-footer__link md-footer__link--next" aria-label="Next: Quickstart">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Quickstart
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.footer", "content.code.copy", "navigation.tabs.sticky", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

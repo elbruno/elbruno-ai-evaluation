@@ -1,0 +1,3045 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Production-grade AI testing and evaluation toolkit for .NET applications — xUnit for AI.">
+      
+      
+        <meta name="author" content="Bruno Capuano">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>Design: ElBruno.AI.Evaluation.SyntheticData - ElBruno.AI.Evaluation — AI Testing for .NET</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-elbrunoaievaluationsyntheticdata" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ElBruno.AI.Evaluation — AI Testing for .NET" class="md-header__button md-logo" aria-label="ElBruno.AI.Evaluation — AI Testing for .NET" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ElBruno.AI.Evaluation — AI Testing for .NET
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design: ElBruno.AI.Evaluation.SyntheticData
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 2c-1.82 0-3.53.5-5 1.35C8 5.08 10 8.3 10 12s-2 6.92-5 8.65C6.47 21.5 8.18 22 10 22a10 10 0 0 0 10-10A10 10 0 0 0 10 2"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/elbruno/netai-nextwin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    elbruno/netai-nextwin
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ElBruno.AI.Evaluation — AI Testing for .NET" class="md-nav__button md-logo" aria-label="ElBruno.AI.Evaluation — AI Testing for .NET" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    ElBruno.AI.Evaluation — AI Testing for .NET
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/elbruno/netai-nextwin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    elbruno/netai-nextwin
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/01-introducing-elbruno-ai-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing ElBruno.AI.Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/02-golden-datasets-for-ai-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Datasets for AI Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/03-ai-evaluators-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Evaluators Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/04-ai-testing-with-xunit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Testing with xUnit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/05-from-demo-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Demo to Production
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/06-synthetic-data-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/07-choosing-the-right-evaluators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing the Right Evaluators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Library Docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../golden-datasets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Datasets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../evaluation-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../comparison-with-microsoft-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison with Microsoft
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../publishing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-package-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Package Metadata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-public-api-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Public API Surface
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Public API Surface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-core-builder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Core Builder
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Core Builder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#syntheticdatasetbuilder-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SyntheticDatasetBuilder (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-generator-interfaces-implementations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Generator Interfaces &amp; Implementations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 Generator Interfaces &amp; Implementations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isyntheticdatagenerator-public-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ISyntheticDataGenerator (Public Interface)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deterministicgenerator-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DeterministicGenerator (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llmgenerator-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LlmGenerator (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compositegenerator-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CompositeGenerator (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-template-interfaces-implementations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Template Interfaces &amp; Implementations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Template Interfaces &amp; Implementations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#idatatemplate-public-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDataTemplate (Public Interface)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qatemplate-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QaTemplate (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ragtemplate-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RagTemplate (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adversarialtemplate-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AdversarialTemplate (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domaintemplate-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DomainTemplate (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-strategy-configuration-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Strategy Configuration Classes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.4 Strategy Configuration Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#templatestrategy-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TemplateStrategy (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llmstrategy-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LlmStrategy (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generationtemplate-public-enum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GenerationTemplate (Public Enum)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compositegeneratorconfig-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CompositeGeneratorConfig (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-extension-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Extension Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.5 Extension Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#syntheticdatasetextensions-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SyntheticDatasetExtensions (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validationerror-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ValidationError (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validationoptions-public-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ValidationOptions (Public Class)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-scenario-examples-with-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Scenario Examples with Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Scenario Examples with Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-scenario-generate-simple-qa-pairs-deterministic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Scenario: Generate Simple Q&amp;A Pairs (Deterministic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-scenario-generate-rag-examples-with-context-deterministic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Scenario: Generate RAG Examples with Context (Deterministic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-scenario-generate-llm-powered-adversarial-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Scenario: Generate LLM-Powered Adversarial Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-scenario-hybrid-generation-70-deterministic-30-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Scenario: Hybrid Generation (70% Deterministic + 30% LLM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-scenario-domain-specific-generation-healthcare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Scenario: Domain-Specific Generation (Healthcare)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-scenario-augment-existing-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Scenario: Augment Existing Dataset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-scenario-validate-and-deduplicate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Scenario: Validate and Deduplicate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-file-by-file-implementation-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. File-by-File Implementation Breakdown
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. File-by-File Implementation Breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-builder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Builder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Templates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensions-utilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensions &amp; Utilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#project-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project File
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-integration-points-with-existing-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Integration Points with Existing Packages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Integration Points with Existing Packages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#with-elbrunoaievaluation-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With ElBruno.AI.Evaluation (Core)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-elbrunoaievaluationxunit-testing-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With ElBruno.AI.Evaluation.Xunit (Testing Integration)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-elbrunoaievaluationreporting-persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With ElBruno.AI.Evaluation.Reporting (Persistence)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-dependencies-external-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Dependencies &amp; External Libraries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-error-handling-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Error Handling &amp; Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Error Handling &amp; Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-exception-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Exception Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-testing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Testing Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Testing Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unit-tests-to-be-in-tests-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unit Tests (to be in tests/ folder)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-documentation-samples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Documentation &amp; Samples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Documentation &amp; Samples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#package-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample Applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-version-release-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Version &amp; Release Planning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-implementation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Implementation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-design-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Design Rationale
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. Design Rationale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-fluent-builder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Fluent Builder?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-isyntheticdatagenerator-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why ISyntheticDataGenerator Interface?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-idatatemplate-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why IDataTemplate Hierarchy?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-compositegenerator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why CompositeGenerator?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-extension-methods-for-augmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Extension Methods for Augmentation?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-validation-separate-from-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Validation Separate from Generation?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-future-enhancements-v15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Future Enhancements (v1.5+)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#end-of-design-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End of Design Document
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="design-elbrunoaievaluationsyntheticdata">Design: ElBruno.AI.Evaluation.SyntheticData<a class="headerlink" href="#design-elbrunoaievaluationsyntheticdata" title="Permanent link">¶</a></h1>
+<p><strong>Status:</strong> Design Phase<br>
+<strong>Version:</strong> 1.0<br>
+<strong>Author:</strong> Mulder (Research Director)<br>
+<strong>Date:</strong> 2025<br>
+<strong>Target Release:</strong> ElBruno.AI.Evaluation v1.5</p>
+<hr>
+<h2 id="1-executive-summary">1. Executive Summary<a class="headerlink" href="#1-executive-summary" title="Permanent link">¶</a></h2>
+<p><code>ElBruno.AI.Evaluation.SyntheticData</code> is the 4th NuGet package in the ElBruno.AI.Evaluation toolkit. It generates synthetic <code>GoldenDataset</code> and <code>GoldenExample</code> instances for AI evaluation testing, supporting both deterministic (template-based) and AI-powered (IChatClient-based) generation strategies. The package provides a fluent builder API consistent with existing pipeline patterns and handles common evaluation scenarios: Q&amp;A pairs, RAG context+answer, adversarial edge cases, and domain-specific data.</p>
+<hr>
+<h2 id="2-package-metadata">2. Package Metadata<a class="headerlink" href="#2-package-metadata" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Package ID</strong></td>
+<td><code>ElBruno.AI.Evaluation.SyntheticData</code></td>
+</tr>
+<tr>
+<td><strong>Target Framework</strong></td>
+<td><code>.NET 8.0+</code></td>
+</tr>
+<tr>
+<td><strong>Language</strong></td>
+<td>C# latest (with nullable enabled)</td>
+</tr>
+<tr>
+<td><strong>Root Namespace</strong></td>
+<td><code>ElBruno.AI.Evaluation.SyntheticData</code></td>
+</tr>
+<tr>
+<td><strong>Dependencies</strong></td>
+<td><code>ElBruno.AI.Evaluation</code> (latest), <code>Microsoft.Extensions.AI.Abstractions</code> 9.5.0+</td>
+</tr>
+<tr>
+<td><strong>License</strong></td>
+<td>MIT</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="3-project-structure">3. Project Structure<a class="headerlink" href="#3-project-structure" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code>src/ElBruno.AI.Evaluation.SyntheticData/
+├── ElBruno.AI.Evaluation.SyntheticData.csproj
+├── SyntheticDatasetBuilder.cs          # Main fluent builder entry point
+├── Generators/
+│   ├── ISyntheticDataGenerator.cs      # Core interface for all generators
+│   ├── DeterministicGenerator.cs       # Template-based generation
+│   ├── LlmGenerator.cs                 # IChatClient-based generation
+│   └── CompositeGenerator.cs           # Combines multiple generators
+├── Templates/
+│   ├── IDataTemplate.cs                # Interface for template definitions
+│   ├── QaTemplate.cs                   # Q&amp;A pair templates
+│   ├── RagTemplate.cs                  # RAG context+answer templates
+│   ├── AdversarialTemplate.cs          # Edge-case &amp; adversarial templates
+│   └── DomainTemplate.cs               # Domain-specific scenario templates
+├── Strategies/
+│   ├── GenerationStrategy.cs           # Strategy enum/classes
+│   ├── TemplateStrategy.cs             # Template-based settings
+│   └── LlmStrategy.cs                  # LLM-based settings
+├── Extensions/
+│   └── SyntheticDatasetExtensions.cs   # Helper methods for datasets
+└── Utilities/
+    ├── RandomSeedProvider.cs           # Deterministic seed management
+    └── PromptGenerator.cs              # LLM prompt composition
+</code></pre></div>
+<hr>
+<h2 id="4-public-api-surface">4. Public API Surface<a class="headerlink" href="#4-public-api-surface" title="Permanent link">¶</a></h2>
+<h3 id="41-core-builder">4.1 Core Builder<a class="headerlink" href="#41-core-builder" title="Permanent link">¶</a></h3>
+<h4 id="syntheticdatasetbuilder-public-class"><code>SyntheticDatasetBuilder</code> (Public Class)<a class="headerlink" href="#syntheticdatasetbuilder-public-class" title="Permanent link">¶</a></h4>
+<p>Main entry point for fluent dataset generation. Implements fluent builder pattern consistent with <code>EvaluationPipelineBuilder</code>.</p>
+<p><strong>Public Constructor &amp; Methods:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Fluent builder for generating synthetic golden datasets.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">SyntheticDatasetBuilder</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Initialization</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">SyntheticDatasetBuilder</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">datasetName</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Metadata configuration</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Sets the semantic version of the dataset.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="w"> </span><span class="nf">WithVersion</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">version</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Sets the dataset description.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="w"> </span><span class="nf">WithDescription</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">description</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Adds tags to categorize the dataset.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="w"> </span><span class="nf">WithTags</span><span class="p">(</span><span class="k">params</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">tags</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Generator selection &amp; configuration</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Uses deterministic template-based generation.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="w"> </span><span class="nf">UseDeterministicGenerator</span><span class="p">(</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">TemplateStrategy</span><span class="o">&gt;</span><span class="w"> </span><span class="n">configureStrategy</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Uses LLM-powered generation via IChatClient.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="w"> </span><span class="nf">UseLlmGenerator</span><span class="p">(</span>
+<span class="w">        </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">chatClient</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">LlmStrategy</span><span class="o">&gt;</span><span class="w"> </span><span class="n">configureStrategy</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Uses composite generation (deterministic + LLM).&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="w"> </span><span class="nf">UseCompositeGenerator</span><span class="p">(</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">CompositeGeneratorConfig</span><span class="o">&gt;</span><span class="w"> </span><span class="n">configureComposite</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Scenario-specific builders (syntactic sugar)</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Generates Q&amp;A pairs from a template.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="w"> </span><span class="nf">GenerateQaPairs</span><span class="p">(</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">QaTemplate</span><span class="o">&gt;?</span><span class="w"> </span><span class="n">configure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Generates RAG context+answer examples.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="w"> </span><span class="nf">GenerateRagExamples</span><span class="p">(</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">RagTemplate</span><span class="o">&gt;?</span><span class="w"> </span><span class="n">configure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Generates adversarial/edge-case examples.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="w"> </span><span class="nf">GenerateAdversarialExamples</span><span class="p">(</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">AdversarialTemplate</span><span class="o">&gt;?</span><span class="w"> </span><span class="n">configure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Generates domain-specific examples.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="w"> </span><span class="nf">GenerateDomainExamples</span><span class="p">(</span>
+<span class="w">        </span><span class="kt">string</span><span class="w"> </span><span class="n">domain</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">DomainTemplate</span><span class="o">&gt;?</span><span class="w"> </span><span class="n">configure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Output</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Builds and returns the synthetic GoldenDataset.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;exception cref="InvalidOperationException"&gt;Thrown when no generator is configured.&lt;/exception&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">GoldenDataset</span><span class="o">&gt;</span><span class="w"> </span><span class="n">BuildAsync</span><span class="p">(</span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h3 id="42-generator-interfaces-implementations">4.2 Generator Interfaces &amp; Implementations<a class="headerlink" href="#42-generator-interfaces-implementations" title="Permanent link">¶</a></h3>
+<h4 id="isyntheticdatagenerator-public-interface"><code>ISyntheticDataGenerator</code> (Public Interface)<a class="headerlink" href="#isyntheticdatagenerator-public-interface" title="Permanent link">¶</a></h4>
+<p>Core abstraction for all generation strategies.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Generators</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Core interface for synthetic data generation strategies.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">ISyntheticDataGenerator</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Generates synthetic GoldenExample instances.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;param name="count"&gt;Number of examples to generate.&lt;/param&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;param name="ct"&gt;Cancellation token.&lt;/param&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;returns&gt;Collection of generated GoldenExample instances.&lt;/returns&gt;</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="n">GoldenExample</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GenerateAsync</span><span class="p">(</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="deterministicgenerator-public-class"><code>DeterministicGenerator</code> (Public Class)<a class="headerlink" href="#deterministicgenerator-public-class" title="Permanent link">¶</a></h4>
+<p>Template-based generation with deterministic results.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Generators</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Generates synthetic examples deterministically using templates.</span>
+<span class="c1">/// Suitable for reproducible, lightweight test data generation.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">DeterministicGenerator</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ISyntheticDataGenerator</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Creates a new deterministic generator with the specified template.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">DeterministicGenerator</span><span class="p">(</span><span class="n">IDataTemplate</span><span class="w"> </span><span class="n">template</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Creates a new deterministic generator with optional random seed for reproducibility.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">DeterministicGenerator</span><span class="p">(</span><span class="n">IDataTemplate</span><span class="w"> </span><span class="n">template</span><span class="p">,</span><span class="w"> </span><span class="kt">int?</span><span class="w"> </span><span class="n">randomSeed</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;inheritdoc /&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="n">GoldenExample</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GenerateAsync</span><span class="p">(</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="llmgenerator-public-class"><code>LlmGenerator</code> (Public Class)<a class="headerlink" href="#llmgenerator-public-class" title="Permanent link">¶</a></h4>
+<p>IChatClient-powered generation with AI-driven content creation.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Generators</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Generates synthetic examples using an IChatClient.</span>
+<span class="c1">/// Provides AI-powered, high-variance data suitable for adversarial/edge-case testing.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">LlmGenerator</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ISyntheticDataGenerator</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Creates a new LLM-based generator.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">LlmGenerator</span><span class="p">(</span>
+<span class="w">        </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">chatClient</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">string</span><span class="w"> </span><span class="n">systemPrompt</span><span class="p">,</span>
+<span class="w">        </span><span class="n">GenerationTemplate</span><span class="w"> </span><span class="n">generationTemplate</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Sets the temperature for generation (0.0-2.0). Default: 0.7.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">LlmGenerator</span><span class="w"> </span><span class="nf">WithTemperature</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">temperature</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Sets the maximum tokens per response. Default: 500.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">LlmGenerator</span><span class="w"> </span><span class="nf">WithMaxTokens</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">maxTokens</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Sets the number of parallel generation requests. Default: 1.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">LlmGenerator</span><span class="w"> </span><span class="nf">WithParallelism</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">degree</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;inheritdoc /&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="n">GoldenExample</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GenerateAsync</span><span class="p">(</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="compositegenerator-public-class"><code>CompositeGenerator</code> (Public Class)<a class="headerlink" href="#compositegenerator-public-class" title="Permanent link">¶</a></h4>
+<p>Combines multiple generators for hybrid generation strategies.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Generators</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Combines multiple ISyntheticDataGenerator instances for hybrid generation.</span>
+<span class="c1">/// Example: 70% deterministic examples + 30% LLM-powered examples.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">CompositeGenerator</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ISyntheticDataGenerator</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Creates a new composite generator with weighted sub-generators.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">CompositeGenerator</span><span class="p">(</span>
+<span class="w">        </span><span class="k">params</span><span class="w"> </span><span class="p">(</span><span class="n">ISyntheticDataGenerator</span><span class="w"> </span><span class="n">generator</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">weight</span><span class="p">)[]</span><span class="w"> </span><span class="n">generators</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;inheritdoc /&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="n">GoldenExample</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GenerateAsync</span><span class="p">(</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h3 id="43-template-interfaces-implementations">4.3 Template Interfaces &amp; Implementations<a class="headerlink" href="#43-template-interfaces-implementations" title="Permanent link">¶</a></h3>
+<h4 id="idatatemplate-public-interface"><code>IDataTemplate</code> (Public Interface)<a class="headerlink" href="#idatatemplate-public-interface" title="Permanent link">¶</a></h4>
+<p>Base interface for all template types.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Templates</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Base interface for data templates.</span>
+<span class="c1">/// Templates define the structure and content patterns for synthetic data generation.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IDataTemplate</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets the template type/category.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">TemplateType</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets the example tags to apply to generated examples.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Tags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets optional metadata to include in generated examples.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="n">IReadOnlyDictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Metadata</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="qatemplate-public-class"><code>QaTemplate</code> (Public Class)<a class="headerlink" href="#qatemplate-public-class" title="Permanent link">¶</a></h4>
+<p>Generates Q&amp;A pair examples.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Templates</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Template for generating Q&amp;A (question-answer) pairs.</span>
+<span class="c1">/// Suitable for FAQ systems, chatbots, and knowledge-based QA.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">QaTemplate</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IDataTemplate</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Creates a new Q&amp;A template with question prompts and answer patterns.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">QaTemplate</span><span class="p">(</span>
+<span class="w">        </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">questionTemplates</span><span class="p">,</span>
+<span class="w">        </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">answerTemplates</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Sets the category/domain for these Q&amp;A pairs (e.g., "technical-support").</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">QaTemplate</span><span class="w"> </span><span class="nf">WithCategory</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">category</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Adds tags to all generated examples.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">QaTemplate</span><span class="w"> </span><span class="nf">AddTags</span><span class="p">(</span><span class="k">params</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">tags</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Adds metadata key-value pairs to all generated examples.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">QaTemplate</span><span class="w"> </span><span class="nf">WithMetadata</span><span class="p">(</span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">metadata</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or generates template pairs (question → answer mappings).</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">Question</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Answer</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetPairs</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">TemplateType</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">"QA"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Tags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyDictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Metadata</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="ragtemplate-public-class"><code>RagTemplate</code> (Public Class)<a class="headerlink" href="#ragtemplate-public-class" title="Permanent link">¶</a></h4>
+<p>Generates RAG (Retrieval-Augmented Generation) context+answer examples.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Templates</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Template for generating RAG examples (question + context → answer).</span>
+<span class="c1">/// Suitable for evaluating retrieval-augmented generation systems.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">RagTemplate</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IDataTemplate</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Creates a new RAG template with document contexts and question-answer pairs.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">RagTemplate</span><span class="p">(</span>
+<span class="w">        </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">documents</span><span class="p">,</span>
+<span class="w">        </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">Question</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Answer</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">qaExamples</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Sets the number of document chunks per example. Default: 1.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">RagTemplate</span><span class="w"> </span><span class="nf">WithDocumentsPerExample</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Sets tags for the RAG examples.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">RagTemplate</span><span class="w"> </span><span class="nf">AddTags</span><span class="p">(</span><span class="k">params</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">tags</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Adds metadata to all generated examples.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">RagTemplate</span><span class="w"> </span><span class="nf">WithMetadata</span><span class="p">(</span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">metadata</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets the underlying documents (context sources).</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Documents</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets the Q&amp;A pairs that anchor the examples.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">Question</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Answer</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">QaExamples</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">TemplateType</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">"RAG"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Tags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyDictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Metadata</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="adversarialtemplate-public-class"><code>AdversarialTemplate</code> (Public Class)<a class="headerlink" href="#adversarialtemplate-public-class" title="Permanent link">¶</a></h4>
+<p>Generates edge-case and adversarial examples.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Templates</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Template for generating adversarial and edge-case examples.</span>
+<span class="c1">/// Includes nulls, empty strings, contradictions, typos, and malformed inputs.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AdversarialTemplate</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IDataTemplate</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Creates a new adversarial template with base examples to perturb.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">AdversarialTemplate</span><span class="p">(</span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="n">GoldenExample</span><span class="o">&gt;</span><span class="w"> </span><span class="n">baseExamples</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Enables null/empty input injection. Default: true.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">AdversarialTemplate</span><span class="w"> </span><span class="nf">WithNullInjection</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Enables input truncation (partial/incomplete queries). Default: true.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">AdversarialTemplate</span><span class="w"> </span><span class="nf">WithTruncation</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Enables typo/character-level perturbations. Default: true.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">AdversarialTemplate</span><span class="w"> </span><span class="nf">WithTypoInjection</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Enables contradiction injection (conflicting context vs expected output). Default: true.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">AdversarialTemplate</span><span class="w"> </span><span class="nf">WithContradictions</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Enables extremely long input generation. Default: false.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">AdversarialTemplate</span><span class="w"> </span><span class="nf">WithLongInputs</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2000</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Adds tags to all generated adversarial examples.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">AdversarialTemplate</span><span class="w"> </span><span class="nf">AddTags</span><span class="p">(</span><span class="k">params</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">tags</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">TemplateType</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">"Adversarial"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Tags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyDictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Metadata</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="domaintemplate-public-class"><code>DomainTemplate</code> (Public Class)<a class="headerlink" href="#domaintemplate-public-class" title="Permanent link">¶</a></h4>
+<p>Generates domain-specific examples (healthcare, finance, legal, etc.).</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Templates</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Template for domain-specific synthetic data generation.</span>
+<span class="c1">/// Handles domain vocabularies, terminology, and realistic constraints.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">DomainTemplate</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IDataTemplate</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Creates a template for a specific domain (e.g., "healthcare", "finance", "legal").</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">DomainTemplate</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">domain</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Sets domain-specific vocabulary/terms to use in generation.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DomainTemplate</span><span class="w"> </span><span class="nf">WithVocabulary</span><span class="p">(</span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">terms</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Sets domain-specific constraints (e.g., "only discuss public companies" for finance).</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DomainTemplate</span><span class="w"> </span><span class="nf">WithConstraints</span><span class="p">(</span><span class="k">params</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">constraints</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Sets the regulatory/compliance framework (e.g., "HIPAA" for healthcare).</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DomainTemplate</span><span class="w"> </span><span class="nf">WithComplianceFramework</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">framework</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Adds tags reflecting the domain.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DomainTemplate</span><span class="w"> </span><span class="nf">AddTags</span><span class="p">(</span><span class="k">params</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">tags</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Adds domain-specific metadata.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DomainTemplate</span><span class="w"> </span><span class="nf">WithMetadata</span><span class="p">(</span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">metadata</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets the domain name (e.g., "healthcare", "finance").</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Domain</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets the vocabulary terms for this domain.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Vocabulary</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">TemplateType</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">$"Domain:{Domain}"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Tags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IReadOnlyDictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Metadata</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h3 id="44-strategy-configuration-classes">4.4 Strategy Configuration Classes<a class="headerlink" href="#44-strategy-configuration-classes" title="Permanent link">¶</a></h3>
+<h4 id="templatestrategy-public-class"><code>TemplateStrategy</code> (Public Class)<a class="headerlink" href="#templatestrategy-public-class" title="Permanent link">¶</a></h4>
+<p>Configuration for deterministic template-based generation.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Strategies</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Configuration strategy for deterministic template-based generation.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TemplateStrategy</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or sets the data template to use for generation.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IDataTemplate</span><span class="o">?</span><span class="w"> </span><span class="n">Template</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or sets the optional random seed for reproducible generation.</span>
+<span class="w">    </span><span class="c1">/// Null = non-deterministic.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int?</span><span class="w"> </span><span class="n">RandomSeed</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or sets whether to shuffle generated examples. Default: false.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">Shuffle</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or sets how to handle missing/null expected outputs.</span>
+<span class="w">    </span><span class="c1">/// Options: "skip", "use_input_as_expected", "empty_string".</span>
+<span class="w">    </span><span class="c1">/// Default: "empty_string".</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">NullHandling</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"empty_string"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="llmstrategy-public-class"><code>LlmStrategy</code> (Public Class)<a class="headerlink" href="#llmstrategy-public-class" title="Permanent link">¶</a></h4>
+<p>Configuration for LLM-powered generation.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Strategies</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Configuration strategy for LLM-powered synthetic data generation.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">LlmStrategy</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or sets the system prompt that guides the LLM.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">SystemPrompt</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or sets the generation template specifying output structure.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">GenerationTemplate</span><span class="o">?</span><span class="w"> </span><span class="n">GenerationTemplate</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or sets the temperature for generation (0.0-2.0). Default: 0.7.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">Temperature</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.7</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or sets the maximum tokens per response. Default: 500.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MaxTokens</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or sets the degree of parallelism. Default: 1.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ParallelismDegree</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or sets whether to retry failed generations. Default: true.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">RetryOnFailure</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets or sets the maximum retry count. Default: 3.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MaxRetries</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="generationtemplate-public-enum"><code>GenerationTemplate</code> (Public Enum)<a class="headerlink" href="#generationtemplate-public-enum" title="Permanent link">¶</a></h4>
+<p>Predefined output formats for LLM-powered generation.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Strategies</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Predefined output format templates for LLM generation.</span>
+<span class="c1">/// Guides the LLM to produce structured GoldenExample instances.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">GenerationTemplate</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Simple Input → Output pairs.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="n">SimpleQA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Input + Context → Output (RAG-style).&lt;/summary&gt;</span>
+<span class="w">    </span><span class="n">RagContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Input → Output + Explanation.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="n">QAWithExplanation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Multiple variations of Input → Output for the same concept.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="n">QAVariations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Edge cases and adversarial examples.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="n">AdversarialCases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Domain-specific examples with metadata.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="n">DomainSpecific</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="compositegeneratorconfig-public-class"><code>CompositeGeneratorConfig</code> (Public Class)<a class="headerlink" href="#compositegeneratorconfig-public-class" title="Permanent link">¶</a></h4>
+<p>Configuration for composite/hybrid generation.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Strategies</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Configuration for composite generation (hybrid deterministic + LLM).</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">CompositeGeneratorConfig</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Adds a deterministic generator with a weight (proportion of total examples).</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">AddDeterministicGenerator</span><span class="p">(</span>
+<span class="w">        </span><span class="n">IDataTemplate</span><span class="w"> </span><span class="n">template</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">weight</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int?</span><span class="w"> </span><span class="n">randomSeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Adds an LLM generator with a weight.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">AddLlmGenerator</span><span class="p">(</span>
+<span class="w">        </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">chatClient</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">string</span><span class="w"> </span><span class="n">systemPrompt</span><span class="p">,</span>
+<span class="w">        </span><span class="n">GenerationTemplate</span><span class="w"> </span><span class="n">generationTemplate</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">weight</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Gets the configured composite generator.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">CompositeGenerator</span><span class="w"> </span><span class="nf">Build</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h3 id="45-extension-methods">4.5 Extension Methods<a class="headerlink" href="#45-extension-methods" title="Permanent link">¶</a></h3>
+<h4 id="syntheticdatasetextensions-public-class"><code>SyntheticDatasetExtensions</code> (Public Class)<a class="headerlink" href="#syntheticdatasetextensions-public-class" title="Permanent link">¶</a></h4>
+<p>Helper methods for working with synthetic datasets.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Extensions</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Extension methods for GoldenDataset and synthetic data operations.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">SyntheticDatasetExtensions</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Augments an existing dataset with synthetically generated examples.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">GoldenDataset</span><span class="o">&gt;</span><span class="w"> </span><span class="n">AugmentWithSyntheticExamplesAsync</span><span class="p">(</span>
+<span class="w">        </span><span class="k">this</span><span class="w"> </span><span class="n">GoldenDataset</span><span class="w"> </span><span class="n">dataset</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ISyntheticDataGenerator</span><span class="w"> </span><span class="n">generator</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Merges multiple datasets into a single combined dataset.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">GoldenDataset</span><span class="w"> </span><span class="nf">Merge</span><span class="p">(</span>
+<span class="w">        </span><span class="k">this</span><span class="w"> </span><span class="n">GoldenDataset</span><span class="w"> </span><span class="n">dataset</span><span class="p">,</span>
+<span class="w">        </span><span class="k">params</span><span class="w"> </span><span class="n">GoldenDataset</span><span class="p">[]</span><span class="w"> </span><span class="n">otherDatasets</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Deduplicates examples by input hash.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">GoldenDataset</span><span class="w"> </span><span class="nf">Deduplicate</span><span class="p">(</span><span class="k">this</span><span class="w"> </span><span class="n">GoldenDataset</span><span class="w"> </span><span class="n">dataset</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Validates synthetic examples (non-null inputs/outputs, reasonable lengths).</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="n">ValidationError</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ValidateExamples</span><span class="p">(</span>
+<span class="w">        </span><span class="k">this</span><span class="w"> </span><span class="n">GoldenDataset</span><span class="w"> </span><span class="n">dataset</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ValidationOptions</span><span class="o">?</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="validationerror-public-class"><code>ValidationError</code> (Public Class)<a class="headerlink" href="#validationerror-public-class" title="Permanent link">¶</a></h4>
+<p>Represents a validation issue in synthetic data.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Extensions</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Represents a validation error found in synthetic examples.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ValidationError</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Index of the example in the dataset.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ExampleIndex</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">init</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Type of validation error (e.g., "null_input", "empty_output").&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">ErrorType</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">init</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Human-readable error message.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Message</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">init</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Severity level: "error", "warning".&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Severity</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">init</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"error"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="validationoptions-public-class"><code>ValidationOptions</code> (Public Class)<a class="headerlink" href="#validationoptions-public-class" title="Permanent link">¶</a></h4>
+<p>Configuration for validation logic.</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Extensions</span><span class="p">;</span>
+
+<span class="c1">/// &lt;summary&gt;</span>
+<span class="c1">/// Options for validating synthetic datasets.</span>
+<span class="c1">/// &lt;/summary&gt;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ValidationOptions</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Minimum input length (characters). Default: 1.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MinInputLength</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Maximum input length (characters). Default: 5000.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MaxInputLength</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5000</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Minimum expected output length (characters). Default: 0 (allow empty).&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MinOutputLength</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Maximum expected output length (characters). Default: 5000.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">MaxOutputLength</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5000</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Whether to flag examples with null inputs. Default: true.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">FlagNullInputs</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Whether to flag examples with null expected outputs. Default: false (allowed).&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">FlagNullOutputs</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;Whether to check for duplicate inputs. Default: true.&lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">FlagDuplicateInputs</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h2 id="5-scenario-examples-with-code">5. Scenario Examples with Code<a class="headerlink" href="#5-scenario-examples-with-code" title="Permanent link">¶</a></h2>
+<h3 id="51-scenario-generate-simple-qa-pairs-deterministic">5.1 Scenario: Generate Simple Q&amp;A Pairs (Deterministic)<a class="headerlink" href="#51-scenario-generate-simple-qa-pairs-deterministic" title="Permanent link">¶</a></h3>
+<p><strong>Use Case:</strong> Quick, reproducible test data for chatbot evaluation.</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.SyntheticData.Templates</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.Datasets</span><span class="p">;</span>
+
+<span class="c1">// Define Q&amp;A templates</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">qaTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">QaTemplate</span><span class="p">(</span>
+<span class="w">    </span><span class="n">questionTemplates</span><span class="p">:</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="s">"What is {topic}?"</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"How do I {action}?"</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"Explain {concept} to me."</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="n">answerTemplates</span><span class="p">:</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="s">"{topic} is a {definition}."</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"To {action}, follow these steps: {steps}."</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"{concept} refers to {explanation}."</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">).</span><span class="n">WithCategory</span><span class="p">(</span><span class="s">"general-knowledge"</span><span class="p">)</span>
+<span class="w"> </span><span class="p">.</span><span class="n">AddTags</span><span class="p">(</span><span class="s">"faq"</span><span class="p">,</span><span class="w"> </span><span class="s">"general"</span><span class="p">);</span>
+
+<span class="c1">// Build dataset</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">dataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="p">(</span><span class="s">"qa-chatbot-examples"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithVersion</span><span class="p">(</span><span class="s">"1.0.0"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithDescription</span><span class="p">(</span><span class="s">"Generated Q&amp;A pairs for chatbot evaluation"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithTags</span><span class="p">(</span><span class="s">"synthetic"</span><span class="p">,</span><span class="w"> </span><span class="s">"deterministic"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">UseDeterministicGenerator</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">Template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">qaTemplate</span><span class="p">;</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">RandomSeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w"> </span><span class="c1">// Reproducible</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">GenerateQaPairs</span><span class="p">(</span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">BuildAsync</span><span class="p">();</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"✅ Generated {dataset.Examples.Count} Q&amp;A examples"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h3 id="52-scenario-generate-rag-examples-with-context-deterministic">5.2 Scenario: Generate RAG Examples with Context (Deterministic)<a class="headerlink" href="#52-scenario-generate-rag-examples-with-context-deterministic" title="Permanent link">¶</a></h3>
+<p><strong>Use Case:</strong> Evaluate RAG systems with synthetic documents.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">ragTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RagTemplate</span><span class="p">(</span>
+<span class="w">    </span><span class="n">documents</span><span class="p">:</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="s">"Return Policy: Items can be returned within 30 days of purchase."</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"Shipping: Free shipping on orders over $50. Standard delivery takes 5-7 business days."</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"Warranty: All products include a 1-year manufacturer's warranty."</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="n">qaExamples</span><span class="p">:</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="p">(</span><span class="s">"What is the return policy?"</span><span class="p">,</span><span class="w"> </span><span class="s">"Items can be returned within 30 days of purchase."</span><span class="p">),</span>
+<span class="w">        </span><span class="p">(</span><span class="s">"How long does shipping take?"</span><span class="p">,</span><span class="w"> </span><span class="s">"Standard delivery takes 5-7 business days."</span><span class="p">),</span>
+<span class="w">        </span><span class="p">(</span><span class="s">"Is there a warranty?"</span><span class="p">,</span><span class="w"> </span><span class="s">"All products include a 1-year warranty."</span><span class="p">),</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">).</span><span class="n">WithDocumentsPerExample</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w"> </span><span class="p">.</span><span class="n">AddTags</span><span class="p">(</span><span class="s">"rag"</span><span class="p">,</span><span class="w"> </span><span class="s">"ecommerce"</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">dataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="p">(</span><span class="s">"rag-evaluation"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithVersion</span><span class="p">(</span><span class="s">"1.0.0"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithDescription</span><span class="p">(</span><span class="s">"RAG evaluation dataset with mock documents"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">UseDeterministicGenerator</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">Template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ragTemplate</span><span class="p">;</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">RandomSeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">;</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">GenerateRagExamples</span><span class="p">(</span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">BuildAsync</span><span class="p">();</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"✅ Generated {dataset.Examples.Count} RAG examples"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h3 id="53-scenario-generate-llm-powered-adversarial-cases">5.3 Scenario: Generate LLM-Powered Adversarial Cases<a class="headerlink" href="#53-scenario-generate-llm-powered-adversarial-cases" title="Permanent link">¶</a></h3>
+<p><strong>Use Case:</strong> Find edge cases and corner cases via AI generation.</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.Extensions.AI</span><span class="p">;</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">chatClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenAIChatClient</span><span class="p">(...);</span><span class="w"> </span><span class="c1">// Your LLM client</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">dataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="p">(</span><span class="s">"adversarial-edge-cases"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithVersion</span><span class="p">(</span><span class="s">"1.0.0"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithDescription</span><span class="p">(</span><span class="s">"LLM-generated adversarial examples"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithTags</span><span class="p">(</span><span class="s">"synthetic"</span><span class="p">,</span><span class="w"> </span><span class="s">"llm"</span><span class="p">,</span><span class="w"> </span><span class="s">"adversarial"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">UseLlmGenerator</span><span class="p">(</span><span class="n">chatClient</span><span class="p">,</span><span class="w"> </span><span class="n">strategy</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">SystemPrompt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"You are an expert at generating adversarial inputs to break AI systems. "</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                                </span><span class="s">"Create edge cases, typos, contradictions, and malformed inputs."</span><span class="p">;</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">GenerationTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationTemplate</span><span class="p">.</span><span class="n">AdversarialCases</span><span class="p">;</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">Temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.9</span><span class="p">;</span><span class="w"> </span><span class="c1">// Higher creativity</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">MaxTokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">300</span><span class="p">;</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">ParallelismDegree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"> </span><span class="c1">// Generate 5 at a time</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">GenerateAdversarialExamples</span><span class="p">(</span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">BuildAsync</span><span class="p">();</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"✅ Generated {dataset.Examples.Count} adversarial examples via LLM"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h3 id="54-scenario-hybrid-generation-70-deterministic-30-llm">5.4 Scenario: Hybrid Generation (70% Deterministic + 30% LLM)<a class="headerlink" href="#54-scenario-hybrid-generation-70-deterministic-30-llm" title="Permanent link">¶</a></h3>
+<p><strong>Use Case:</strong> Balance cost and diversity; use templates for baseline, LLM for variety.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">QaTemplate</span><span class="p">(...);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">dataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="p">(</span><span class="s">"hybrid-qa-dataset"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithVersion</span><span class="p">(</span><span class="s">"1.0.0"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">UseCompositeGenerator</span><span class="p">(</span><span class="n">config</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 70% deterministic</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="n">AddDeterministicGenerator</span><span class="p">(</span>
+<span class="w">            </span><span class="n">template</span><span class="p">:</span><span class="w"> </span><span class="n">template</span><span class="p">,</span>
+<span class="w">            </span><span class="n">weight</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7</span><span class="p">,</span>
+<span class="w">            </span><span class="n">randomSeed</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 30% LLM-powered</span>
+<span class="w">        </span><span class="n">config</span><span class="p">.</span><span class="n">AddLlmGenerator</span><span class="p">(</span>
+<span class="w">            </span><span class="n">chatClient</span><span class="p">:</span><span class="w"> </span><span class="n">chatClient</span><span class="p">,</span>
+<span class="w">            </span><span class="n">systemPrompt</span><span class="p">:</span><span class="w"> </span><span class="s">"Generate diverse, natural Q&amp;A pairs."</span><span class="p">,</span>
+<span class="w">            </span><span class="n">generationTemplate</span><span class="p">:</span><span class="w"> </span><span class="n">GenerationTemplate</span><span class="p">.</span><span class="n">SimpleQA</span><span class="p">,</span>
+<span class="w">            </span><span class="n">weight</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3</span><span class="p">);</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">GenerateQaPairs</span><span class="p">(</span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">BuildAsync</span><span class="p">();</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"✅ Generated {dataset.Examples.Count} hybrid examples (70% deterministic, 30% LLM)"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h3 id="55-scenario-domain-specific-generation-healthcare">5.5 Scenario: Domain-Specific Generation (Healthcare)<a class="headerlink" href="#55-scenario-domain-specific-generation-healthcare" title="Permanent link">¶</a></h3>
+<p><strong>Use Case:</strong> Generate realistic healthcare examples with compliance constraints.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DomainTemplate</span><span class="p">(</span><span class="s">"healthcare"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithVocabulary</span><span class="p">(</span><span class="k">new</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">"patient"</span><span class="p">,</span><span class="w"> </span><span class="s">"diagnosis"</span><span class="p">,</span><span class="w"> </span><span class="s">"treatment"</span><span class="p">,</span><span class="w"> </span><span class="s">"medication"</span><span class="p">,</span><span class="w"> </span><span class="s">"symptom"</span><span class="p">,</span><span class="w"> </span><span class="s">"HIPAA"</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithConstraints</span><span class="p">(</span><span class="s">"Do not include real patient names or SSNs"</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                     </span><span class="s">"Only discuss public medical information"</span><span class="p">,</span>
+<span class="w">                     </span><span class="s">"Follow HIPAA guidelines"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithComplianceFramework</span><span class="p">(</span><span class="s">"HIPAA"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">AddTags</span><span class="p">(</span><span class="s">"healthcare"</span><span class="p">,</span><span class="w"> </span><span class="s">"domain-specific"</span><span class="p">,</span><span class="w"> </span><span class="s">"hipaa-compliant"</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">dataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SyntheticDatasetBuilder</span><span class="p">(</span><span class="s">"healthcare-qa-examples"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithVersion</span><span class="p">(</span><span class="s">"1.0.0"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithDescription</span><span class="p">(</span><span class="s">"Domain-specific healthcare Q&amp;A"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithTags</span><span class="p">(</span><span class="s">"healthcare"</span><span class="p">,</span><span class="w"> </span><span class="s">"synthetic"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">UseLlmGenerator</span><span class="p">(</span><span class="n">chatClient</span><span class="p">,</span><span class="w"> </span><span class="n">strategy</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">SystemPrompt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">            </span><span class="s">"Generate healthcare Q&amp;A pairs. Only discuss public medical information. "</span><span class="w"> </span><span class="o">+</span>
+<span class="w">            </span><span class="s">"Do not include real patient data. Follow HIPAA principles."</span><span class="p">;</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">GenerationTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationTemplate</span><span class="p">.</span><span class="n">DomainSpecific</span><span class="p">;</span>
+<span class="w">        </span><span class="n">strategy</span><span class="p">.</span><span class="n">Temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="p">;</span><span class="w"> </span><span class="c1">// Lower variance for compliance</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">GenerateDomainExamples</span><span class="p">(</span><span class="s">"healthcare"</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">BuildAsync</span><span class="p">();</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"✅ Generated {dataset.Examples.Count} healthcare examples"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h3 id="56-scenario-augment-existing-dataset">5.6 Scenario: Augment Existing Dataset<a class="headerlink" href="#56-scenario-augment-existing-dataset" title="Permanent link">¶</a></h3>
+<p><strong>Use Case:</strong> Expand a hand-curated golden dataset with synthetic examples.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Start with an existing golden dataset</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">baseDataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GoldenDataset</span><span class="w"> </span>
+<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"customer-support"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Examples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* existing examples */</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Generate synthetic examples</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">syntheticTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">QaTemplate</span><span class="p">(...);</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">augmentedDataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">baseDataset</span><span class="p">.</span><span class="n">AugmentWithSyntheticExamplesAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="n">generator</span><span class="p">:</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeterministicGenerator</span><span class="p">(</span><span class="n">syntheticTemplate</span><span class="p">,</span><span class="w"> </span><span class="n">randomSeed</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">),</span>
+<span class="w">    </span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">);</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"✅ Augmented dataset now has {augmentedDataset.Examples.Count} examples"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h3 id="57-scenario-validate-and-deduplicate">5.7 Scenario: Validate and Deduplicate<a class="headerlink" href="#57-scenario-validate-and-deduplicate" title="Permanent link">¶</a></h3>
+<p><strong>Use Case:</strong> Ensure quality of generated dataset.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Validate examples</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">validationErrors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataset</span><span class="p">.</span><span class="n">ValidateExamples</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ValidationOptions</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">MinInputLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">    </span><span class="n">MaxInputLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span>
+<span class="w">    </span><span class="n">MinOutputLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">    </span><span class="n">FlagDuplicateInputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">validationErrors</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">validationErrors</span><span class="p">)</span>
+<span class="w">        </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"❌ Example {error.ExampleIndex}: {error.Message}"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">"✅ All examples passed validation"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Deduplicate</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">cleanDataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataset</span><span class="p">.</span><span class="n">Deduplicate</span><span class="p">();</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"✅ Removed duplicates: {dataset.Examples.Count} → {cleanDataset.Examples.Count}"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h2 id="6-file-by-file-implementation-breakdown">6. File-by-File Implementation Breakdown<a class="headerlink" href="#6-file-by-file-implementation-breakdown" title="Permanent link">¶</a></h2>
+<h3 id="core-builder">Core Builder<a class="headerlink" href="#core-builder" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>File:</strong> <code>SyntheticDatasetBuilder.cs</code></li>
+<li><strong>Lines:</strong> ~250</li>
+<li><strong>Responsibilities:</strong><ul>
+<li>Fluent builder entry point</li>
+<li>Configuration management</li>
+<li>Coordination of generator selection</li>
+<li>Delegation to scenario-specific methods</li>
+<li>Async <code>BuildAsync()</code> that instantiates generator and calls <code>GenerateAsync()</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="generators">Generators<a class="headerlink" href="#generators" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>File:</strong> <code>Generators/ISyntheticDataGenerator.cs</code></li>
+<li><strong>Lines:</strong> ~20</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Core interface definition</li>
+<li>Single method: <code>GenerateAsync(int count, CancellationToken ct)</code></li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Generators/DeterministicGenerator.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~100</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Template-based generation</li>
+<li>Deterministic RNG (optional seed)</li>
+<li>Example composition from template data</li>
+<li>Null handling according to strategy</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Generators/LlmGenerator.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~200</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>IChatClient integration</li>
+<li>System/user prompt construction</li>
+<li>JSON parsing of LLM responses</li>
+<li>Parallelism + retry logic</li>
+<li>Temperature/token configuration</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Generators/CompositeGenerator.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~80</li>
+<li><strong>Responsibilities:</strong><ul>
+<li>Weight-based distribution across sub-generators</li>
+<li>Aggregate results into single list</li>
+<li>Maintain ordering/shuffling</li>
+</ul>
+</li>
+</ul>
+<h3 id="templates">Templates<a class="headerlink" href="#templates" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>File:</strong> <code>Templates/IDataTemplate.cs</code></li>
+<li><strong>Lines:</strong> ~20</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Base interface</li>
+<li>TemplateType, Tags, Metadata properties</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Templates/QaTemplate.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~120</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Q&amp;A pair storage and management</li>
+<li>Question/answer interpolation</li>
+<li>Tag/metadata handling</li>
+<li>Fluent configuration (WithCategory, AddTags, etc.)</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Templates/RagTemplate.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~130</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Document management</li>
+<li>Q&amp;A mapping</li>
+<li>Context chunk selection</li>
+<li>Fluent configuration</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Templates/AdversarialTemplate.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~140</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Base example perturbation strategies</li>
+<li>Null injection, truncation, typo injection, contradiction, long input logic</li>
+<li>Individual enable/disable toggles</li>
+<li>Fluent configuration</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Templates/DomainTemplate.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~130</li>
+<li><strong>Responsibilities:</strong><ul>
+<li>Domain management (healthcare, finance, legal, etc.)</li>
+<li>Vocabulary/constraint storage</li>
+<li>Compliance framework tracking</li>
+<li>Fluent configuration</li>
+</ul>
+</li>
+</ul>
+<h3 id="strategies">Strategies<a class="headerlink" href="#strategies" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>File:</strong> <code>Strategies/TemplateStrategy.cs</code></li>
+<li><strong>Lines:</strong> ~30</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Configuration POCO for deterministic generation</li>
+<li>Template reference, random seed, shuffle flag, null handling strategy</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Strategies/LlmStrategy.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~40</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Configuration POCO for LLM generation</li>
+<li>System prompt, generation template, temperature, max tokens, parallelism, retry settings</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Strategies/GenerationTemplate.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~20</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Enum: SimpleQA, RagContext, QAWithExplanation, QAVariations, AdversarialCases, DomainSpecific</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Strategies/CompositeGeneratorConfig.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~60</li>
+<li><strong>Responsibilities:</strong><ul>
+<li>Fluent configuration builder for composite generation</li>
+<li>Methods to add deterministic/LLM sub-generators with weights</li>
+<li>Build() method to instantiate CompositeGenerator</li>
+</ul>
+</li>
+</ul>
+<h3 id="extensions-utilities">Extensions &amp; Utilities<a class="headerlink" href="#extensions-utilities" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>File:</strong> <code>Extensions/SyntheticDatasetExtensions.cs</code></li>
+<li><strong>Lines:</strong> ~180</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li><code>AugmentWithSyntheticExamplesAsync()</code> - add synthetic examples to existing dataset</li>
+<li><code>Merge()</code> - combine multiple datasets</li>
+<li><code>Deduplicate()</code> - remove duplicate inputs</li>
+<li><code>ValidateExamples()</code> - validate dataset quality</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Extensions/ValidationError.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~25</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Result POCO for validation errors</li>
+<li>ExampleIndex, ErrorType, Message, Severity</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Extensions/ValidationOptions.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~40</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Configuration POCO for validation</li>
+<li>Length constraints, null/duplicate flags</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Utilities/RandomSeedProvider.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~50</li>
+<li>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Centralized random number generation</li>
+<li>Seed management for reproducibility</li>
+<li>Helper methods for common RNG patterns</li>
+</ul>
+</li>
+<li>
+<p><strong>File:</strong> <code>Utilities/PromptGenerator.cs</code></p>
+</li>
+<li><strong>Lines:</strong> ~150</li>
+<li><strong>Responsibilities:</strong><ul>
+<li>System prompt composition for LLM generation</li>
+<li>JSON schema generation for structured output</li>
+<li>Template-to-prompt translation based on GenerationTemplate enum</li>
+</ul>
+</li>
+</ul>
+<h3 id="project-file">Project File<a class="headerlink" href="#project-file" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>File:</strong> <code>ElBruno.AI.Evaluation.SyntheticData.csproj</code></li>
+<li><strong>Lines:</strong> ~30</li>
+<li><strong>Responsibilities:</strong><ul>
+<li>Package metadata</li>
+<li>Dependencies: ElBruno.AI.Evaluation, Microsoft.Extensions.AI.Abstractions 9.5.0+</li>
+<li>NuGet configuration</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="7-integration-points-with-existing-packages">7. Integration Points with Existing Packages<a class="headerlink" href="#7-integration-points-with-existing-packages" title="Permanent link">¶</a></h2>
+<h3 id="with-elbrunoaievaluation-core">With <code>ElBruno.AI.Evaluation</code> (Core)<a class="headerlink" href="#with-elbrunoaievaluation-core" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Types Used:</strong></li>
+<li><code>GoldenDataset</code>, <code>GoldenExample</code> — primary output</li>
+<li><code>IChatClient</code> — for LLM-powered generation</li>
+<li>
+<p><code>IEvaluator</code> — future: use evaluators to score synthetic data quality</p>
+</li>
+<li>
+<p><strong>Patterns Adopted:</strong></p>
+</li>
+<li>Fluent builder (mirroring <code>EvaluationPipelineBuilder</code>)</li>
+<li>Extension methods on core types</li>
+<li>Task-based async API</li>
+</ul>
+<h3 id="with-elbrunoaievaluationxunit-testing-integration">With <code>ElBruno.AI.Evaluation.Xunit</code> (Testing Integration)<a class="headerlink" href="#with-elbrunoaievaluationxunit-testing-integration" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Future Use:</strong></li>
+<li>Synthetic datasets compatible with <code>AIEvaluationTest</code> attribute</li>
+<li>Can be used as data sources for parameterized tests</li>
+</ul>
+<h3 id="with-elbrunoaievaluationreporting-persistence">With <code>ElBruno.AI.Evaluation.Reporting</code> (Persistence)<a class="headerlink" href="#with-elbrunoaievaluationreporting-persistence" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Future Use:</strong></li>
+<li>Generated datasets can be exported via JSON/CSV exporters</li>
+<li>Can be stored in SQLite for tracking synthetic data versions</li>
+</ul>
+<hr>
+<h2 id="8-dependencies-external-libraries">8. Dependencies &amp; External Libraries<a class="headerlink" href="#8-dependencies-external-libraries" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Dependency</th>
+<th>Version</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ElBruno.AI.Evaluation</code></td>
+<td>Latest</td>
+<td>Core data models (GoldenDataset, GoldenExample)</td>
+</tr>
+<tr>
+<td><code>Microsoft.Extensions.AI.Abstractions</code></td>
+<td>9.5.0+</td>
+<td>IChatClient abstraction</td>
+</tr>
+<tr>
+<td><code>System.Text.Json</code></td>
+<td>Included in .NET 8+</td>
+<td>JSON parsing for LLM responses</td>
+</tr>
+<tr>
+<td>(Optional) <code>System.Linq.Async</code></td>
+<td>If needed</td>
+<td>Async LINQ for streams</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="9-error-handling-validation">9. Error Handling &amp; Validation<a class="headerlink" href="#9-error-handling-validation" title="Permanent link">¶</a></h2>
+<h3 id="key-exception-types">Key Exception Types<a class="headerlink" href="#key-exception-types" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong><code>InvalidOperationException</code></strong></li>
+<li>Thrown when builder is built without required components (no generator configured)</li>
+<li>Thrown when LLM generation fails after max retries</li>
+<li>
+<p>Thrown when composite generator receives invalid weights</p>
+</li>
+<li>
+<p><strong><code>ArgumentNullException</code></strong></p>
+</li>
+<li>
+<p>Thrown when required parameters are null (templates, chat clients, etc.)</p>
+</li>
+<li>
+<p><strong><code>ArgumentException</code></strong></p>
+</li>
+<li>Thrown when invalid values are provided (e.g., negative count, invalid temperature)</li>
+</ul>
+<h3 id="validation-strategy">Validation Strategy<a class="headerlink" href="#validation-strategy" title="Permanent link">¶</a></h3>
+<ul>
+<li>Template methods should validate inputs and throw <code>ArgumentNullException</code></li>
+<li>Generators should catch LLM errors and retry per strategy; log failures</li>
+<li>Extension methods (<code>ValidateExamples</code>) return a list of <code>ValidationError</code> objects (non-throwing)</li>
+</ul>
+<hr>
+<h2 id="10-testing-strategy">10. Testing Strategy<a class="headerlink" href="#10-testing-strategy" title="Permanent link">¶</a></h2>
+<h3 id="unit-tests-to-be-in-tests-folder">Unit Tests (to be in <code>tests/</code> folder)<a class="headerlink" href="#unit-tests-to-be-in-tests-folder" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Builder tests:</strong> Verify fluent API chaining, required validations</li>
+<li><strong>Generator tests:</strong> Mock templates, verify output structure and count</li>
+<li><strong>Template tests:</strong> Verify interpolation, null handling, tag/metadata application</li>
+<li><strong>Extension tests:</strong> Validate augmentation, deduplication, merging</li>
+<li><strong>Validation tests:</strong> Verify error detection logic</li>
+</ul>
+<h3 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>E2E:</strong> Generate dataset → Validate → Export → Load</li>
+<li><strong>LLM integration:</strong> Mock IChatClient responses, verify parsing and retry logic</li>
+<li><strong>Composite generation:</strong> Verify weight-based distribution</li>
+</ul>
+<hr>
+<h2 id="11-documentation-samples">11. Documentation &amp; Samples<a class="headerlink" href="#11-documentation-samples" title="Permanent link">¶</a></h2>
+<h3 id="package-documentation">Package Documentation<a class="headerlink" href="#package-documentation" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>docs/synthetic-data-quickstart.md</strong> — 5-minute tutorial</li>
+<li><strong>docs/synthetic-data-advanced.md</strong> — Deep dive on each scenario</li>
+<li><strong>docs/generation-strategies.md</strong> — Deterministic vs. LLM tradeoffs</li>
+</ul>
+<h3 id="sample-applications">Sample Applications<a class="headerlink" href="#sample-applications" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>samples/SyntheticDataGeneration/</strong> — Console app demonstrating all scenarios</li>
+<li>Generate Q&amp;A, RAG, adversarial, domain-specific examples</li>
+<li>Validate and deduplicate</li>
+<li>Export to JSON/CSV</li>
+</ul>
+<hr>
+<h2 id="12-version-release-planning">12. Version &amp; Release Planning<a class="headerlink" href="#12-version-release-planning" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Target</th>
+<th>Features</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1.0.0</strong></td>
+<td>ElBruno.AI.Evaluation v1.5</td>
+<td>All core generators, templates, fluent builder, basic validation</td>
+</tr>
+<tr>
+<td><strong>1.1.0</strong></td>
+<td>Q3 2025</td>
+<td>Domain template library (healthcare, finance, legal presets)</td>
+</tr>
+<tr>
+<td><strong>1.2.0</strong></td>
+<td>Q4 2025</td>
+<td>Streaming generation for large-scale datasets</td>
+</tr>
+<tr>
+<td><strong>2.0.0</strong></td>
+<td>TBD</td>
+<td>Fine-tuning integration, custom domain plugins</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="13-implementation-checklist">13. Implementation Checklist<a class="headerlink" href="#13-implementation-checklist" title="Permanent link">¶</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled> Create project structure and <code>.csproj</code> file</li>
+<li class="task-list-item"><input type="checkbox" disabled> Implement <code>ISyntheticDataGenerator</code> interface</li>
+<li class="task-list-item"><input type="checkbox" disabled> Implement <code>DeterministicGenerator</code> with template interpolation</li>
+<li class="task-list-item"><input type="checkbox" disabled> Implement <code>LlmGenerator</code> with prompt composition and JSON parsing</li>
+<li class="task-list-item"><input type="checkbox" disabled> Implement <code>CompositeGenerator</code> with weighted distribution</li>
+<li class="task-list-item"><input type="checkbox" disabled> Implement all template classes (QA, RAG, Adversarial, Domain)</li>
+<li class="task-list-item"><input type="checkbox" disabled> Implement strategy configuration classes</li>
+<li class="task-list-item"><input type="checkbox" disabled> Implement <code>SyntheticDatasetBuilder</code> with fluent API</li>
+<li class="task-list-item"><input type="checkbox" disabled> Implement extension methods and validation logic</li>
+<li class="task-list-item"><input type="checkbox" disabled> Implement utility classes (RandomSeedProvider, PromptGenerator)</li>
+<li class="task-list-item"><input type="checkbox" disabled> Write comprehensive unit tests</li>
+<li class="task-list-item"><input type="checkbox" disabled> Write integration tests</li>
+<li class="task-list-item"><input type="checkbox" disabled> Create sample application</li>
+<li class="task-list-item"><input type="checkbox" disabled> Write documentation and README</li>
+<li class="task-list-item"><input type="checkbox" disabled> Publish to NuGet</li>
+</ul>
+<hr>
+<h2 id="14-design-rationale">14. Design Rationale<a class="headerlink" href="#14-design-rationale" title="Permanent link">¶</a></h2>
+<h3 id="why-fluent-builder">Why Fluent Builder?<a class="headerlink" href="#why-fluent-builder" title="Permanent link">¶</a></h3>
+<p>Consistency with existing <code>EvaluationPipelineBuilder</code> pattern; enables readable, chainable configuration.</p>
+<h3 id="why-isyntheticdatagenerator-interface">Why ISyntheticDataGenerator Interface?<a class="headerlink" href="#why-isyntheticdatagenerator-interface" title="Permanent link">¶</a></h3>
+<p>Enables pluggability; different strategies (deterministic, LLM, composite) implement the same contract.</p>
+<h3 id="why-idatatemplate-hierarchy">Why IDataTemplate Hierarchy?<a class="headerlink" href="#why-idatatemplate-hierarchy" title="Permanent link">¶</a></h3>
+<p>Separates concerns: templates define <em>what data to generate</em>, generators define <em>how to generate</em> it. Allows reuse across generators.</p>
+<h3 id="why-compositegenerator">Why CompositeGenerator?<a class="headerlink" href="#why-compositegenerator" title="Permanent link">¶</a></h3>
+<p>Real-world datasets benefit from hybrid approaches (cost + diversity). Explicit weighting makes tradeoffs transparent.</p>
+<h3 id="why-extension-methods-for-augmentation">Why Extension Methods for Augmentation?<a class="headerlink" href="#why-extension-methods-for-augmentation" title="Permanent link">¶</a></h3>
+<p>Non-invasive API; allows adding synthetic data generation capability to any <code>GoldenDataset</code> without modifying core types.</p>
+<h3 id="why-validation-separate-from-generation">Why Validation Separate from Generation?<a class="headerlink" href="#why-validation-separate-from-generation" title="Permanent link">¶</a></h3>
+<p>Generation is optimistic; validation is defensive. Separating them allows different failure modes and reporting.</p>
+<hr>
+<h2 id="15-future-enhancements-v15">15. Future Enhancements (v1.5+)<a class="headerlink" href="#15-future-enhancements-v15" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Domain Presets:</strong> Pre-built templates for healthcare, finance, legal, e-commerce</li>
+<li><strong>Streaming Generation:</strong> For large-scale datasets (&gt;10K examples)</li>
+<li><strong>Fine-Tuning Integration:</strong> Fine-tune small models on generated data to improve quality</li>
+<li><strong>Evaluator-Driven Generation:</strong> Use core evaluators to iteratively improve synthetic data quality</li>
+<li><strong>Prompt Template Library:</strong> Reusable system prompts for common domains</li>
+<li><strong>Visualization:</strong> Plot distribution of generated examples (length, complexity, diversity)</li>
+</ul>
+<hr>
+<h2 id="end-of-design-document">End of Design Document<a class="headerlink" href="#end-of-design-document" title="Permanent link">¶</a></h2>
+<p><strong>Next Step:</strong> Hand this document to implementers for phase 1 development.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.footer", "content.code.copy", "navigation.tabs.sticky", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

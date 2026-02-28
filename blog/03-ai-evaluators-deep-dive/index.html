@@ -1,0 +1,1508 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Production-grade AI testing and evaluation toolkit for .NET applications — xUnit for AI.">
+      
+      
+        <meta name="author" content="Bruno Capuano">
+      
+      
+      
+        <link rel="prev" href="../02-golden-datasets-for-ai-testing/">
+      
+      
+        <link rel="next" href="../04-ai-testing-with-xunit/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>AI Evaluators Deep Dive - ElBruno.AI.Evaluation — AI Testing for .NET</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#evaluators-from-quick-checks-to-deep-analysis" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ElBruno.AI.Evaluation — AI Testing for .NET" class="md-header__button md-logo" aria-label="ElBruno.AI.Evaluation — AI Testing for .NET" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ElBruno.AI.Evaluation — AI Testing for .NET
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              AI Evaluators Deep Dive
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 2c-1.82 0-3.53.5-5 1.35C8 5.08 10 8.3 10 12s-2 6.92-5 8.65C6.47 21.5 8.18 22 10 22a10 10 0 0 0 10-10A10 10 0 0 0 10 2"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/elbruno/netai-nextwin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    elbruno/netai-nextwin
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ElBruno.AI.Evaluation — AI Testing for .NET" class="md-nav__button md-logo" aria-label="ElBruno.AI.Evaluation — AI Testing for .NET" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    ElBruno.AI.Evaluation — AI Testing for .NET
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/elbruno/netai-nextwin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    elbruno/netai-nextwin
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-introducing-elbruno-ai-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing ElBruno.AI.Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-golden-datasets-for-ai-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Datasets for AI Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Evaluators Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Evaluators Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#layer-1-elbrunos-deterministic-evaluators-fast-offline-debuggable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1: ElBruno's Deterministic Evaluators (Fast, Offline, Debuggable)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-relevanceevaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. RelevanceEvaluator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-factualityevaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. FactualityEvaluator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-coherenceevaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. CoherenceEvaluator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-hallucinationevaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. HallucinationEvaluator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-safetyevaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. SafetyEvaluator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-evaluators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining Evaluators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-custom-evaluators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Custom Evaluators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try It Yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-the-author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        👨‍💻 About the Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-ai-testing-with-xunit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Testing with xUnit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-from-demo-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Demo to Production
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-synthetic-data-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-choosing-the-right-evaluators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing the Right Evaluators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Library Docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../golden-datasets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Datasets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluation-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../comparison-with-microsoft-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison with Microsoft
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../publishing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#layer-1-elbrunos-deterministic-evaluators-fast-offline-debuggable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1: ElBruno's Deterministic Evaluators (Fast, Offline, Debuggable)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-relevanceevaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. RelevanceEvaluator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-factualityevaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. FactualityEvaluator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-coherenceevaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. CoherenceEvaluator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-hallucinationevaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. HallucinationEvaluator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-safetyevaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. SafetyEvaluator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-evaluators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining Evaluators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-custom-evaluators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Custom Evaluators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try It Yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-the-author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        👨‍💻 About the Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="evaluators-from-quick-checks-to-deep-analysis">Evaluators: From Quick Checks to Deep Analysis<a class="headerlink" href="#evaluators-from-quick-checks-to-deep-analysis" title="Permanent link">¶</a></h1>
+<p>Evaluation is layered. Not all scenarios need LLM-powered judgment. Some need fast, offline verification. Some need sophisticated reasoning. The art is knowing which layer to use and when.</p>
+<p>This post walks through four evaluation layers, using both ElBruno's deterministic evaluators and Microsoft's LLM-powered ones.</p>
+<h2 id="layer-1-elbrunos-deterministic-evaluators-fast-offline-debuggable">Layer 1: ElBruno's Deterministic Evaluators (Fast, Offline, Debuggable)<a class="headerlink" href="#layer-1-elbrunos-deterministic-evaluators-fast-offline-debuggable" title="Permanent link">¶</a></h2>
+<p>These are your first line of defense. No external calls. No cost. Transparent logic you can understand and tune.</p>
+<h2 id="1-relevanceevaluator">1. RelevanceEvaluator<a class="headerlink" href="#1-relevanceevaluator" title="Permanent link">¶</a></h2>
+<p><strong>Question:</strong> Does the output actually answer the input question?</p>
+<p><strong>How it works:</strong> Uses cosine similarity to compare the terms in the input with the terms in the output. High term overlap = high relevance.</p>
+<p><strong>Threshold:</strong> Default 0.6 (60% similarity)</p>
+<p><strong>When to use:</strong> Always. This is your first line of defense against completely off-topic responses.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">evaluator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RelevanceEvaluator</span><span class="p">(</span><span class="n">threshold</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6</span><span class="p">);</span>
+
+<span class="c1">// Good example</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">result1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="s">"What is the capital of France?"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">output</span><span class="p">:</span><span class="w"> </span><span class="s">"The capital of France is Paris, a city on the Seine River."</span>
+<span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">result1</span><span class="p">);</span>
+<span class="c1">// Output: [PASS] Score=0.85 — Cosine similarity between input and output terms: 0.850. Input terms: 5, Output terms: 11.</span>
+
+<span class="c1">// Bad example  </span>
+<span class="kt">var</span><span class="w"> </span><span class="n">result2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="s">"What is the capital of France?"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">output</span><span class="p">:</span><span class="w"> </span><span class="s">"The weather today is sunny. I like pizza."</span>
+<span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">result2</span><span class="p">);</span>
+<span class="c1">// Output: [FAIL] Score=0.12 — Cosine similarity between input and output terms: 0.120. Input terms: 5, Output terms: 8.</span>
+</code></pre></div>
+<p><strong>Real-world scenario:</strong> Your support bot receives "How do I upgrade my plan?" It responds with an essay about weather patterns. RelevanceEvaluator catches this immediately.</p>
+<h2 id="2-factualityevaluator">2. FactualityEvaluator<a class="headerlink" href="#2-factualityevaluator" title="Permanent link">¶</a></h2>
+<p><strong>Question:</strong> Are the claims in the output actually true (based on reference material)?</p>
+<p><strong>How it works:</strong> Extracts claims (sentences) from the output, checks how many tokens overlap with the expected output. Token overlap &gt; 50% = claim is supported.</p>
+<p><strong>Threshold:</strong> Default 0.8 (80% of claims supported)</p>
+<p><strong>When to use:</strong> When you have ground-truth reference material. Essential for RAG systems, documentation bots, news summarization.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">evaluator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FactualityEvaluator</span><span class="p">(</span><span class="n">threshold</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="s">"Tell me about Python"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">output</span><span class="p">:</span><span class="w"> </span><span class="s">"Python is a programming language created by Guido van Rossum in 1991. It's known for readability."</span><span class="p">,</span>
+<span class="w">    </span><span class="n">expectedOutput</span><span class="p">:</span><span class="w"> </span><span class="s">"Python was created by Guido van Rossum. It became popular for web development and data science."</span>
+<span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="c1">// Output: [PASS] Score=0.87 — 2/3 claims supported (86.67%). </span>
+<span class="c1">// The "created by Guido van Rossum" claim is supported. The "1991" and "readability" claims have partial support.</span>
+</code></pre></div>
+<p><strong>Real-world scenario:</strong> Your RAG chatbot answers questions using company documents. FactualityEvaluator ensures answers stay grounded in the documents, not LLM hallucinations.</p>
+<h2 id="3-coherenceevaluator">3. CoherenceEvaluator<a class="headerlink" href="#3-coherenceevaluator" title="Permanent link">¶</a></h2>
+<p><strong>Question:</strong> Does the output make logical sense? Are sentences complete? Any contradictions?</p>
+<p><strong>How it works:</strong> Checks for:</p>
+<ul>
+<li>Incomplete sentences (&lt; 3 words)</li>
+<li>Contradictory phrases ("is/is not" both present)</li>
+<li>Excessive repetition (same sentence appearing multiple times)</li>
+</ul>
+<p><strong>Threshold:</strong> Default 0.7</p>
+<p><strong>When to use:</strong> Catching obviously broken outputs, detecting when the LLM starts generating garbage.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">evaluator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CoherenceEvaluator</span><span class="p">(</span><span class="n">threshold</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">result1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="s">"Explain machine learning"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">output</span><span class="p">:</span><span class="w"> </span><span class="s">"Machine learning is. A is is not. The the the algorithm algorithm algorithm learns patterns from data."</span>
+<span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">result1</span><span class="p">);</span>
+<span class="c1">// Output: [FAIL] Score=0.52 — Issues: 1 incomplete sentence(s), 1 potential contradiction(s), high repetition (66%). </span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">result2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="s">"Explain machine learning"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">output</span><span class="p">:</span><span class="w"> </span><span class="s">"Machine learning is a subset of artificial intelligence. Algorithms learn from data without being explicitly programmed. This enables systems to improve with experience."</span>
+<span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">result2</span><span class="p">);</span>
+<span class="c1">// Output: [PASS] Score=1.00 — Output is coherent (3 sentence(s), no issues detected).</span>
+</code></pre></div>
+<p><strong>Real-world scenario:</strong> Your LLM starts hallucinating due to a prompt injection attack. CoherenceEvaluator detects the incoherent garbage output.</p>
+<h2 id="4-hallucinationevaluator">4. HallucinationEvaluator<a class="headerlink" href="#4-hallucinationevaluator" title="Permanent link">¶</a></h2>
+<p><strong>Question:</strong> Is the output making up facts not present in the source material?</p>
+<p><strong>How it works:</strong> Builds a grounding corpus from the input + expected output. Counts how many tokens in the output appear in the grounding corpus. High overlap = low hallucination.</p>
+<p><strong>Threshold:</strong> Default 0.7 (70% of tokens grounded)</p>
+<p><strong>When to use:</strong> RAG systems, question-answering over documents. Essential for reducing AI-generated falsehoods.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">evaluator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HallucinationEvaluator</span><span class="p">(</span><span class="n">threshold</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="s">"What does the customer say about pricing?"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">output</span><span class="p">:</span><span class="w"> </span><span class="s">"The customer says pricing is reasonable and competitive. They also mentioned liking the UI."</span><span class="p">,</span>
+<span class="w">    </span><span class="n">expectedOutput</span><span class="p">:</span><span class="w"> </span><span class="s">"The customer says pricing is reasonable and offers good value for the features provided."</span>
+<span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="c1">// Output: [PASS] Score=0.74 — Keyword overlap: 11/15 tokens grounded (73%). 4 potentially hallucinated token(s).</span>
+<span class="c1">// "competitive" and "UI" are not in the source material but the core message ("pricing is reasonable") is grounded.</span>
+</code></pre></div>
+<p><strong>Real-world scenario:</strong> Your RAG chatbot adds details that sound plausible but aren't in the documents. HallucinationEvaluator catches this.</p>
+<h2 id="5-safetyevaluator">5. SafetyEvaluator<a class="headerlink" href="#5-safetyevaluator" title="Permanent link">¶</a></h2>
+<p><strong>Question:</strong> Does the output contain unsafe content?</p>
+<p><strong>How it works:</strong> Checks for:</p>
+<ul>
+<li>Profanity and blocked terms (configurable)</li>
+<li>PII patterns: emails, phone numbers, SSNs</li>
+<li>Harmful instructions</li>
+</ul>
+<p><strong>Threshold:</strong> Default 0.9 (allows minimal violations)</p>
+<p><strong>When to use:</strong> Always, especially for customer-facing systems. Non-negotiable for compliance.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">evaluator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SafetyEvaluator</span><span class="p">(</span><span class="n">threshold</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">result1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="s">"Hello"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">output</span><span class="p">:</span><span class="w"> </span><span class="s">"This is a damn problem. Contact me at john.doe@example.com"</span>
+<span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">result1</span><span class="p">);</span>
+<span class="c1">// Output: [FAIL] Score=0.70 — 2 violation(s): Blocked terms: damn; Email address detected.</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">result2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="s">"Help"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">output</span><span class="p">:</span><span class="w"> </span><span class="s">"I can help you with that. Please be patient."</span>
+<span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">result2</span><span class="p">);</span>
+<span class="c1">// Output: [PASS] Score=1.00 — No safety violations detected.</span>
+
+<span class="c1">// Custom blocklist</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">customEvaluator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SafetyEvaluator</span><span class="p">(</span>
+<span class="w">    </span><span class="n">threshold</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9</span><span class="p">,</span>
+<span class="w">    </span><span class="n">additionalBlocklist</span><span class="p">:</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">"proprietary"</span><span class="p">,</span><span class="w"> </span><span class="s">"confidential"</span><span class="w"> </span><span class="p">}</span>
+<span class="p">);</span>
+</code></pre></div>
+<p><strong>Real-world scenario:</strong> Your bot accidental exposes customer email addresses or SSNs from training data. SafetyEvaluator catches this before it reaches production.</p>
+<h2 id="combining-evaluators">Combining Evaluators<a class="headerlink" href="#combining-evaluators" title="Permanent link">¶</a></h2>
+<p>Real-world evaluation is <strong>layered and hybrid</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Layer 1: Fast ElBruno evaluators (offline, CI/CD-friendly)</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">fastPass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IEvaluator</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">CoherenceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="p">};</span>
+
+<span class="c1">// If fast pass succeeds, optionally upgrade to LLM-powered</span>
+<span class="c1">// Layer 2: Microsoft's LLM evaluators (nuanced judgment)</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">deepPass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IEvaluator</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftRelevanceEvaluator</span><span class="p">(),</span><span class="w">    </span><span class="c1">// LLM-powered</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftCompletenessEvaluator</span><span class="p">(),</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftGroundednessEvaluator</span><span class="p">()</span>
+<span class="p">};</span>
+
+<span class="c1">// Example: Use ElBruno first, Microsoft for edge cases</span>
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">run</span><span class="p">.</span><span class="n">Results</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">Score</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.7</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Failed fast checks—investigate with LLM</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">deepResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">LLMEvaluate</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// Helps debug *why* it failed</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Pattern:</strong> ElBruno for gate-keeping, Microsoft for insights.</p>
+<h2 id="creating-custom-evaluators">Creating Custom Evaluators<a class="headerlink" href="#creating-custom-evaluators" title="Permanent link">¶</a></h2>
+<p>The <code>IEvaluator</code> interface is simple. Build your own:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">LengthEvaluator</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IEvaluator</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_minWords</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">LengthEvaluator</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">minWords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_minWords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">minWords</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">EvaluationResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">        </span><span class="kt">string</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="kt">string</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="kt">string?</span><span class="w"> </span><span class="n">expectedOutput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">wordCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">output</span><span class="p">.</span><span class="n">Split</span><span class="p">(</span><span class="sc">' '</span><span class="p">,</span><span class="w"> </span><span class="n">StringSplitOptions</span><span class="p">.</span><span class="n">RemoveEmptyEntries</span><span class="p">).</span><span class="n">Length</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="n">Min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">wordCount</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">_minWords</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">FromResult</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">EvaluationResult</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">score</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Passed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wordCount</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">_minWords</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Details</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$"Output has {wordCount} words (threshold: {_minWords})"</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MetricScores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="na">["length"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MetricScore</span><span class="w"> </span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Length"</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">Value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">score</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">Threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Use it</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">customEval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LengthEvaluator</span><span class="p">(</span><span class="n">minWords</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">);</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">customEval</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span><span class="s">"Explain quantum computing"</span><span class="p">,</span><span class="w"> </span><span class="s">"..."</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="choosing-thresholds">Choosing Thresholds<a class="headerlink" href="#choosing-thresholds" title="Permanent link">¶</a></h2>
+<p>Different use cases need different thresholds:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Relevance</th>
+<th>Factuality</th>
+<th>Coherence</th>
+<th>Hallucination</th>
+<th>Safety</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Support Bot</td>
+<td>0.7</td>
+<td>0.8</td>
+<td>0.8</td>
+<td>0.7</td>
+<td>0.95</td>
+</tr>
+<tr>
+<td>Content Generation</td>
+<td>0.6</td>
+<td>0.5</td>
+<td>0.8</td>
+<td>0.6</td>
+<td>0.9</td>
+</tr>
+<tr>
+<td>RAG Q&amp;A</td>
+<td>0.7</td>
+<td>0.9</td>
+<td>0.7</td>
+<td>0.85</td>
+<td>0.95</td>
+</tr>
+<tr>
+<td>Brainstorming</td>
+<td>0.5</td>
+<td>0.3</td>
+<td>0.6</td>
+<td>0.4</td>
+<td>0.85</td>
+</tr>
+</tbody>
+</table>
+<p>Start conservative (high thresholds), then relax as you understand what's normal for your LLM.</p>
+<h2 id="try-it-yourself">Try It Yourself<a class="headerlink" href="#try-it-yourself" title="Permanent link">¶</a></h2>
+<p>Evaluate your first LLM output:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">evaluators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IEvaluator</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(),</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">FactualityEvaluator</span><span class="p">(),</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">CoherenceEvaluator</span><span class="p">(),</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">HallucinationEvaluator</span><span class="p">(),</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">()</span>
+<span class="p">};</span>
+
+<span class="kt">string</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Your test question"</span><span class="p">;</span>
+<span class="kt">string</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Your LLM's response"</span><span class="p">;</span>
+<span class="kt">string</span><span class="w"> </span><span class="n">expected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Reference material"</span><span class="p">;</span>
+
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">evaluator</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">evaluators</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">expected</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"{evaluator.GetType().Name}: {result}"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<p><em>Next: Integrate these evaluators into your xUnit test suite for automated quality gates.</em></p>
+<hr>
+<h2 id="about-the-author">👨‍💻 About the Author<a class="headerlink" href="#about-the-author" title="Permanent link">¶</a></h2>
+<p><strong>Bruno Capuano</strong> is a Microsoft MVP and AI enthusiast who builds practical tools for .NET developers. This is Part 3 of a 7-part series on AI evaluation.</p>
+<p><strong>🌟 Found this helpful?</strong> Let's connect:</p>
+<ul>
+<li>📘 <a href="https://elbruno.com">Read more on my blog</a> — Deep technical articles on AI &amp; .NET</li>
+<li>🎥 <a href="https://www.youtube.com/elbruno">Watch video tutorials on YouTube</a> — Demos and live coding</li>
+<li>💼 <a href="https://www.linkedin.com/in/elbruno/">Connect on LinkedIn</a> — Professional updates</li>
+<li>🐦 <a href="https://www.x.com/elbruno/">Follow on Twitter/X</a> — Quick tips and announcements</li>
+<li>🎙️ <a href="https://notienenombre.com">No Tiene Nombre Podcast</a> — Tech talks in Spanish</li>
+<li>💻 <a href="https://github.com/elbruno/">Explore more projects on GitHub</a> — Open-source AI tools</li>
+</ul>
+<p>⭐ <em>If this series is helping you build better AI applications, give the <a href="https://github.com/elbruno/elbruno-ai-evaluation">repo</a> a star and share it with your team!</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../02-golden-datasets-for-ai-testing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Golden Datasets for AI Testing">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Golden Datasets for AI Testing
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../04-ai-testing-with-xunit/" class="md-footer__link md-footer__link--next" aria-label="Next: AI Testing with xUnit">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                AI Testing with xUnit
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.footer", "content.code.copy", "navigation.tabs.sticky", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

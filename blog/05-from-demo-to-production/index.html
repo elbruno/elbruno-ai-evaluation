@@ -1,0 +1,1903 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Production-grade AI testing and evaluation toolkit for .NET applications — xUnit for AI.">
+      
+      
+        <meta name="author" content="Bruno Capuano">
+      
+      
+      
+        <link rel="prev" href="../04-ai-testing-with-xunit/">
+      
+      
+        <link rel="next" href="../06-synthetic-data-generation/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>From Demo to Production - ElBruno.AI.Evaluation — AI Testing for .NET</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#production-ai-evaluation-combining-both-toolkits" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ElBruno.AI.Evaluation — AI Testing for .NET" class="md-header__button md-logo" aria-label="ElBruno.AI.Evaluation — AI Testing for .NET" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ElBruno.AI.Evaluation — AI Testing for .NET
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              From Demo to Production
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 2c-1.82 0-3.53.5-5 1.35C8 5.08 10 8.3 10 12s-2 6.92-5 8.65C6.47 21.5 8.18 22 10 22a10 10 0 0 0 10-10A10 10 0 0 0 10 2"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/elbruno/netai-nextwin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    elbruno/netai-nextwin
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ElBruno.AI.Evaluation — AI Testing for .NET" class="md-nav__button md-logo" aria-label="ElBruno.AI.Evaluation — AI Testing for .NET" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    ElBruno.AI.Evaluation — AI Testing for .NET
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/elbruno/netai-nextwin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    elbruno/netai-nextwin
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-introducing-elbruno-ai-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing ElBruno.AI.Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-golden-datasets-for-ai-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Datasets for AI Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-ai-evaluators-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Evaluators Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-ai-testing-with-xunit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Testing with xUnit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Demo to Production
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Demo to Production
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-hybrid-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Hybrid Pattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-production-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Production Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#baseline-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Baseline Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reporting-and-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reporting and Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-and-token-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost and Token Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enterprise-pattern-baseline-and-regression-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Pattern: Baseline and Regression Detection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Gate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#long-term-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long-term Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try It Yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion-the-complete-journey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion: The Complete Journey
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-the-author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        👨‍💻 About the Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-synthetic-data-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-choosing-the-right-evaluators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing the Right Evaluators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Library Docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../golden-datasets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Datasets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluation-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../comparison-with-microsoft-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison with Microsoft
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../publishing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-hybrid-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Hybrid Pattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-production-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Production Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#baseline-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Baseline Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reporting-and-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reporting and Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-and-token-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost and Token Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enterprise-pattern-baseline-and-regression-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Pattern: Baseline and Regression Detection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Gate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#long-term-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Long-term Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try It Yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion-the-complete-journey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion: The Complete Journey
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-the-author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        👨‍💻 About the Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="production-ai-evaluation-combining-both-toolkits">Production AI Evaluation: Combining Both Toolkits<a class="headerlink" href="#production-ai-evaluation-combining-both-toolkits" title="Permanent link">¶</a></h1>
+<p>You've learned each toolkit separately. Now let's build a <strong>complete production pipeline</strong> using both together. Neither toolkitalone is sufficient—the real power comes from using them in combination.</p>
+<h2 id="the-hybrid-pattern">The Hybrid Pattern<a class="headerlink" href="#the-hybrid-pattern" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code>Input Data
+    ↓
+[ElBruno Synthetic Generator] → Creates test data if needed
+    ↓
+[ElBruno Deterministic Evals] → Fast offline gate (CI/CD)
+    ↓
+    IF PASS: [Optional: Microsoft LLM Evals] → Deep analysis for reporting
+    ↓
+[ElBruno Baseline Snapshot] → Detect regressions
+    ↓
+[Production Deployment]
+</code></pre></div>
+<p><strong>Layers:</strong></p>
+<ol>
+<li><strong>Data layer:</strong> ElBruno generates or manages golden datasets</li>
+<li><strong>Quality gate:</strong> ElBruno's deterministic evaluators (fast, offline)</li>
+<li><strong>Deep analysis:</strong> Microsoft's LLM evaluators (optional, for insights)</li>
+<li><strong>Regression:</strong> ElBruno's baseline snapshots (CI/CD safety net)</li>
+<li><strong>Reporting:</strong> ElBruno's SQLite + exports, Microsoft's HTML reports</li>
+</ol>
+<h2 id="complete-production-workflow">Complete Production Workflow<a class="headerlink" href="#complete-production-workflow" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ProductionEvaluationPipeline</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chatClient</span><span class="p">;</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">GoldenDataset</span><span class="w"> </span><span class="n">_dataset</span><span class="p">;</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">BaselineSnapshot</span><span class="w"> </span><span class="n">_baseline</span><span class="p">;</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">SqliteResultStore</span><span class="w"> </span><span class="n">_store</span><span class="p">;</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IMonitoringClient</span><span class="w"> </span><span class="n">_monitoring</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DeploymentGate</span><span class="o">&gt;</span><span class="w"> </span><span class="n">EvaluateBeforeDeployAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">newModelVersion</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Step 1: Generate or load test data</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">testData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">LoadOrGenerateDatasetAsync</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// Step 2: Run ElBruno deterministic evaluators (FAST, OFFLINE)</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">elbrunoEvaluators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IEvaluator</span><span class="o">&gt;</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">HallucinationEvaluator</span><span class="p">(</span><span class="mf">0.75</span><span class="p">),</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">(</span><span class="mf">0.95</span><span class="p">),</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">CoherenceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">FactualityEvaluator</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">elbrunoPipeline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EvaluationPipelineBuilder</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="n">WithChatClient</span><span class="p">(</span><span class="n">_chatClient</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">WithDataset</span><span class="p">(</span><span class="n">testData</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">elbrunoEvaluators</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">elbrunoPipeline</span><span class="p">.</span><span class="n">AddEvaluator</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+<span class="w">            </span><span class="p">.</span><span class="n">WithBaseline</span><span class="p">(</span><span class="n">_baseline</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">regressionReport</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">elbrunoPipeline</span><span class="p">.</span><span class="n">RunWithBaselineAsync</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// Step 3: Store results</span>
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="n">_store</span><span class="p">.</span><span class="n">SaveAsync</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">EvaluationRun</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">ModelVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newModelVersion</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regressionReport</span><span class="p">.</span><span class="n">Results</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RegressionDetected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regressionReport</span><span class="p">.</span><span class="n">HasRegressions</span><span class="p">,</span>
+<span class="w">            </span><span class="n">StartedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="c1">// Step 4: Check gate—fail if regression</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">regressionReport</span><span class="p">.</span><span class="n">HasRegressions</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">"❌ REGRESSION DETECTED"</span><span class="p">);</span>
+<span class="w">            </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">detail</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">regressionReport</span><span class="p">.</span><span class="n">RegressionDetails</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"  {detail.MetricName}: {detail.BaselineValue:F2} → {detail.CurrentValue:F2}"</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">DeploymentGate</span><span class="p">.</span><span class="n">Blocked</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Step 5 (Optional): For critical releases, run Microsoft's LLM evaluators</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ShouldRunDeepEvaluation</span><span class="p">(</span><span class="n">newModelVersion</span><span class="p">))</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">deepResults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">RunMicrosoftEvaluatorsAsync</span><span class="p">(</span><span class="n">testData</span><span class="p">);</span>
+<span class="w">            </span><span class="c1">// Generate comprehensive HTML report for stakeholders</span>
+<span class="w">            </span><span class="k">await</span><span class="w"> </span><span class="nf">GenerateMicrosoftReportAsync</span><span class="p">(</span><span class="n">deepResults</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Step 6: Record metrics for monitoring</span>
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="nf">RecordProductionMetricsAsync</span><span class="p">(</span><span class="n">regressionReport</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">"✅ ALL GATES PASSED"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">DeploymentGate</span><span class="p">.</span><span class="n">Approved</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">RecordProductionMetricsAsync</span><span class="p">(</span><span class="n">RegressionReport</span><span class="w"> </span><span class="n">report</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">metrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="na">["ai.relevance.avg"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">report</span><span class="p">.</span><span class="n">Results</span><span class="p">.</span><span class="n">Average</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">MetricScores</span><span class="p">[</span><span class="s">"relevance"</span><span class="p">].</span><span class="n">Value</span><span class="p">),</span>
+<span class="w">            </span><span class="na">["ai.hallucination.avg"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">report</span><span class="p">.</span><span class="n">Results</span><span class="p">.</span><span class="n">Average</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">MetricScores</span><span class="p">[</span><span class="s">"hallucination"</span><span class="p">].</span><span class="n">Value</span><span class="p">),</span>
+<span class="w">            </span><span class="na">["ai.safety.min"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">report</span><span class="p">.</span><span class="n">Results</span><span class="p">.</span><span class="n">Min</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">MetricScores</span><span class="p">[</span><span class="s">"safety"</span><span class="p">].</span><span class="n">Value</span><span class="p">),</span>
+<span class="w">            </span><span class="na">["ai.pass_rate"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">report</span><span class="p">.</span><span class="n">Results</span><span class="p">.</span><span class="n">Count</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">Passed</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">report</span><span class="p">.</span><span class="n">Results</span><span class="p">.</span><span class="n">Count</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="c1">// Send to DataDog, Prometheus, CloudWatch, etc.</span>
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="n">_monitoring</span><span class="p">.</span><span class="n">RecordMetricsAsync</span><span class="p">(</span><span class="n">metrics</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">ShouldRunDeepEvaluation</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">version</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Run deep eval for major releases or if explicitly requested</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">version</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">".0.0"</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">Environment</span><span class="p">.</span><span class="n">GetEnvironmentVariable</span><span class="p">(</span><span class="s">"DEEP_EVAL"</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"true"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">EvaluationResult</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">RunMicrosoftEvaluatorsAsync</span><span class="p">(</span><span class="n">GoldenDataset</span><span class="w"> </span><span class="n">dataset</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Use Microsoft's LLM-powered evaluators</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">evaluators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftRelevanceEvaluator</span><span class="p">(),</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftCompletenessEvaluator</span><span class="p">(),</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">MicrosoftGroundednessEvaluator</span><span class="p">()</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">EvaluationResult</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">example</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">dataset</span><span class="p">.</span><span class="n">Examples</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_chatClient</span><span class="p">.</span><span class="n">CompleteAsync</span><span class="p">(</span><span class="n">example</span><span class="p">.</span><span class="n">Input</span><span class="p">);</span>
+<span class="w">            </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">evaluator</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">evaluators</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">var</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">                    </span><span class="k">new</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ChatMessage</span><span class="p">(</span><span class="n">ChatRole</span><span class="p">.</span><span class="n">User</span><span class="p">,</span><span class="w"> </span><span class="n">example</span><span class="p">.</span><span class="n">Input</span><span class="p">)</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                    </span><span class="k">new</span><span class="w"> </span><span class="nf">ChatResponse</span><span class="p">(</span><span class="n">output</span><span class="p">),</span>
+<span class="w">                    </span><span class="k">null</span><span class="p">,</span>
+<span class="w">                    </span><span class="k">null</span>
+<span class="w">                </span><span class="p">);</span>
+<span class="w">                </span><span class="n">results</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">results</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Usage</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">pipeline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProductionEvaluationPipeline</span><span class="p">(</span>
+<span class="w">    </span><span class="n">chatClient</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dataset</span><span class="p">,</span>
+<span class="w">    </span><span class="n">baseline</span><span class="p">,</span>
+<span class="w">    </span><span class="n">resultStore</span><span class="p">,</span>
+<span class="w">    </span><span class="n">monitoring</span>
+<span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">gate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">pipeline</span><span class="p">.</span><span class="n">EvaluateBeforeDeployAsync</span><span class="p">(</span><span class="s">"v2.3.0"</span><span class="p">);</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">gate</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">DeploymentGate</span><span class="p">.</span><span class="n">Approved</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nf">DeployToProductionAsync</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Exception</span><span class="p">(</span><span class="s">"Deployment blocked due to quality issues"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="cost-tracking">Cost Tracking<a class="headerlink" href="#cost-tracking" title="Permanent link">¶</a></h2>
+<p>Both toolkits support cost monitoring:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// ElBruno: Track tokens used by deterministic evaluators</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">elbrunoPipeline</span><span class="p">.</span><span class="n">RunAsync</span><span class="p">();</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Tokens used: {run.TokensUsed}"</span><span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Estimated cost: ${run.EstimatedCost:F4}"</span><span class="p">);</span>
+
+<span class="c1">// Microsoft: Built-in token counting</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ChatConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">MaxTokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="p">};</span>
+<span class="c1">// Token counting happens automatically during evaluation</span>
+
+<span class="c1">// Store trends</span>
+<span class="n">SELECT</span><span class="w"> </span>
+<span class="w">  </span><span class="nf">DATE</span><span class="p">(</span><span class="n">created_at</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">day</span><span class="p">,</span>
+<span class="w">  </span><span class="n">AVG</span><span class="p">(</span><span class="n">tokens_used</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">avg_tokens</span><span class="p">,</span>
+<span class="w">  </span><span class="n">SUM</span><span class="p">(</span><span class="n">cost_dollars</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_cost</span>
+<span class="n">FROM</span><span class="w"> </span><span class="n">evaluation_runs</span>
+<span class="n">GROUP</span><span class="w"> </span><span class="n">BY</span><span class="w"> </span><span class="nf">DATE</span><span class="p">(</span><span class="n">created_at</span><span class="p">)</span>
+<span class="n">ORDER</span><span class="w"> </span><span class="n">BY</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="n">DESC</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="key-differences">Key Differences<a class="headerlink" href="#key-differences" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>ElBruno</th>
+<th>Microsoft</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Speed</strong></td>
+<td>Milliseconds (offline)</td>
+<td>Seconds (LLM calls)</td>
+</tr>
+<tr>
+<td><strong>Cost</strong></td>
+<td>Negligible</td>
+<td>$0.01-0.10 per eval</td>
+</tr>
+<tr>
+<td><strong>Regression Detection</strong></td>
+<td>Native (via baseline snapshots)</td>
+<td>Manual comparison</td>
+</tr>
+<tr>
+<td><strong>Synthetic Data</strong></td>
+<td>Native (templates + LLM)</td>
+<td>Not provided</td>
+</tr>
+<tr>
+<td><strong>Persistence</strong></td>
+<td>SQLite (local)</td>
+<td>Azure Storage (cloud)</td>
+</tr>
+<tr>
+<td><strong>Reporting</strong></td>
+<td>JSON/CSV exports</td>
+<td>HTML dashboards</td>
+</tr>
+<tr>
+<td><strong>Use in CI/CD</strong></td>
+<td>Perfect for gating</td>
+<td>Better for dashboards</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.Reporting</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.Evaluators</span><span class="p">;</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SqliteResultStore</span><span class="p">(</span><span class="s">"evaluations.db"</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">evaluator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">);</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="s">"How do I reset my password?"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">output</span><span class="p">:</span><span class="w"> </span><span class="s">"Visit account settings and click reset password."</span><span class="p">,</span>
+<span class="w">    </span><span class="n">expectedOutput</span><span class="p">:</span><span class="w"> </span><span class="s">"Visit Settings &gt; Account &gt; Reset Password."</span>
+<span class="p">);</span>
+
+<span class="c1">// Save to database</span>
+<span class="k">await</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="n">SaveAsync</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+</code></pre></div>
+<p>Now every evaluation is recorded. You can query later:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- All evaluations from today</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="n">passed</span><span class="p">,</span><span class="w"> </span><span class="n">details</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">evaluations</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="nb">date</span><span class="p">(</span><span class="n">created_at</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">date</span><span class="p">(</span><span class="s1">'now'</span><span class="p">);</span>
+
+<span class="c1">-- Average score by evaluator type</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">evaluator_type</span><span class="p">,</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">score</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">avg_score</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">evaluations</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">evaluator_type</span><span class="p">;</span>
+
+<span class="c1">-- Failed evaluations (find problem areas)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">evaluations</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">passed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="baseline-snapshots">Baseline Snapshots<a class="headerlink" href="#baseline-snapshots" title="Permanent link">¶</a></h2>
+<p>A <strong>baseline snapshot</strong> is a record of quality at a point in time. Use it to detect regressions:</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.Metrics</span><span class="p">;</span>
+
+<span class="c1">// Create a baseline from the current run</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">baseline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BaselineSnapshot</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Production v2.1.0"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CreatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeOffset</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Metrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="na">["relevance_avg"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.82</span><span class="p">,</span>
+<span class="w">        </span><span class="na">["factuality_avg"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.87</span><span class="p">,</span>
+<span class="w">        </span><span class="na">["safety_min"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.95</span><span class="p">,</span>
+<span class="w">        </span><span class="na">["hallucination_avg"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.79</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Later, compare new run against baseline</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">pipeline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EvaluationPipelineBuilder</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithChatClient</span><span class="p">(</span><span class="n">chatClient</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithDataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">AddEvaluator</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">RelevanceEvaluator</span><span class="p">())</span>
+<span class="w">    </span><span class="p">.</span><span class="n">AddEvaluator</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">FactualityEvaluator</span><span class="p">())</span>
+<span class="w">    </span><span class="p">.</span><span class="n">AddEvaluator</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SafetyEvaluator</span><span class="p">())</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithBaseline</span><span class="p">(</span><span class="n">baseline</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">regression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">pipeline</span><span class="p">.</span><span class="n">RunWithBaselineAsync</span><span class="p">();</span>
+
+<span class="c1">// Check for quality drops</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">regression</span><span class="p">.</span><span class="n">HasRegressions</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">issue</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">regression</span><span class="p">.</span><span class="n">RegressionDetails</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"⚠️ {issue.MetricName}: {issue.BaselineValue:F2} → {issue.CurrentValue:F2}"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">InvalidOperationException</span><span class="p">(</span><span class="s">"Quality regression detected!"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">"✅ All metrics passed baseline checks"</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="reporting-and-export">Reporting and Export<a class="headerlink" href="#reporting-and-export" title="Permanent link">¶</a></h2>
+<p>Once evaluations are stored, export for analysis:</p>
+<p><strong>Console Reporter:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">reporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConsoleReporter</span><span class="p">();</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">pipeline</span><span class="p">.</span><span class="n">RunAsync</span><span class="p">();</span>
+<span class="n">reporter</span><span class="p">.</span><span class="n">Report</span><span class="p">(</span><span class="n">run</span><span class="p">);</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// Evaluation Run Summary</span>
+<span class="c1">// =====================</span>
+<span class="c1">// Total Examples: 42</span>
+<span class="c1">// Passed: 38</span>
+<span class="c1">// Failed: 4</span>
+<span class="c1">// Pass Rate: 90.48%</span>
+<span class="c1">//</span>
+<span class="c1">// Relevance:    avg=0.82, min=0.65, max=0.99</span>
+<span class="c1">// Factuality:   avg=0.87, min=0.52, max=1.00</span>
+<span class="c1">// Safety:       avg=0.98, min=0.90, max=1.00</span>
+<span class="c1">// Hallucination: avg=0.79, min=0.45, max=0.96</span>
+</code></pre></div>
+<p><strong>JSON Export:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">exporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonExporter</span><span class="p">();</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">exporter</span><span class="p">.</span><span class="n">ExportAsync</span><span class="p">(</span><span class="n">run</span><span class="p">);</span>
+<span class="k">await</span><span class="w"> </span><span class="n">File</span><span class="p">.</span><span class="n">WriteAllTextAsync</span><span class="p">(</span><span class="s">"evaluation-results.json"</span><span class="p">,</span><span class="w"> </span><span class="n">json</span><span class="p">);</span>
+
+<span class="c1">// Output: evaluation-results.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="s">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s">"2025-02-23T15:45:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="s">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s">"Support Bot"</span><span class="p">,</span>
+<span class="w">  </span><span class="s">"examples_evaluated"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">  </span><span class="s">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s">"input"</span><span class="p">:</span><span class="w"> </span><span class="s">"How do I reset my password?"</span><span class="p">,</span>
+<span class="w">      </span><span class="s">"output"</span><span class="p">:</span><span class="w"> </span><span class="s">"Visit account settings..."</span><span class="p">,</span>
+<span class="w">      </span><span class="s">"overall_score"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.89</span><span class="p">,</span>
+<span class="w">      </span><span class="s">"passed"</span><span class="p">:</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<span class="w">      </span><span class="s">"metrics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s">"relevance"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.85</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"factuality"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.92</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"safety"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.00</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="s">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s">"pass_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.904</span><span class="p">,</span>
+<span class="w">    </span><span class="s">"avg_score"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.86</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>CSV Export:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">csvExporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CsvExporter</span><span class="p">();</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">csv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">csvExporter</span><span class="p">.</span><span class="n">ExportAsync</span><span class="p">(</span><span class="n">run</span><span class="p">);</span>
+<span class="k">await</span><span class="w"> </span><span class="n">File</span><span class="p">.</span><span class="n">WriteAllTextAsync</span><span class="p">(</span><span class="s">"evaluation-results.csv"</span><span class="p">,</span><span class="w"> </span><span class="n">csv</span><span class="p">);</span>
+
+<span class="c1">// Use in Excel/Sheets for charts, pivot tables, etc.</span>
+<span class="c1">// Example output:</span>
+<span class="c1">// input,output,overall_score,passed,relevance,factuality,safety,hallucination</span>
+<span class="c1">// "How do I...", "Visit account...", 0.89, true, 0.85, 0.92, 1.00, 0.82</span>
+</code></pre></div>
+<h2 id="cost-and-token-tracking">Cost and Token Tracking<a class="headerlink" href="#cost-and-token-tracking" title="Permanent link">¶</a></h2>
+<p>Track how much you're spending:</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">ElBruno.AI.Evaluation.Metrics</span><span class="p">;</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EvaluationRun</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">evaluationResults</span><span class="p">,</span>
+<span class="w">    </span><span class="n">TokensUsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12500</span><span class="p">,</span><span class="w">           </span><span class="c1">// Total tokens consumed</span>
+<span class="w">    </span><span class="n">CostInDollars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0156</span><span class="p">,</span><span class="w">       </span><span class="c1">// $0.0156 for this run</span>
+<span class="w">    </span><span class="n">StartedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CompletedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+<span class="p">};</span>
+
+<span class="c1">// Store with results</span>
+<span class="k">await</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="n">SaveAsync</span><span class="p">(</span><span class="n">run</span><span class="p">);</span>
+
+<span class="c1">// Later, analyze spending</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">@"</span>
+<span class="s">SELECT </span>
+<span class="s">  DATE(created_at) as day,</span>
+<span class="s">  COUNT(*) as evaluations,</span>
+<span class="s">  SUM(tokens_used) as total_tokens,</span>
+<span class="s">  SUM(cost_dollars) as total_cost</span>
+<span class="s">FROM evaluation_runs</span>
+<span class="s">GROUP BY DATE(created_at)</span>
+<span class="s">ORDER BY created_at DESC</span>
+<span class="s">LIMIT 30;</span>
+<span class="s">"</span><span class="p">;</span>
+
+<span class="c1">// Execute and see trends</span>
+<span class="c1">// day        | evaluations | total_tokens | total_cost</span>
+<span class="c1">// 2025-02-23 | 12          | 150000       | $0.19</span>
+<span class="c1">// 2025-02-22 | 15          | 187500       | $0.24</span>
+<span class="c1">// 2025-02-21 | 8           | 100000       | $0.13</span>
+</code></pre></div>
+<h2 id="enterprise-pattern-baseline-and-regression-detection">Enterprise Pattern: Baseline and Regression Detection<a class="headerlink" href="#enterprise-pattern-baseline-and-regression-detection" title="Permanent link">¶</a></h2>
+<p>Here's a production-grade pattern used by enterprises:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AIEvaluationPipeline</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chatClient</span><span class="p">;</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">GoldenDataset</span><span class="w"> </span><span class="n">_dataset</span><span class="p">;</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">BaselineSnapshot</span><span class="w"> </span><span class="n">_baseline</span><span class="p">;</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">SqliteResultStore</span><span class="w"> </span><span class="n">_store</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">EvaluationReport</span><span class="o">&gt;</span><span class="w"> </span><span class="n">EvaluateAndCompareAsync</span><span class="p">(</span>
+<span class="w">        </span><span class="kt">string</span><span class="w"> </span><span class="n">modelVersion</span><span class="p">,</span>
+<span class="w">        </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 1. Run evaluation</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">evaluators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GetProductionEvaluators</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">pipeline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EvaluationPipelineBuilder</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="n">WithChatClient</span><span class="p">(</span><span class="n">_chatClient</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">WithDataset</span><span class="p">(</span><span class="n">_dataset</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">evaluators</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">pipeline</span><span class="p">.</span><span class="n">AddEvaluator</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+<span class="w">            </span><span class="p">.</span><span class="n">WithBaseline</span><span class="p">(</span><span class="n">_baseline</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">regressionReport</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">pipeline</span><span class="p">.</span><span class="n">RunWithBaselineAsync</span><span class="p">(</span><span class="n">ct</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 2. Store results</span>
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="n">_store</span><span class="p">.</span><span class="n">SaveAsync</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">EvaluationRunRecord</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">ModelVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">modelVersion</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regressionReport</span><span class="p">.</span><span class="n">Results</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RegressionDetected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regressionReport</span><span class="p">.</span><span class="n">HasRegressions</span><span class="p">,</span>
+<span class="w">            </span><span class="n">CreatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeOffset</span><span class="p">.</span><span class="n">UtcNow</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="c1">// 3. Generate report</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EvaluationReport</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">ModelVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">modelVersion</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PassRate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regressionReport</span><span class="p">.</span><span class="n">Results</span><span class="p">.</span><span class="n">Count</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">Passed</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">regressionReport</span><span class="p">.</span><span class="n">Results</span><span class="p">.</span><span class="n">Count</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RegressionDetected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regressionReport</span><span class="p">.</span><span class="n">HasRegressions</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RegressionDetails</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regressionReport</span><span class="p">.</span><span class="n">RegressionDetails</span><span class="p">,</span>
+<span class="w">            </span><span class="n">FailedExamples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regressionReport</span><span class="p">.</span><span class="n">Results</span>
+<span class="w">                </span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">!</span><span class="n">r</span><span class="p">.</span><span class="n">Passed</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FailureDetail</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">Input</span><span class="p">,</span><span class="w"> </span><span class="n">Reason</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">Details</span><span class="w"> </span><span class="p">})</span>
+<span class="w">                </span><span class="p">.</span><span class="n">ToList</span><span class="p">()</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IEvaluator</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetProductionEvaluators</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">new</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span><span class="w">     </span><span class="c1">// Must address the question</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">FactualityEvaluator</span><span class="p">(</span><span class="mf">0.85</span><span class="p">),</span><span class="w">   </span><span class="c1">// Strict on facts</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">HallucinationEvaluator</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span><span class="w"> </span><span class="c1">// Watch for making things up</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">SafetyEvaluator</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span><span class="w">        </span><span class="c1">// Safety is non-negotiable</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Usage in CI/CD</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">pipeline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AIEvaluationPipeline</span><span class="p">(</span>
+<span class="w">    </span><span class="n">chatClient</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dataset</span><span class="p">,</span>
+<span class="w">    </span><span class="n">baselineSnapshot</span><span class="p">,</span>
+<span class="w">    </span><span class="n">resultStore</span>
+<span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">report</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">pipeline</span><span class="p">.</span><span class="n">EvaluateAndCompareAsync</span><span class="p">(</span><span class="s">"v2.1.0"</span><span class="p">);</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">report</span><span class="p">.</span><span class="n">RegressionDetected</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">"❌ QUALITY REGRESSION DETECTED"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">detail</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">report</span><span class="p">.</span><span class="n">RegressionDetails</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"  {detail.MetricName}: {detail.BaselineValue:F2} → {detail.CurrentValue:F2}"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Block deployment</span>
+<span class="w">    </span><span class="n">Environment</span><span class="p">.</span><span class="n">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"✅ Quality check passed (pass rate: {report.PassRate:P})"</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="monitoring-dashboard">Monitoring Dashboard<a class="headerlink" href="#monitoring-dashboard" title="Permanent link">¶</a></h2>
+<p>Store evaluation data in a time-series database for long-term monitoring:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// After each evaluation run, write to monitoring system</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">metrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="na">["ai.relevance.avg"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">results</span><span class="p">.</span><span class="n">Average</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">MetricScores</span><span class="p">[</span><span class="s">"relevance"</span><span class="p">].</span><span class="n">Value</span><span class="p">),</span>
+<span class="w">    </span><span class="na">["ai.factuality.avg"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">results</span><span class="p">.</span><span class="n">Average</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">MetricScores</span><span class="p">[</span><span class="s">"factuality"</span><span class="p">].</span><span class="n">Value</span><span class="p">),</span>
+<span class="w">    </span><span class="na">["ai.safety.min"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">results</span><span class="p">.</span><span class="n">Min</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">MetricScores</span><span class="p">[</span><span class="s">"safety"</span><span class="p">].</span><span class="n">Value</span><span class="p">),</span>
+<span class="w">    </span><span class="na">["ai.pass_rate"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">results</span><span class="p">.</span><span class="n">Count</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">Passed</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">results</span><span class="p">.</span><span class="n">Count</span><span class="p">,</span>
+<span class="w">    </span><span class="na">["ai.tokens_used"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">run</span><span class="p">.</span><span class="n">TokensUsed</span><span class="p">,</span>
+<span class="w">    </span><span class="na">["ai.cost_dollars"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">run</span><span class="p">.</span><span class="n">CostInDollars</span>
+<span class="p">};</span>
+
+<span class="c1">// Send to your monitoring service (DataDog, Prometheus, CloudWatch, etc.)</span>
+<span class="k">await</span><span class="w"> </span><span class="n">monitoringClient</span><span class="p">.</span><span class="n">RecordMetricsAsync</span><span class="p">(</span><span class="n">metrics</span><span class="p">);</span>
+</code></pre></div>
+<p>In your dashboard, you'd see charts like:</p>
+<div class="highlight"><pre><span></span><code>Quality Over Time (Last 30 Days)
+─────────────────────────────────
+Score  │                    ┌─────────
+0.90   │                   ╱
+0.85   │              ┌────╱
+0.80   │          ┌───╱
+0.75   │      ┌───╱  ← Quality improved after v2.1.0
+       │──────┴─────────────────────→
+       Day 1                    Day 30
+
+Pass Rate by Model Version
+───────────────────────────
+v2.0.0  ███████████████░░░ 88%
+v2.0.1  ██████████████░░░░░ 84%  ← Regression!
+v2.1.0  ████████████████░░ 92%   ← Fixed
+</code></pre></div>
+<h2 id="deployment-gate">Deployment Gate<a class="headerlink" href="#deployment-gate" title="Permanent link">¶</a></h2>
+<p>Use evaluation results to gate deployments:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/deploy.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy with AI Quality Check</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">evaluate</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-dotnet@v3</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">dotnet-version</span><span class="p">:</span><span class="w"> </span><span class="s">'8.0'</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run AI Evaluation</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet run --project tests/ElBruno.AI.Evaluation.Tests/Evaluate.cs</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">EVALUATION_BASELINE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production-v2.1.0</span>
+<span class="w">          </span><span class="nt">LLM_ENDPOINT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.LLM_ENDPOINT }}</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check Results</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">if [ -f "evaluation-regression.txt" ]; then</span>
+<span class="w">            </span><span class="no">echo "❌ Quality regression detected"</span>
+<span class="w">            </span><span class="no">exit 1</span>
+<span class="w">          </span><span class="no">fi</span>
+<span class="w">          </span><span class="no">echo "✅ Quality check passed"</span>
+
+<span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evaluate</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to Production</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span>
+</code></pre></div>
+<p>Your LLM can't be deployed if quality has regressed!</p>
+<h2 id="long-term-strategy">Long-term Strategy<a class="headerlink" href="#long-term-strategy" title="Permanent link">¶</a></h2>
+<ol>
+<li><strong>Week 1:</strong> Start with a small golden dataset (10 examples)</li>
+<li><strong>Week 2:</strong> Add your most common question types</li>
+<li><strong>Week 3:</strong> Establish baseline metrics for current model</li>
+<li><strong>Week 4:</strong> Set up regression detection in CI/CD</li>
+<li><strong>Month 2:</strong> Expand dataset to 50+ examples</li>
+<li><strong>Month 3:</strong> Add cost tracking and optimization</li>
+<li><strong>Ongoing:</strong> Evolve dataset as you learn from production data</li>
+</ol>
+<h2 id="try-it-yourself">Try It Yourself<a class="headerlink" href="#try-it-yourself" title="Permanent link">¶</a></h2>
+<p>Create your first evaluation run with persistence:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Evaluate</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">evaluator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RelevanceEvaluator</span><span class="p">();</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">evaluator</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="s">"What is AI?"</span><span class="p">,</span>
+<span class="w">    </span><span class="s">"AI is artificial intelligence, a field of computer science."</span>
+<span class="p">);</span>
+
+<span class="c1">// Persist</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SqliteResultStore</span><span class="p">(</span><span class="s">"evals.db"</span><span class="p">);</span>
+<span class="k">await</span><span class="w"> </span><span class="n">store</span><span class="p">.</span><span class="n">SaveAsync</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+
+<span class="c1">// Export</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">exporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonExporter</span><span class="p">();</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">exporter</span><span class="p">.</span><span class="n">ExportAsync</span><span class="p">(</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="n">EvaluationRun</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">json</span><span class="p">);</span>
+</code></pre></div>
+<p>Run it daily, weekly, or with every deployment. Over time, you'll have a clear picture of your AI application's quality trend.</p>
+<hr>
+<h2 id="conclusion-the-complete-journey">Conclusion: The Complete Journey<a class="headerlink" href="#conclusion-the-complete-journey" title="Permanent link">¶</a></h2>
+<p>You've now explored the full landscape of AI testing in .NET:</p>
+<ol>
+<li><strong>Testing AI in .NET: The Landscape</strong> — Understanding both toolkits</li>
+<li><strong>Building Your Test Foundation</strong> — Datasets and synthetic data (ElBruno)</li>
+<li><strong>Evaluators: From Quick Checks to Deep Analysis</strong> — Layered evaluation strategies</li>
+<li><strong>AI Testing in Your CI Pipeline</strong> — xUnit integration and automation</li>
+<li><strong>Production AI Evaluation</strong> (this post) — Complete pipeline using both toolkits</li>
+</ol>
+<p><strong>Next steps:</strong></p>
+<ul>
+<li>Start with ElBruno for fast iteration and regression detection</li>
+<li>Graduate to Microsoft when you need nuanced quality judgment</li>
+<li>Use both in production for comprehensive coverage</li>
+<li>Monitor trends over time with SQLite + dashboards</li>
+</ul>
+<p>The .NET ecosystem now has enterprise-grade AI evaluation. Build with confidence. Deploy with metrics. Monitor in production.</p>
+<hr>
+<p><strong>Advanced topics:</strong> See posts 6 &amp; 7 for deep dives on synthetic data generation and evaluator selection by scenario.</p>
+<hr>
+<h2 id="about-the-author">👨‍💻 About the Author<a class="headerlink" href="#about-the-author" title="Permanent link">¶</a></h2>
+<p><strong>Bruno Capuano</strong> is a Microsoft MVP and AI enthusiast who builds practical tools for .NET developers. This is Part 5 of a 7-part series on AI evaluation.</p>
+<p><strong>🌟 Found this helpful?</strong> Let's connect:</p>
+<ul>
+<li>📘 <a href="https://elbruno.com">Read more on my blog</a> — Deep technical articles on AI &amp; .NET</li>
+<li>🎥 <a href="https://www.youtube.com/elbruno">Watch video tutorials on YouTube</a> — Demos and live coding</li>
+<li>💼 <a href="https://www.linkedin.com/in/elbruno/">Connect on LinkedIn</a> — Professional updates</li>
+<li>🐦 <a href="https://www.x.com/elbruno/">Follow on Twitter/X</a> — Quick tips and announcements</li>
+<li>🎙️ <a href="https://notienenombre.com">No Tiene Nombre Podcast</a> — Tech talks in Spanish</li>
+<li>💻 <a href="https://github.com/elbruno/">Explore more projects on GitHub</a> — Open-source AI tools</li>
+</ul>
+<p>⭐ <em>If this series is helping you build better AI applications, give the <a href="https://github.com/elbruno/elbruno-ai-evaluation">repo</a> a star and share it with your team!</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../04-ai-testing-with-xunit/" class="md-footer__link md-footer__link--prev" aria-label="Previous: AI Testing with xUnit">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                AI Testing with xUnit
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../06-synthetic-data-generation/" class="md-footer__link md-footer__link--next" aria-label="Next: Synthetic Data Generation">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Synthetic Data Generation
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.footer", "content.code.copy", "navigation.tabs.sticky", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

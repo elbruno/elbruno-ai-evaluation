@@ -1,0 +1,2239 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Production-grade AI testing and evaluation toolkit for .NET applications — xUnit for AI.">
+      
+      
+        <meta name="author" content="Bruno Capuano">
+      
+      
+      
+        <link rel="prev" href="../quickstart/">
+      
+      
+        <link rel="next" href="../evaluation-metrics/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>Golden Datasets - ElBruno.AI.Evaluation — AI Testing for .NET</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#golden-datasets-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ElBruno.AI.Evaluation — AI Testing for .NET" class="md-header__button md-logo" aria-label="ElBruno.AI.Evaluation — AI Testing for .NET" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ElBruno.AI.Evaluation — AI Testing for .NET
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Golden Datasets
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 2c-1.82 0-3.53.5-5 1.35C8 5.08 10 8.3 10 12s-2 6.92-5 8.65C6.47 21.5 8.18 22 10 22a10 10 0 0 0 10-10A10 10 0 0 0 10 2"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/elbruno/netai-nextwin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    elbruno/netai-nextwin
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ElBruno.AI.Evaluation — AI Testing for .NET" class="md-nav__button md-logo" aria-label="ElBruno.AI.Evaluation — AI Testing for .NET" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    ElBruno.AI.Evaluation — AI Testing for .NET
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/elbruno/netai-nextwin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    elbruno/netai-nextwin
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog Series
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog Series
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/01-introducing-elbruno-ai-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducing ElBruno.AI.Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/02-golden-datasets-for-ai-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Datasets for AI Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/03-ai-evaluators-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Evaluators Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/04-ai-testing-with-xunit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Testing with xUnit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/05-from-demo-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Demo to Production
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/06-synthetic-data-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/07-choosing-the-right-evaluators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing the Right Evaluators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Library Docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Library Docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Datasets
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Datasets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-golden-datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Are Golden Datasets?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Are Golden Datasets?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#json-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSON Format
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="JSON Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#goldenexample-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GoldenExample Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loading-datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading Datasets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Loading Datasets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-json-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From JSON File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-csv-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From CSV File
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-datasets-programmatically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Datasets Programmatically
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataset Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dataset Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filter-by-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter by Tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-subset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Subset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-summary-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Summary Statistics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versioning-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Versioning Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Changelog
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-balance-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Balance Coverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-keep-expected-outputs-realistic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Keep Expected Outputs Realistic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-include-context-for-rag-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Include Context for RAG Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-tag-systematically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Tag Systematically
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-version-with-your-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Version with Your Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-review-and-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Review and Audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-maintain-lineage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Maintain Lineage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-size-appropriately" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Size Appropriately
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#organizing-multiple-datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Organizing Multiple Datasets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#failed-to-deserialize-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Failed to deserialize dataset"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-examples-after-csv-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Examples After CSV Import
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subset-returns-no-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subset Returns No Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-example-building-an-faq-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Example: Building an FAQ Dataset
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../evaluation-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../comparison-with-microsoft-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison with Microsoft
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../publishing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-golden-datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Are Golden Datasets?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Are Golden Datasets?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#json-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSON Format
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="JSON Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#goldenexample-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GoldenExample Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loading-datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading Datasets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Loading Datasets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-json-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From JSON File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-csv-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From CSV File
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-datasets-programmatically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Datasets Programmatically
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataset Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dataset Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filter-by-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter by Tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-subset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Subset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-summary-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Summary Statistics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versioning-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Versioning Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Changelog
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-balance-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Balance Coverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-keep-expected-outputs-realistic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Keep Expected Outputs Realistic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-include-context-for-rag-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Include Context for RAG Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-tag-systematically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Tag Systematically
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-version-with-your-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Version with Your Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-review-and-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Review and Audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-maintain-lineage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Maintain Lineage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-size-appropriately" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Size Appropriately
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#organizing-multiple-datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Organizing Multiple Datasets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#failed-to-deserialize-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Failed to deserialize dataset"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-examples-after-csv-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Examples After CSV Import
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subset-returns-no-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subset Returns No Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-example-building-an-faq-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Example: Building an FAQ Dataset
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="golden-datasets-guide">Golden Datasets Guide<a class="headerlink" href="#golden-datasets-guide" title="Permanent link">¶</a></h1>
+<p>Learn how to create, manage, and version golden datasets for AI evaluation.</p>
+<h2 id="what-are-golden-datasets">What Are Golden Datasets?<a class="headerlink" href="#what-are-golden-datasets" title="Permanent link">¶</a></h2>
+<p>A <strong>golden dataset</strong> is a collection of ground-truth test cases—inputs paired with expected outputs—that serve as a benchmark for AI system quality. They're the foundation of reproducible evaluation.</p>
+<h3 id="key-characteristics">Key Characteristics<a class="headerlink" href="#key-characteristics" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Versioned</strong> — Use semantic versioning (1.0.0, 1.1.0, 2.0.0)</li>
+<li><strong>Immutable</strong> — Once released, old versions don't change</li>
+<li><strong>Tagged</strong> — Categorize examples (e.g., "edge-case", "happy-path")</li>
+<li><strong>Metadata-rich</strong> — Track context, notes, and provenance</li>
+<li><strong>JSON-based</strong> — Easy to version control, review, and share</li>
+</ul>
+<hr>
+<h2 id="json-format">JSON Format<a class="headerlink" href="#json-format" title="Permanent link">¶</a></h2>
+<h3 id="basic-structure">Basic Structure<a class="headerlink" href="#basic-structure" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Customer Support Bot Evaluation"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ground truth for evaluating customer support chatbot quality"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-01-15T10:30:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"production"</span><span class="p">,</span><span class="w"> </span><span class="s2">"support-v2"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"examples"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"How do I reset my password?"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"expectedOutput"</span><span class="p">:</span><span class="w"> </span><span class="s2">"To reset your password, visit the login page and click 'Forgot Password'. Enter your email address and follow the verification steps."</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Standard password reset procedure"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"account"</span><span class="p">,</span><span class="w"> </span><span class="s2">"authentication"</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"support-tickets"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"difficulty"</span><span class="p">:</span><span class="w"> </span><span class="s2">"easy"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"criticality"</span><span class="p">:</span><span class="w"> </span><span class="s2">"high"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="field-reference">Field Reference<a class="headerlink" href="#field-reference" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Dataset identifier</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>string</td>
+<td>No</td>
+<td>Semantic version (default: "1.0.0")</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>No</td>
+<td>Human-readable purpose</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>ISO8601</td>
+<td>No</td>
+<td>When dataset was created (auto-set to now)</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>string[]</td>
+<td>No</td>
+<td>Dataset-level categories</td>
+</tr>
+<tr>
+<td><code>examples</code></td>
+<td>Example[]</td>
+<td>Yes</td>
+<td>Array of test cases</td>
+</tr>
+</tbody>
+</table>
+<h3 id="goldenexample-fields">GoldenExample Fields<a class="headerlink" href="#goldenexample-fields" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>input</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The query or prompt</td>
+</tr>
+<tr>
+<td><code>expectedOutput</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>The reference/correct answer</td>
+</tr>
+<tr>
+<td><code>context</code></td>
+<td>string</td>
+<td>No</td>
+<td>Background info for RAG/context-aware evaluation</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>string[]</td>
+<td>No</td>
+<td>Example-level labels (e.g., "edge-case")</td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td>object</td>
+<td>No</td>
+<td>Arbitrary key-value pairs</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="loading-datasets">Loading Datasets<a class="headerlink" href="#loading-datasets" title="Permanent link">¶</a></h2>
+<h3 id="from-json-file">From JSON File<a class="headerlink" href="#from-json-file" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">loader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonDatasetLoader</span><span class="p">();</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">dataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">loader</span><span class="p">.</span><span class="n">LoadAsync</span><span class="p">(</span><span class="s">"path/to/dataset.json"</span><span class="p">);</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Loaded: {dataset.Name} v{dataset.Version}"</span><span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Examples: {dataset.Examples.Count}"</span><span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Tags: {string.Join("</span><span class="p">,</span><span class="w"> </span><span class="s">", dataset.Tags)}"</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="from-csv-file">From CSV File<a class="headerlink" href="#from-csv-file" title="Permanent link">¶</a></h3>
+<p>Create a CSV with required columns: <code>Input</code>, <code>ExpectedOutput</code>, and optional <code>Context</code>, <code>Tags</code>:</p>
+<div class="highlight"><pre><span></span><code>Input,ExpectedOutput,Context,Tags
+How do I login?,Visit login.example.com and enter your email.,Login page,account
+What are your hours?,We're open 9-6 EST Monday-Friday.,Hours,contact
+</code></pre></div>
+<p>Load it:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">loader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonDatasetLoader</span><span class="p">();</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">dataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">loader</span><span class="p">.</span><span class="n">LoadFromCsvAsync</span><span class="p">(</span><span class="s">"examples.csv"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h2 id="creating-datasets-programmatically">Creating Datasets Programmatically<a class="headerlink" href="#creating-datasets-programmatically" title="Permanent link">¶</a></h2>
+<p>Build datasets in code:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">dataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GoldenDataset</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"FAQ Evaluation"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"1.0.0"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Common customer questions"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CreatedAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTimeOffset</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">"faq"</span><span class="p">,</span><span class="w"> </span><span class="s">"production"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="n">Examples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">GoldenExample</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"How do I cancel my subscription?"</span><span class="p">,</span>
+<span class="w">            </span><span class="n">ExpectedOutput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Visit Settings &gt; Billing &gt; Cancel Subscription. Refunds are issued within 5 business days."</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Billing FAQ section"</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">"billing"</span><span class="p">,</span><span class="w"> </span><span class="s">"cancellation"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">            </span><span class="n">Metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="na">["source"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"help-desk"</span><span class="p">,</span>
+<span class="w">                </span><span class="na">["reviewed_by"]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"support-team"</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">GoldenExample</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Is there a mobile app?"</span><span class="p">,</span>
+<span class="w">            </span><span class="n">ExpectedOutput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Yes, download from the App Store or Google Play."</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Apps section in knowledge base"</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">"mobile"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Save for reuse</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">loader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonDatasetLoader</span><span class="p">();</span>
+<span class="k">await</span><span class="w"> </span><span class="n">loader</span><span class="p">.</span><span class="n">SaveAsync</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span><span class="w"> </span><span class="s">"faq-evaluation.json"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h2 id="dataset-operations">Dataset Operations<a class="headerlink" href="#dataset-operations" title="Permanent link">¶</a></h2>
+<h3 id="filter-by-tag">Filter by Tag<a class="headerlink" href="#filter-by-tag" title="Permanent link">¶</a></h3>
+<p>Get examples matching a specific tag:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">accountExamples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataset</span><span class="p">.</span><span class="n">GetByTag</span><span class="p">(</span><span class="s">"account"</span><span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Account-related examples: {accountExamples.Count}"</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="create-a-subset">Create a Subset<a class="headerlink" href="#create-a-subset" title="Permanent link">¶</a></h3>
+<p>Filter examples using a predicate:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Get only high-criticality examples</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">critical</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataset</span><span class="p">.</span><span class="n">GetSubset</span><span class="p">(</span><span class="n">e</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span>
+<span class="w">    </span><span class="n">e</span><span class="p">.</span><span class="n">Metadata</span><span class="p">.</span><span class="n">GetValueOrDefault</span><span class="p">(</span><span class="s">"criticality"</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"high"</span><span class="p">);</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Critical examples: {critical.Examples.Count}"</span><span class="p">);</span>
+
+<span class="c1">// Evaluate only the subset</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">chatClient</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span><span class="n">critical</span><span class="p">,</span><span class="w"> </span><span class="n">evaluators</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="get-summary-statistics">Get Summary Statistics<a class="headerlink" href="#get-summary-statistics" title="Permanent link">¶</a></h3>
+<p>View dataset composition:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataset</span><span class="p">.</span><span class="n">GetSummary</span><span class="p">();</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Total examples: {summary.TotalExamples}"</span><span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Examples with context: {summary.ExamplesWithContext}"</span><span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Unique tags: {string.Join("</span><span class="p">,</span><span class="w"> </span><span class="s">", summary.UniqueTags)}"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h2 id="versioning-strategy">Versioning Strategy<a class="headerlink" href="#versioning-strategy" title="Permanent link">¶</a></h2>
+<p>Use semantic versioning:</p>
+<ul>
+<li><strong>MAJOR</strong> (e.g., 2.0.0) — Breaking changes, incompatible with 1.x evaluations</li>
+<li><strong>MINOR</strong> (e.g., 1.1.0) — New examples added, backward compatible</li>
+<li><strong>PATCH</strong> (e.g., 1.0.1) — Bug fixes, typo corrections</li>
+</ul>
+<h3 id="guidelines">Guidelines<a class="headerlink" href="#guidelines" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Don't modify released versions</strong> — Create a new version instead</li>
+<li><strong>Document changes</strong> — Keep a changelog</li>
+<li><strong>Version with your model</strong> — If you release a new model, bump the dataset version too</li>
+<li><strong>Branch by use case</strong> — Separate datasets for different domains (support_v1.0.0, rag_v2.1.0)</li>
+</ol>
+<h3 id="example-changelog">Example Changelog<a class="headerlink" href="#example-changelog" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="gh"># Customer Support Dataset Changelog</span>
+
+<span class="gu">## v1.1.0 (2025-01-20)</span>
+<span class="k">-</span><span class="w"> </span>Added 5 new edge-case examples for billing inquiries
+<span class="k">-</span><span class="w"> </span>Fixed typo in example 12 (expected output)
+<span class="k">-</span><span class="w"> </span>Added "escalation" tag for difficult cases
+<span class="k">-</span><span class="w"> </span>Examples: 25 → 30
+
+<span class="gu">## v1.0.0 (2025-01-15)</span>
+<span class="k">-</span><span class="w"> </span>Initial release
+<span class="k">-</span><span class="w"> </span>25 examples covering: account, billing, technical, general
+</code></pre></div>
+<hr>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">¶</a></h2>
+<h3 id="1-balance-coverage">1. Balance Coverage<a class="headerlink" href="#1-balance-coverage" title="Permanent link">¶</a></h3>
+<p>Include diverse scenarios:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"examples"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"happy-path"</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">    </span><span class="c1">// Normal, happy scenarios</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"edge-case"</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">     </span><span class="c1">// Unusual but valid inputs</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"error-handling"</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// Invalid/error cases</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ambiguous"</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}</span><span class="w">      </span><span class="c1">// Unclear or multi-interpretable</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="2-keep-expected-outputs-realistic">2. Keep Expected Outputs Realistic<a class="headerlink" href="#2-keep-expected-outputs-realistic" title="Permanent link">¶</a></h3>
+<p>Expected outputs should represent <strong>actual human-quality responses</strong>, not idealized perfection:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What does your product do?"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"expectedOutput"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Our product is a cloud analytics platform for real-time business intelligence. Key features include dashboards, automated reporting, and integrations with popular data sources."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Standard product description"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Don't create artificially perfect outputs:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"How does it work?"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"expectedOutput"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Step 1: Connect your data. Step 2: Build queries. Step 3: Create dashboards. Step 4: Share insights. Step 5: Monitor performance. Step 6: Export results. Step 7: Set up alerts. Step 8: Collaborate. Step 9: Scale usage. Step 10: Achieve success."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DO NOT DO THIS — unrealistic!"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="3-include-context-for-rag-evaluation">3. Include Context for RAG Evaluation<a class="headerlink" href="#3-include-context-for-rag-evaluation" title="Permanent link">¶</a></h3>
+<p>For retrieval-augmented generation, always include context:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What year was the company founded?"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"expectedOutput"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The company was founded in 2019."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Company Overview: Established in 2019, we serve 5000+ customers across 40 countries."</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="4-tag-systematically">4. Tag Systematically<a class="headerlink" href="#4-tag-systematically" title="Permanent link">¶</a></h3>
+<p>Use consistent, predefined tags:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good: Consistent tag naming</span>
+<span class="n">tags</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"technical"</span><span class="p">,</span><span class="w"> </span><span class="s">"urgent"</span><span class="p">,</span><span class="w"> </span><span class="s">"authentication"</span><span class="p">]</span>
+
+<span class="c1">// Bad: Inconsistent naming</span>
+<span class="n">tags</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"tech"</span><span class="p">,</span><span class="w"> </span><span class="s">"URGENT"</span><span class="p">,</span><span class="w"> </span><span class="s">"login"</span><span class="p">]</span>
+
+<span class="c1">// Better: Use enum or constants</span>
+<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ExampleTags</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Happy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"happy-path"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">EdgeCase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"edge-case"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"error-handling"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="5-version-with-your-models">5. Version with Your Models<a class="headerlink" href="#5-version-with-your-models" title="Permanent link">¶</a></h3>
+<p>When you release or update a model, version your dataset too:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// If models changed significantly, bump dataset version</span>
+<span class="c1">// model-v2.0.0 → evaluation-dataset-v2.0.0</span>
+<span class="c1">// This makes it clear which dataset was used to evaluate which model</span>
+</code></pre></div>
+<h3 id="6-review-and-audit">6. Review and Audit<a class="headerlink" href="#6-review-and-audit" title="Permanent link">¶</a></h3>
+<p>Before release:</p>
+<ul>
+<li>✅ Have humans review all expected outputs</li>
+<li>✅ Check for typos, grammatical errors</li>
+<li>✅ Verify context is accurate and helpful</li>
+<li>✅ Ensure examples don't contain PII</li>
+<li>✅ Confirm tags are consistent</li>
+</ul>
+<h3 id="7-maintain-lineage">7. Maintain Lineage<a class="headerlink" href="#7-maintain-lineage" title="Permanent link">¶</a></h3>
+<p>Track where examples came from:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"expectedOutput"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"support-tickets"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"ticket_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SUP-12345"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"reviewed_by"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe@example.com"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"date_added"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-01-15"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="8-size-appropriately">8. Size Appropriately<a class="headerlink" href="#8-size-appropriately" title="Permanent link">¶</a></h3>
+<p>Dataset size depends on use case:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Recommended Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Development/testing</td>
+<td>10-20 examples</td>
+</tr>
+<tr>
+<td>Pre-release validation</td>
+<td>50-100 examples</td>
+</tr>
+<tr>
+<td>Regression testing</td>
+<td>100+ examples</td>
+</tr>
+<tr>
+<td>Production monitoring</td>
+<td>500+ examples (ongoing)</td>
+</tr>
+</tbody>
+</table>
+<p>Larger datasets catch more issues but take longer to evaluate.</p>
+<hr>
+<h2 id="organizing-multiple-datasets">Organizing Multiple Datasets<a class="headerlink" href="#organizing-multiple-datasets" title="Permanent link">¶</a></h2>
+<p>For complex systems, use multiple focused datasets:</p>
+<div class="highlight"><pre><span></span><code>datasets/
+├── customer-support.json       # v1.3.0 — 50 support examples
+├── rag-retrieval.json           # v2.0.0 — 30 retrieval examples
+├── safety-moderation.json       # v1.0.0 — 20 safety examples
+├── code-generation.json         # v3.1.0 — 40 coding examples
+└── multi-language.json          # v1.0.0 — 25 non-English examples
+</code></pre></div>
+<p>Load and evaluate against specific datasets:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">supportDataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">loader</span><span class="p">.</span><span class="n">LoadAsync</span><span class="p">(</span><span class="s">"datasets/customer-support.json"</span><span class="p">);</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">ragDataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">loader</span><span class="p">.</span><span class="n">LoadAsync</span><span class="p">(</span><span class="s">"datasets/rag-retrieval.json"</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">supportResults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">chatClient</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span><span class="n">supportDataset</span><span class="p">,</span><span class="w"> </span><span class="n">evaluators</span><span class="p">);</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">ragResults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">chatClient</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span><span class="n">ragDataset</span><span class="p">,</span><span class="w"> </span><span class="n">evaluators</span><span class="p">);</span>
+
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Support: {supportResults.Results.Count(r =&gt; r.Passed)}/{supportResults.Results.Count} passed"</span><span class="p">);</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"RAG: {ragResults.Results.Count(r =&gt; r.Passed)}/{ragResults.Results.Count} passed"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">¶</a></h2>
+<h3 id="failed-to-deserialize-dataset">"Failed to deserialize dataset"<a class="headerlink" href="#failed-to-deserialize-dataset" title="Permanent link">¶</a></h3>
+<ul>
+<li>Verify JSON is valid (use jsonlint.com)</li>
+<li>Ensure <code>name</code> and <code>examples</code> fields exist</li>
+<li>Check for encoding issues (use UTF-8)</li>
+</ul>
+<h3 id="missing-examples-after-csv-import">Missing Examples After CSV Import<a class="headerlink" href="#missing-examples-after-csv-import" title="Permanent link">¶</a></h3>
+<ul>
+<li>Verify CSV has <code>Input</code> and <code>ExpectedOutput</code> columns (exact case)</li>
+<li>Check that header row exists</li>
+<li>Ensure rows don't have empty inputs or outputs</li>
+</ul>
+<h3 id="subset-returns-no-results">Subset Returns No Results<a class="headerlink" href="#subset-returns-no-results" title="Permanent link">¶</a></h3>
+<ul>
+<li>Verify examples have the tags you're filtering by</li>
+<li>Use <code>GetSummary()</code> to check available tags:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataset</span><span class="p">.</span><span class="n">GetSummary</span><span class="p">();</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Available tags: {string.Join("</span><span class="p">,</span><span class="w"> </span><span class="s">", summary.UniqueTags)}"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h2 id="real-world-example-building-an-faq-dataset">Real-World Example: Building an FAQ Dataset<a class="headerlink" href="#real-world-example-building-an-faq-dataset" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// Step 1: Create initial dataset from knowledge base</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">dataset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GoldenDataset</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Product FAQ"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"1.0.0"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"FAQ examples extracted from help center"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">"production"</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Step 2: Add examples with full metadata</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">faqs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="p">(</span><span class="s">"What's your pricing?"</span><span class="p">,</span><span class="w"> </span><span class="s">"We offer 3 tiers: Starter ($29), Pro ($99), Enterprise (custom)."</span><span class="p">,</span><span class="w"> </span><span class="s">"Pricing page"</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">"Do you have a free trial?"</span><span class="p">,</span><span class="w"> </span><span class="s">"Yes, 14 days free. No credit card required."</span><span class="p">,</span><span class="w"> </span><span class="s">"Signup flow"</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">"Can I export my data?"</span><span class="p">,</span><span class="w"> </span><span class="s">"Yes, CSV, JSON, and API access included in all plans."</span><span class="p">,</span><span class="w"> </span><span class="s">"Data export docs"</span><span class="p">)</span>
+<span class="p">};</span>
+
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">faqs</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">dataset</span><span class="p">.</span><span class="n">AddExample</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">GoldenExample</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ExpectedOutput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">"faq"</span><span class="p">,</span><span class="w"> </span><span class="s">"general"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="n">Metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="s">"source"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"help-center"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// Step 3: Save</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">loader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonDatasetLoader</span><span class="p">();</span>
+<span class="k">await</span><span class="w"> </span><span class="n">loader</span><span class="p">.</span><span class="n">SaveAsync</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span><span class="w"> </span><span class="s">"faq.json"</span><span class="p">);</span>
+
+<span class="c1">// Step 4: Evaluate against it</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">evaluators</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IEvaluator</span><span class="p">[]</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">RelevanceEvaluator</span><span class="p">(</span><span class="mf">0.65</span><span class="p">),</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">CoherenceEvaluator</span><span class="p">(</span><span class="mf">0.70</span><span class="p">)</span>
+<span class="p">};</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">chatClient</span><span class="p">.</span><span class="n">EvaluateAsync</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span><span class="w"> </span><span class="n">evaluators</span><span class="p">);</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">passRate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">run</span><span class="p">.</span><span class="n">Results</span><span class="p">.</span><span class="n">Count</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">Passed</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">run</span><span class="p">.</span><span class="n">Results</span><span class="p">.</span><span class="n">Count</span><span class="p">;</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"FAQ Pass Rate: {passRate:P0}"</span><span class="p">);</span>
+</code></pre></div>
+<hr>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
+<ul>
+<li>Review evaluation-metrics.md to understand how examples are scored</li>
+<li>Check best-practices.md for testing patterns and workflows</li>
+<li>Explore samples/ for complete working examples with datasets</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../quickstart/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Quickstart">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Quickstart
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../evaluation-metrics/" class="md-footer__link md-footer__link--next" aria-label="Next: Evaluation Metrics">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Evaluation Metrics
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.footer", "content.code.copy", "navigation.tabs.sticky", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
