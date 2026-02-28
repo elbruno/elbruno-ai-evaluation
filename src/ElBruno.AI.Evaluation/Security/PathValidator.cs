@@ -12,19 +12,14 @@ public static class PathValidator
     /// </summary>
     /// <param name="path">The file path to validate.</param>
     /// <param name="paramName">The parameter name for exception messages.</param>
-    /// <param name="allowAbsolutePaths">Whether to allow absolute paths. Default is false.</param>
     /// <exception cref="ArgumentException">Thrown when the path contains invalid or unsafe patterns.</exception>
-    public static void ValidateFilePath(string path, string paramName, bool allowAbsolutePaths = false)
+    public static void ValidateFilePath(string path, string paramName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path, paramName);
 
         // Reject path traversal sequences
         if (path.Contains(".."))
             throw new ArgumentException("Path traversal detected. Paths containing '..' are not allowed.", paramName);
-
-        // Reject absolute paths if not allowed
-        if (!allowAbsolutePaths && Path.IsPathRooted(path))
-            throw new ArgumentException("Absolute paths are not allowed. Use relative paths only.", paramName);
 
         // Reject paths with null characters
         if (path.Contains('\0'))
@@ -66,10 +61,12 @@ public static class PathValidator
     /// <exception cref="ArgumentException">Thrown when the path contains unsafe patterns.</exception>
     public static void ValidateDatabasePath(string dbPath, string paramName)
     {
-        ValidateFilePath(dbPath, paramName, allowAbsolutePaths: false);
+        ValidateFilePath(dbPath, paramName);
 
-        // Additional SQLite-specific validation to prevent URI parameters
-        if (dbPath.Contains(';') || dbPath.Contains('?'))
-            throw new ArgumentException("SQLite URI parameters are not allowed.", paramName);
+        // Additional SQLite-specific validation to prevent URI injection patterns
+        if (dbPath.Contains(';') || dbPath.Contains('?') || 
+            dbPath.Contains("File=", StringComparison.OrdinalIgnoreCase) ||
+            dbPath.Contains("Data Source=", StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException("SQLite URI parameters and connection string patterns are not allowed.", paramName);
     }
 }
