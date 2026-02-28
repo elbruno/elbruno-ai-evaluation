@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ElBruno.AI.Evaluation.Security;
 
 namespace ElBruno.AI.Evaluation.Datasets;
 
@@ -19,6 +20,7 @@ public static class DatasetLoaderStatic
     /// <summary>Loads a <see cref="GoldenDataset"/> from a JSON file.</summary>
     public static async Task<GoldenDataset> LoadFromJsonAsync(string path, CancellationToken ct = default)
     {
+        FileIntegrityValidator.ValidateJsonFile(path);
         await using var stream = File.OpenRead(path);
         return await JsonSerializer.DeserializeAsync<GoldenDataset>(stream, JsonOptions, ct)
             ?? throw new InvalidOperationException($"Failed to deserialize dataset from '{path}'.");
@@ -32,6 +34,7 @@ public static class DatasetLoaderStatic
     public static async Task<GoldenDataset> LoadFromCsvAsync(
         string path, string inputColumn = "input", string outputColumn = "expected_output", CancellationToken ct = default)
     {
+        FileIntegrityValidator.ValidateCsvFile(path);
         var lines = await File.ReadAllLinesAsync(path, ct);
         if (lines.Length == 0)
             throw new InvalidOperationException("CSV file is empty.");
@@ -66,6 +69,7 @@ public static class DatasetLoaderStatic
     public static async Task SaveToJsonAsync(GoldenDataset dataset, string path, CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(dataset);
+        PathValidator.ValidateFilePath(path, nameof(path));
         var dir = Path.GetDirectoryName(path);
         if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
 
@@ -77,6 +81,7 @@ public static class DatasetLoaderStatic
     public static async Task SaveToCsvAsync(GoldenDataset dataset, string path, CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(dataset);
+        PathValidator.ValidateFilePath(path, nameof(path));
         var dir = Path.GetDirectoryName(path);
         if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
 

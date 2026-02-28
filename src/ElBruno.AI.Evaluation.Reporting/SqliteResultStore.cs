@@ -1,5 +1,6 @@
 using System.Text;
 using ElBruno.AI.Evaluation.Evaluators;
+using ElBruno.AI.Evaluation.Security;
 using Microsoft.Data.Sqlite;
 
 namespace ElBruno.AI.Evaluation.Reporting;
@@ -22,6 +23,7 @@ public sealed class SqliteResultStore : IAsyncDisposable
     /// <returns>An initialized <see cref="SqliteResultStore"/>.</returns>
     public static async Task<SqliteResultStore> CreateAsync(string dbPath, CancellationToken ct = default)
     {
+        FileIntegrityValidator.ValidateDatabaseFile(dbPath);
         var connection = new SqliteConnection($"Data Source={dbPath}");
         await connection.OpenAsync(ct).ConfigureAwait(false);
 

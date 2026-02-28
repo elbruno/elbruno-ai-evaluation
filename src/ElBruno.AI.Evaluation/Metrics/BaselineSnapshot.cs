@@ -1,4 +1,5 @@
 using System.Text.Json;
+using ElBruno.AI.Evaluation.Security;
 
 namespace ElBruno.AI.Evaluation.Metrics;
 
@@ -24,6 +25,7 @@ public sealed class BaselineSnapshot
     /// <summary>Persists this baseline to a JSON file.</summary>
     public async Task SaveAsync(string filePath, CancellationToken cancellationToken = default)
     {
+        PathValidator.ValidateFilePath(filePath, nameof(filePath));
         await using var stream = File.Create(filePath);
         await JsonSerializer.SerializeAsync(stream, this, JsonOptions, cancellationToken);
     }
@@ -31,6 +33,7 @@ public sealed class BaselineSnapshot
     /// <summary>Loads a baseline from a JSON file.</summary>
     public static async Task<BaselineSnapshot> LoadAsync(string filePath, CancellationToken cancellationToken = default)
     {
+        FileIntegrityValidator.ValidateJsonFile(filePath);
         await using var stream = File.OpenRead(filePath);
         return await JsonSerializer.DeserializeAsync<BaselineSnapshot>(stream, cancellationToken: cancellationToken)
             ?? throw new InvalidOperationException($"Failed to deserialize baseline from '{filePath}'.");
