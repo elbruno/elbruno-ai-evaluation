@@ -45,3 +45,31 @@
 - Fixed SmokeTests.cs namespace conflict (fully qualified `ElBruno.AI.Evaluation.Evaluators.EvaluationResult`)
 - Added `Microsoft.Extensions.AI.Abstractions` package to integration test csproj for `IChatClient` mock
 - Some evaluator behaviors discovered during testing: HallucinationEvaluator returns 1.0 for empty output, RelevanceEvaluator cosine similarity can be low even for semantically related text
+
+### 2025-02-24 — CI/Linux Compatibility Audit (GitHub Issue #1)
+**Task:** Audit test suite for CI/Linux compatibility issues per LocalEmbeddings findings.
+
+**Audit Scope:**
+- Platform-conditional test skipping (Skip.IfNot/Skip.If requiring [SkippableFact])
+- Path.GetInvalidFileNameChars() usage in tests
+- File name validation patterns
+- Git tag version parsing in publish workflow
+
+**Findings:**
+- **[SkippableFact]:** ✅ Zero tests use Skip.* methods — all 164 tests use standard [Fact]/[Theory]
+- **File name validation:** ✅ Zero tests use Path.GetInvalidFileNameChars() or InvalidPathChars
+- **Platform detection:** ✅ Zero tests use RuntimeInformation or OS detection APIs
+- **Cross-platform paths:** ✅ All tests use Path.Combine() and Path.GetTempPath() correctly
+- **CI workflow:** ✅ Already runs on ubuntu-latest with standard xUnit runner
+- **Publish workflow:** ⚠️ Tag version parsing strips leading 'v' but could add trailing '.' protection (preventative, non-blocking)
+
+**Test Quality Patterns Observed:**
+- 28 test files, 164 total tests (163 [Fact] + 1 [Theory])
+- All tests are platform-agnostic by design
+- No hardcoded Windows paths or backslashes
+- DatasetLoader tests demonstrate best practices for temp file handling
+- No timing-dependent assertions or Thread.Sleep() found
+
+**Conclusion:** Test suite is **fully CI/Linux compatible**. No blocking issues or required fixes. Confidence: 95/100.
+
+**Output:** `.squad/decisions/inbox/langly-ci-linux-audit.md` — comprehensive audit report

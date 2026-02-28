@@ -183,3 +183,36 @@ Created a new production-ready sample demonstrating the complete reporting workf
 - ✅ ReportingShowcase project builds successfully (0 errors, 0 warnings)
 - ✅ All APIs used match actual public signatures from source code
 - ✅ Example data is realistic (customer support Q&A scenarios)
+
+### Security Documentation (Current Session)
+Created SECURITY.md to document safety guarantees and best practices:
+
+**Files Created:**
+- `docs/SECURITY.md` — Comprehensive security guide covering:
+  - File Operations Safety: Explains path traversal protection via Path.Combine() and System.IO immutability
+  - File Integrity: Schema validation for JSON/CSV, content quality checks, evaluator safeguards
+  - Best Practices: 5 production patterns (validation, tagged subsets, secure storage, anomaly monitoring, versioning)
+  - Developer-friendly language targeting fellow developers, not security experts
+
+**Files Modified:**
+- `README.md` — Added "Security & Safety" link to documentation section (positioned after Best Practices)
+
+## Documentation Patterns Observed
+
+1. **Progressive Disclosure Pattern** — Documentation advances from quick start (5 min) → reference docs (deep dives) → blog posts (real-world stories) → production samples (running code)
+
+2. **Developer Voice** — All writing assumes peer developers who understand .NET, xUnit, and evaluation concepts. No marketing fluff, minimal jargon outside AI/evaluation domain.
+
+3. **Code-First Examples** — Every concept is grounded in actual C# code snippets from the repository. Examples are tested, working, and directly copy-pasteable.
+
+4. **Enterprise Patterns** — Documentation bridges learning (what is this?) with production (how do I run this safely at scale?). Each feature page includes CI/CD, monitoring, and security considerations.
+
+5. **Cross-Reference Structure** — Docs link to each other strategically:
+   - Quickstart → Metrics & Datasets (when user needs specifics)
+   - Metrics/Datasets → Best Practices (when deploying)
+   - Best Practices → Blog Series (for context and rationale)
+   - All → Samples (working reference implementations)
+
+6. **Safety-First Narrative** — Security documentation is not an afterthought but positioned prominently in docs nav and README, reflecting that safety is foundational, not optional.
+
+7. **Validation as User Concern** — Rather than claiming "complete safety," docs empower developers with tools (ValidateExamples, Deduplicate, tagged subsets) and patterns (version pinning, monitoring) to build safety into their workflows.

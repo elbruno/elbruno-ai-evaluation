@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using ElBruno.AI.Evaluation.Evaluators;
+using ElBruno.AI.Evaluation.Security;
 
 namespace ElBruno.AI.Evaluation.Reporting;
 
@@ -17,6 +18,7 @@ public sealed class CsvExporter
     {
         ArgumentNullException.ThrowIfNull(run);
         ArgumentException.ThrowIfNullOrEmpty(outputPath);
+        PathValidator.ValidateFilePath(outputPath, nameof(outputPath));
 
         var directory = Path.GetDirectoryName(outputPath);
         if (!string.IsNullOrEmpty(directory))

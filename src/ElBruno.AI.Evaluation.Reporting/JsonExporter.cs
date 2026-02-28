@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ElBruno.AI.Evaluation.Evaluators;
+using ElBruno.AI.Evaluation.Security;
 
 namespace ElBruno.AI.Evaluation.Reporting;
 
@@ -23,6 +24,7 @@ public sealed class JsonExporter
     {
         ArgumentNullException.ThrowIfNull(run);
         ArgumentException.ThrowIfNullOrEmpty(outputPath);
+        PathValidator.ValidateFilePath(outputPath, nameof(outputPath));
 
         var directory = Path.GetDirectoryName(outputPath);
         if (!string.IsNullOrEmpty(directory))

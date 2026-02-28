@@ -100,3 +100,49 @@ This is the right opportunity at the right time for the right sponsor.
 - Strategic framing must be woven throughout (not just conclusion)
 - Concrete personas, demo scenarios, content hooks make abstract strategy actionable
 - Freemium model (OSS + Enterprise) resolves adoption friction vs. sustainability tension
+
+---
+
+### Issue #1 Triage: Security & Performance Audit (February 2026)
+
+**Context:** Bruno requested triage of GitHub Issue #1 — a 13-item security/performance/CI audit checklist imported from LocalEmbeddings v1.1.0 review.
+
+**Triage Process:**
+1. Read full issue body (3 checklists: Security, Performance, CI/Linux)
+2. Used explore agent to survey codebase: found 7 .NET projects, DatasetLoader.cs, RelevanceEvaluator.cs, CI workflows
+3. Analyzed file I/O patterns, vector math implementation, test infrastructure, git tag versioning logic
+4. Cross-referenced audit items against actual code to determine HIGH/MEDIUM/LOW priority
+
+**Key Findings:**
+- **4 HIGH-PRIORITY items** with confirmed impact: path traversal vulnerability (no validation in DatasetLoader), manual cosine similarity (no SIMD), SkippableFact missing (Linux CI risk), git tag version stripping bug
+- **5 MEDIUM-PRIORITY items** requiring targeted work: file name validation, Span/Memory allocations, ArrayPool for buffers, BenchmarkDotNet suite, input validation
+- **4 LOW-PRIORITY items** not applicable: HTTPS enforcement (no remote fetch), file integrity (no binary models), top-K search (no ranking bottleneck), squad routing (already covered)
+
+**Decomposition Strategy:**
+- Organized into 3 parallel tracks: Security (A), Performance (B), CI (C)
+- Identified fast win: git tag fix (#4) is 30-min trivial change
+- Sequenced perf work: TensorPrimitives → Span/Memory → ArrayPool → Benchmarks (compound gains)
+- Routed 8/13 items to Byers (security + perf + testing expertise), 1 to any agent (trivial), 1 to self (routing review), 3 archived
+
+**Routing Rationale:**
+- Byers has proven track record with .NET security, performance optimization, and test infrastructure (see history: v1.0 release prep, solution structure)
+- Fast win (#4) can be handled by any agent to unblock CI immediately
+- Defer items #10/#11/#12 (not applicable to current codebase; architectural guidance only)
+
+**Estimated Effort:**
+- Total: M-L (6-10 days)
+- Critical path: 4-6 days if sequential, 2-3 weeks at 50% allocation
+- Parallelization: HIGH (Security + CI can run concurrent with Performance track)
+
+**Learnings About Codebase:**
+- File I/O security posture is weak: direct `File.OpenRead()` with no path validation across 4 files
+- Performance baseline missing: no BenchmarkDotNet suite; can't validate optimization claims without it
+- Vector math is low-hanging fruit: manual cosine similarity is proven 3-10x slower than TensorPrimitives (LocalEmbeddings audit data)
+- CI is Linux-only (ubuntu-latest); SkippableFact issue is real risk if any platform-conditional tests exist
+- CSV parsing is naive: `Split(',')` fails on quoted fields with commas (edge case but exploitable)
+
+**Learnings About Issue Triage:**
+- Cross-referencing audit items against actual code prevents wasted work (3 items were N/A)
+- Severity != effort: path traversal (HIGH) is S-M effort; benchmarks (MEDIUM) is M effort
+- Dependencies matter: benchmarks MUST come after perf changes to validate gains
+- Fast wins build momentum: routing #4 (30-min fix) first demonstrates responsiveness

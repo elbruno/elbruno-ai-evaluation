@@ -1,6 +1,7 @@
 using ElBruno.AI.Evaluation.Datasets;
 using ElBruno.AI.Evaluation.Evaluators;
 using ElBruno.AI.Evaluation.Extensions;
+using ElBruno.AI.Evaluation.Security;
 using Microsoft.Extensions.AI;
 
 namespace ElBruno.AI.Evaluation.Xunit;
@@ -27,7 +28,9 @@ public sealed class AITestRunner
     /// <returns>This runner for fluent chaining.</returns>
     public AITestRunner WithDataset(string datasetPath)
     {
-        _datasetPath = datasetPath ?? throw new ArgumentNullException(nameof(datasetPath));
+        ArgumentNullException.ThrowIfNull(datasetPath);
+        PathValidator.ValidateFilePath(datasetPath, nameof(datasetPath));
+        _datasetPath = datasetPath;
         return this;
     }
 

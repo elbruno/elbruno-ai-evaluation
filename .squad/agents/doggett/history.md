@@ -56,3 +56,51 @@
 - Complementary positioning with Microsoft's official tools reduces competitive risk
 - Extensibility design mitigates accuracy/complexity limitations
 - MVP discipline critical to avoid scope creep on ambitious projects
+
+---
+
+### Validation Session 2: GitHub Issue #1 Audit Scope Assessment (February 2026)
+
+**Context:** Apply security/performance/CI lessons from elbruno.localembeddings v1.1.0 audit to ElBruno.AI.Evaluation
+
+**Project Maturity Assessment:**
+- **Type:** Research/Evaluation Library (NuGet package, not production service)
+- **Maturity:** Pre-Production (v0.5 → v1.0, already approved by Mulder)
+- **Attack Surface:** Minimal — developer-controlled file I/O (JSON/CSV datasets), no user-facing web APIs
+- **Trust Model:** Trusted developer input in CI/CD pipelines
+- **Deployment:** `dotnet add package` installation (not runtime service)
+
+**Scope Findings:**
+- **15 audit items assessed:** 4 MUST-DO, 3 SHOULD-DO, 8 OUT-OF-SCOPE
+- **P0 Blockers (v1.0 Gate):**
+  1. Path traversal validation in DatasetLoaderStatic (10 lines)
+  2. File size limit checks to prevent CI OOM (5 lines)
+  3. Publish workflow version tag validation (10 lines)
+- **P1 Post-v1.0:** TensorPrimitives for 5-10x cosine similarity speedup (20 lines)
+- **Rejected:** URL validation (no network I/O), [SkippableFact] (no platform tests), Top-K search (doesn't exist)
+
+**Key Constraints Validated:**
+- "Offline deterministic evaluators" — security fixes must not add external dependencies ✅
+- "Complementary positioning" — changes must not duplicate Microsoft's official libs ✅
+- "No external dependencies for CSV" — performance refactor stays hand-rolled ✅
+- Developer ergonomics preserved via opt-out flags for strict validation
+
+**Contradictions Identified:**
+- Path traversal prevention may break existing workflows using `../../golden-datasets/v1.json` references
+- **Resolution:** Add `validateSecurity: false` escape hatch for trusted CI environments
+
+**Evidence Quality: EXCELLENT**
+- Codebase grep analysis confirmed file I/O surface area (5 files)
+- Project scope boundaries clear from README/decisions.md
+- No speculative features — assessed only what exists today
+
+**Verdict: APPROVED with 4 P0 fixes (35 lines, ~2 hours effort)**
+- Confidence: 94/100
+- Cost/Benefit: EXCELLENT (high-impact security/ops fixes, low effort)
+- Recommendation: Gate v1.0 on P0 blockers, defer performance to v1.0.1
+
+**Lessons for Future Audits:**
+- Project type (library vs. service) drastically changes audit relevance (8 of 15 items N/A)
+- Grep-based surface area analysis prevents over-engineering (no URL code = no URL validation)
+- Developer-facing tools need security but can offer escape hatches (validateSecurity flag pattern)
+- Pre-approved projects (Mulder v1.0 approval) should minimize gate additions (35 lines acceptable)

@@ -123,6 +123,7 @@ Comprehensive guides for all use cases:
 - **[Golden Datasets](docs/golden-datasets.md)** — Dataset design, JSON schema, CSV import, versioning, and best practices
 - **[Synthetic Data Generation](docs/synthetic-data.md)** — Template-based and LLM-powered test data generation for evaluation
 - **[Best Practices](docs/best-practices.md)** — Production patterns, threshold tuning, CI/CD integration, and monitoring
+- **[Security & Safety](docs/SECURITY.md)** — File operations safety, data integrity guarantees, and production best practices
 - **[Publishing to NuGet](docs/publishing.md)** — How to publish new versions using GitHub Actions + Trusted Publishing
 
 ## Blog Series
