@@ -192,21 +192,16 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-## 👨‍💻 About the Author
+## 👋 About the Author
 
-**Bruno Capuano** — AI enthusiast, Microsoft MVP, and developer advocate passionate about making AI accessible to everyone.
+Hi! I'm **ElBruno** 🧡, a passionate developer and content creator exploring AI, .NET, and modern development practices.
 
-I create content about AI, .NET, Azure, and developer productivity across multiple platforms. If you found this library useful, you might enjoy:
+**Made with ❤️ by [ElBruno](https://github.com/elbruno)**
 
-🌐 **Follow my work:**
+If you like this project, consider following my work across platforms:
 
-- 💻 [More AI Projects on GitHub](https://github.com/elbruno/) — Explore my open-source AI experiments and tools
-- 📝 [Technical Blog](https://elbruno.com) — Deep dives into AI, .NET, and cloud development
-- 🎙️ [No Tiene Nombre Podcast](https://notienenombre.com) — Tech discussions in Spanish
-- 🎥 [YouTube Channel](https://www.youtube.com/elbruno) — Video tutorials, demos, and live coding
-- 💼 [LinkedIn](https://www.linkedin.com/in/elbruno/) — Professional updates and industry insights
-- 🐦 [Twitter/X](https://www.x.com/elbruno/) — Quick tips, announcements, and tech thoughts
-
-**Got questions or ideas?** Let's connect! Open a [Discussion](https://github.com/elbruno/elbruno-ai-evaluation/discussions) or reach out on any platform above.
-
-✨ *If this project saved you time or helped your AI testing workflow, consider giving it a ⭐ star and sharing it with fellow developers!*
+- 📻 **Podcast**: [No Tienen Nombre](https://notienenombre.com) — Spanish-language episodes on AI, development, and tech culture
+- 💻 **Blog**: [ElBruno.com](https://elbruno.com) — Deep dives on embeddings, RAG, .NET, and local AI
+- 📺 **YouTube**: [youtube.com/elbruno](https://www.youtube.com/elbruno) — Demos, tutorials, and live coding
+- 🔗 **LinkedIn**: [@elbruno](https://www.linkedin.com/in/elbruno/) — Professional updates and insights
+- 𝕏 **Twitter**: [@elbruno](https://www.x.com/elbruno/) — Quick tips, releases, and tech news
