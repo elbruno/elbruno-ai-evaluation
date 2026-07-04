@@ -290,17 +290,16 @@ foreach (var evaluator in evaluators)
 
 ---
 
-## 👨‍💻 About the Author
+## 👋 About the Author
 
-**Bruno Capuano** is a Microsoft MVP and AI enthusiast who builds practical tools for .NET developers. This is Part 3 of a 7-part series on AI evaluation.
+Hi! I'm **ElBruno** 🧡, a passionate developer and content creator exploring AI, .NET, and modern development practices.
 
-**🌟 Found this helpful?** Let's connect:
+**Made with ❤️ by [ElBruno](https://github.com/elbruno)**
 
-- 📘 [Read more on my blog](https://elbruno.com) — Deep technical articles on AI & .NET
-- 🎥 [Watch video tutorials on YouTube](https://www.youtube.com/elbruno) — Demos and live coding
-- 💼 [Connect on LinkedIn](https://www.linkedin.com/in/elbruno/) — Professional updates
-- 🐦 [Follow on Twitter/X](https://www.x.com/elbruno/) — Quick tips and announcements
-- 🎙️ [No Tiene Nombre Podcast](https://notienenombre.com) — Tech talks in Spanish
-- 💻 [Explore more projects on GitHub](https://github.com/elbruno/) — Open-source AI tools
+If you like this project, consider following my work across platforms:
 
-⭐ *If this series is helping you build better AI applications, give the [repo](https://github.com/elbruno/elbruno-ai-evaluation) a star and share it with your team!*
+- 📻 **Podcast**: [No Tienen Nombre](https://notienenombre.com) — Spanish-language episodes on AI, development, and tech culture
+- 💻 **Blog**: [ElBruno.com](https://elbruno.com) — Deep dives on embeddings, RAG, .NET, and local AI
+- 📺 **YouTube**: [youtube.com/elbruno](https://www.youtube.com/elbruno) — Demos, tutorials, and live coding
+- 🔗 **LinkedIn**: [@elbruno](https://www.linkedin.com/in/elbruno/) — Professional updates and insights
+- 𝕏 **Twitter**: [@elbruno](https://www.x.com/elbruno/) — Quick tips, releases, and tech news
